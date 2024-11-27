@@ -29,7 +29,7 @@ public class CentroCuentaRepository(
     public Task<List<CentroCuentaResultSet>> GetAllByCia(string codCia, string codCc, string? q = null) =>
         dbContext.ConsultarCentroCuentaFromFunc
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.ConsultarCENTRO_CUENTA({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+                "SELECT * FROM CONTABLE.ConsultarCENTRO_CUENTA({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
                 codCia, codCc, DBNull.Value, DBNull.Value, DBNull.Value, DBNull.Value, DBNull.Value, DBNull.Value
             )
             .Select(entity => new CentroCuentaResultSet
@@ -77,7 +77,7 @@ public class CentroCuentaRepository(
             .Select(entity => new Select2ResultSet
             {
                 id = $"{entity.COD_CIA}|{entity.CENTRO_COSTO}|{entity.CTA_1}|{entity.CTA_2}|{entity.CTA_3}|{entity.CTA_4}|{entity.CTA_5}|{entity.CTA_6}",
-                text = entity.Cta_Catalana + " - " + entity.Descripcion_CTA,
+                text = entity.Cta_CONTABLE + " - " + entity.Descripcion_CTA,
                 more = pageNumber * pageSize < count
             })
             .ToListAsync();
@@ -94,7 +94,7 @@ public class CentroCuentaRepository(
         string cta6
     ) => dbContext.ConsultarCentroCuentaFromFunc
         .FromSqlRaw(
-            "SELECT * FROM CATALANA.ConsultarCENTRO_CUENTA({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
+            "SELECT * FROM CONTABLE.ConsultarCENTRO_CUENTA({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",
             codCia, codCentroCosto, cta1, cta2, cta3, cta4, cta5, cta6
         ).Select(entity => new CentroCuentaResultSet
         {

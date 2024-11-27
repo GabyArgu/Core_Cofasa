@@ -29,7 +29,7 @@ public class UserRepository(
         try {
             return dbContext.UserApp
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.ObtenerUsuarios({0}, {1}, {2})",
+                    "SELECT * FROM CONTABLE.ObtenerUsuarios({0}, {1}, {2})",
                     DBNull.Value, DBNull.Value, DBNull.Value
                 )
                 .Select(entity => new UserAppResultSet {
@@ -54,7 +54,7 @@ public class UserRepository(
         try {
             return dbContext.UserApp
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.ObtenerUsuarios({0}, {1}, {2})",
+                    "SELECT * FROM CONTABLE.ObtenerUsuarios({0}, {1}, {2})",
                     id, DBNull.Value, DBNull.Value
                 )
                 .Select(entity => new UserAppResultSet {

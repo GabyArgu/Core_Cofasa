@@ -48,7 +48,7 @@ namespace CoreContable {
 
             // Configuración de la nueva vista CentroCuentaFormatoView
             modelBuilder.Entity<CentroCuentaFormatoView>()
-                .ToView("vw_centro_cuenta_formato", "CATALANA")
+                .ToView("vw_centro_cuenta_formato", "CONTABLE")
                 .HasKey(x => new { x.COD_CIA, x.CENTRO_COSTO, x.CTA_1, x.CTA_2, x.CTA_3, x.CTA_4, x.CTA_5, x.CTA_6 });
 
             // Configuración de triggers

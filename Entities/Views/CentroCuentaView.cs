@@ -31,5 +31,5 @@ public class CentroCuentaView
     public string? USUARIO_MODIFICACION { get; set; }
 
     public string? Descripcion_CTA { get; set; }
-    public string Cta_Catalana { get; internal set; }
+    public string Cta_CONTABLE { get; internal set; }
 }

@@ -40,7 +40,7 @@ public class DetRepoRepository(
     {
         return dbContext.DetRepositorioFromFuncForDt
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.ObtenerDetallesRepositorio({0}, {1}, {2}, {3}, {4})",
+                "SELECT * FROM CONTABLE.ObtenerDetallesRepositorio({0}, {1}, {2}, {3}, {4})",
                 codCia!=null ? codCia : DBNull.Value,
                 periodo!=null ? periodo : DBNull.Value,
                 tipoDocto!=null ? tipoDocto : DBNull.Value,

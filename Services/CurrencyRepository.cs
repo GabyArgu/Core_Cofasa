@@ -34,7 +34,7 @@ public class CurrencyRepository(
 
     public Task<List<CurrencyResultSet>> GetCurrencies() =>
         dbContext.AcMonMoneda
-            .FromSqlRaw("SELECT * FROM CATALANA.Obtener_Monedas()")
+            .FromSqlRaw("SELECT * FROM CONTABLE.Obtener_Monedas()")
             .Select(entity => new CurrencyResultSet
             {
                 MON_CODIGO = entity.MonCodigo,
@@ -119,7 +119,7 @@ public class CurrencyRepository(
     
     public Task<List<Select2ResultSet>> CallGetCurrencies() =>
         dbContext.AcMonMoneda
-            .FromSql($"SELECT * FROM CATALANA.Obtener_Monedas()")
+            .FromSql($"SELECT * FROM CONTABLE.Obtener_Monedas()")
             .Select(currency => new Select2ResultSet
             {
                 id = currency.MonCodigo,

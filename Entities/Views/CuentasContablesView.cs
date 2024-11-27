@@ -15,7 +15,7 @@ public class CuentasContablesView
     public required string CuentaContable { get; set; }
 
     [MaxLength(10)]
-    public string? Cta_Catalana { get; set; }
+    public string? Cta_CONTABLE { get; set; }
 
     public int? Cta_Nivel { get; set; }
 

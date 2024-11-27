@@ -4,7 +4,7 @@ public class ReporteBalanceComprobacionLista
 {
     public string CuentaContable { get; set; }
 
-    public string Cta_Catalana { get; set; }
+    public string Cta_CONTABLE { get; set; }
 
     public string DescripEsp { get; set; }
 

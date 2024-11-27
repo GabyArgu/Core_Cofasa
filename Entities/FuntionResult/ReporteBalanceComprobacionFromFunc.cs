@@ -7,7 +7,7 @@ public class ReporteBalanceComprobacionFromFunc
 {
     public string CUENTACONTABLE { get; set; }
 
-    public string Cta_Catalana { get; set; }
+    public string Cta_CONTABLE { get; set; }
 
     public string DESCRIP_ESP { get; set; }
 

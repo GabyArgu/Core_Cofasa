@@ -379,7 +379,7 @@ public class RepositoryController(
                     }
 
                     var coreAccountNumber = await dmgCuentasRepository
-                        .GetCoreContableAccountFromCatalanaAccount(currentCia, currentRow.CUENTA_CONTABLE);
+                        .GetCoreContableAccountFromCONTABLEAccount(currentCia, currentRow.CUENTA_CONTABLE);
 
                     var detailData = new DetRepositorioDto
                     {

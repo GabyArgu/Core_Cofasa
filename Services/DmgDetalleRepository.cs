@@ -26,7 +26,7 @@ public class DmgDetalleRepository(
     {
         return dbContext.DmgDetalle
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.ObtenerDetalleMayorizado({0}, {1}, {2}, {3})",
+                "SELECT * FROM CONTABLE.ObtenerDetalleMayorizado({0}, {1}, {2}, {3})",
                 codCia!=null ? codCia : DBNull.Value,
                 periodo!=null ? periodo : DBNull.Value,
                 tipoDocto!=null ? tipoDocto : DBNull.Value,

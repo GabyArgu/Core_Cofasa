@@ -45,7 +45,7 @@ O se puede configurar EF para que use un nivel de compatibilidad especifico, par
 ```sql
 SELECT compatibility_level
 FROM sys.databases
-WHERE name = 'CORE_CATALANA';
+WHERE name = 'CORE_CONTABLE';
 ```
 
 Y luego se setea el nivel de compatibilidad en el archivo `Program.cs`:

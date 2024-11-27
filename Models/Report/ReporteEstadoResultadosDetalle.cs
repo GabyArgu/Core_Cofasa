@@ -4,7 +4,7 @@ namespace CoreContable.Models.Report {
     public class ReporteEstadoResultadosDetalle {
         public string clase_saldo { get; set; }      // Coincide con clase_saldo en la función
         public string Nombre_Cia { get; set; }       // Coincide con Nombre_Cia en la función
-        public string Cta_Catalana { get; set; }     // Coincide con Cta_Catalana en la función
+        public string Cta_CONTABLE { get; set; }     // Coincide con Cta_CONTABLE en la función
         public string Descrip_Esp { get; set; }      // Coincide con Descrip_Esp en la función
         public string grupo_cta { get; set; }        // Coincide con grupo_cta en la función
         public string Grupo_Cta { get; internal set; }

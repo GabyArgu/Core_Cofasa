@@ -41,7 +41,7 @@ public class ReportsRepository(
     public Task<List<ReportePolizaDiarioFromFuncResultSet>> GetDataForPolizaDiario (string codCia, string tipoDocto, int numPoliza, int periodo) {
         try {
             var result = dbContext.ReportePolizaDiarioFromFunc
-                .FromSqlRaw ("SELECT * FROM CATALANA.Rpt_PolizaDiario({0}, {1}, {2}, {3})",
+                .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_PolizaDiario({0}, {1}, {2}, {3})",
                     codCia, tipoDocto, numPoliza, periodo)
                 .Select (entity => new ReportePolizaDiarioFromFuncResultSet {
                     COD_CIA = entity.COD_CIA,
@@ -86,7 +86,7 @@ public class ReportsRepository(
     int numPoliza, int periodo ) {
         try {
             var result = dbContext.ReportePolizaMayorFromFunc
-                .FromSqlRaw ("SELECT * FROM CATALANA.Rpt_PolizaMayor({0}, {1}, {2}, {3})", codCia, tipoDocto, numPoliza, periodo)
+                .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_PolizaMayor({0}, {1}, {2}, {3})", codCia, tipoDocto, numPoliza, periodo)
                 .Select (entity => new ReportePolizaDiarioFromFuncResultSet {
                     COD_CIA = entity.COD_CIA,
                     NombreCompania = entity.NombreCompania,
@@ -132,7 +132,7 @@ public class ReportsRepository(
         try {
             return dbContext.ReporteHistoricoCuentaFromFunc
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.Rpt_HistoricoCuenta({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})",
+                    "SELECT * FROM CONTABLE.Rpt_HistoricoCuenta({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})",
                     codCia, centroCosto, fechaInicio, fechaFin, cta1, cta2, cta3, cta4, cta5, cta6
                 )
                 .Select(entity => new ReporteHistoricoCuentaFromFuncResultSet {
@@ -174,7 +174,7 @@ public class ReportsRepository(
             // Ejecución de la función Rpt_BalanceComprobacion
             return dbContext.ReporteBalanceComprobacionFromFunc
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.Rpt_BalanceComprobacion({0}, {1}, {2}, {3})",
+                    "SELECT * FROM CONTABLE.Rpt_BalanceComprobacion({0}, {1}, {2}, {3})",
                     codCia, fechaInicio, fechaFin , level
                 )
                 .Select(entity => new ReporteBalanceComprobacionResultSet {
@@ -184,7 +184,7 @@ public class ReportsRepository(
                     DescripEsp = entity.DESCRIP_ESP,
                     Nivel = entity.Nivel ?? 1, // Nivel contable
                     GRUPO_CTA = entity.GRUPO_CTA,
-                    Cta_Catalana = entity.Cta_Catalana,
+                    Cta_CONTABLE = entity.Cta_CONTABLE,
                     Sub_Grupo = entity.Sub_Grupo,
                     Clase_saldo = entity.Clase_saldo,
                     SaldoAnterior = entity.SALDO_ANT ?? 0,
@@ -205,7 +205,7 @@ public class ReportsRepository(
         try {
             var result = await dbContext.Set<ReporteBalanceGralFromFunc>()
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.Rpt_Balance_Gral(@p0, @p1)",
+                    "SELECT * FROM CONTABLE.Rpt_Balance_Gral(@p0, @p1)",
 
                     fecha, codCia
                 )
@@ -223,7 +223,7 @@ public class ReportsRepository(
     string codCia, string centroCosto, string fechaInicio, string fechaFin, int cta1, int cta2, int cta3, int cta4, int cta5, int cta6) {
         try {
             var result = await dbContext.ReportePolizaMayorFromFunc
-                .FromSqlRaw ("SELECT * FROM CATALANA.Rpt_PolizaMayor_Aux({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})",
+                .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_PolizaMayor_Aux({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})",
                     codCia, centroCosto, fechaInicio, fechaFin, cta1, cta2, cta3, cta4, cta5, cta6)
                 .Select (entity => new ReporteDiarioMayorFromFunc {
                     COD_CIA = entity.COD_CIA,
@@ -267,7 +267,7 @@ public class ReportsRepository(
     public async Task<List<ReporteEstadoResultadosDetalle>> GetDataForEstadoResultados (string codCia, string startDate, string endDate) {
         try {
             var data = await dbContext.ReporteEstadoResultadosFromFunc
-                .FromSqlRaw ("SELECT * FROM Catalana.Rpt_Saldos_Cta_Resultados(@p0, @p1, @p2)",
+                .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_Saldos_Cta_Resultados(@p0, @p1, @p2)",
                             startDate, endDate, codCia)  
 
                 .ToListAsync ( );

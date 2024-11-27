@@ -28,7 +28,7 @@ public abstract class CC
 
     // NOMBRES DE TABLAS Y SCHEMA.
 
-    public const string SCHEMA = "CATALANA";
+    public const string SCHEMA = "CONTABLE";
     // public const string SCHEMA = "dbo";
 
     public const string AC_MON_MONEDA = "ac_mon_moneda";

@@ -47,7 +47,7 @@ public class ContaRepoRepository(
     public Task<List<RepositorioResultSet>> GetAllBy(string? codCia = null, int? periodo = null, string? tipoDocto = null,
         int? numPoliza = null, int? pageSize = null, int? pageNumber = null, string? searchTerm = null) => dbContext.ObtenerDatosRepositorioResult
         .FromSqlRaw(
-            "SELECT * FROM CATALANA.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+            "SELECT * FROM CONTABLE.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
             codCia!=null ? codCia : DBNull.Value,
             periodo!=null ? periodo : DBNull.Value,
             tipoDocto!=null ? tipoDocto : DBNull.Value,
@@ -158,7 +158,7 @@ public class ContaRepoRepository(
         {
             return dbContext.ObtenerDatosRepositorioResult
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                    "SELECT * FROM CONTABLE.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
                     codCia!=null ? codCia : DBNull.Value,
                     periodo!=null ? periodo : DBNull.Value,
                     tipoDocto!=null ? tipoDocto : DBNull.Value,

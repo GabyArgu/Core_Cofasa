@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using CoreContable.Utils;
 
 namespace CoreContable.Entities {
-    [Table("centro_cuenta", Schema = "CATALANA")]
+    [Table("centro_cuenta", Schema = "CONTABLE")]
     public class CentroCuentaFormato {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

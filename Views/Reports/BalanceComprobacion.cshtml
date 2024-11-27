@@ -101,7 +101,7 @@
                 @foreach (var cuenta in @Model.CuentasUnificadas)
                 {
                     <tr>
-                        <td><p style="text-align: center;">@cuenta.Cta_Catalana</p></td>
+                        <td><p style="text-align: center;">@cuenta.Cta_CONTABLE</p></td>
                         <td><p>@cuenta.DescripEsp</p></td>
                         <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
                         <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>

@@ -42,7 +42,7 @@ public class SecurityRepository(
     public async Task<List<ValidateUserOnLoginFromFunctionResult>?> GetLoginUser(string userName, string codCia) {
         try {
             return await dbContext.ValidateUserOnLoginFromFunctionResult
-                .FromSql($"SELECT * FROM CATALANA.validate_user_on_login({userName}, {codCia})")
+                .FromSql($"SELECT * FROM CONTABLE.validate_user_on_login({userName}, {codCia})")
                 .ToListAsync();
         }
         catch (Exception e) {
@@ -237,7 +237,7 @@ public class SecurityRepository(
         try {
             return dbContext.UserMenuPermissionFromFunctionResult
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.get_user_permissions_by_cia({0}, {1}, {2})",
+                    "SELECT * FROM CONTABLE.get_user_permissions_by_cia({0}, {1}, {2})",
                     username, ciaCode, perFatherId != null ? perFatherId : DBNull.Value
                 )
                 .ToListAsync();

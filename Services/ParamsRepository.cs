@@ -38,7 +38,7 @@ public class ParamsRepository(
 ) : IParamsRepository
 {
     public Task<ContaParamsResultSet?> GetContaParamsByCia(string codCia) => dbContext.DmgParam
-        .FromSql($"SELECT * FROM CATALANA.ConsultarDMGParam({codCia})")
+        .FromSql($"SELECT * FROM CONTABLE.ConsultarDMGParam({codCia})")
         .Select(param => new ContaParamsResultSet(param))
         .FirstOrDefaultAsync();
 
@@ -198,7 +198,7 @@ public class ParamsRepository(
 
     public Task<DmgPeriodResultSet?> GetPeriodParamsByCiaAndPeriod(string codCia, int period) =>
         dbContext.DmgPeriod
-            .FromSql($"SELECT * FROM CATALANA.ConsultarPeriodo({codCia}, {period})")
+            .FromSql($"SELECT * FROM CONTABLE.ConsultarPeriodo({codCia}, {period})")
             .Select(entity => new DmgPeriodResultSet
             {
                 CodCia = entity.COD_CIA,

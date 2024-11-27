@@ -25,13 +25,13 @@ public class CentroCuentaFormatoRepository : ICentroCuentaFormatoRepository {
 
     public Task<List<CentroCuentaFormatoResultSet>> GetAllByCia(string codCia, string codCc, string? q = null) =>
         _dbContext.Set<CentroCuentaFormatoResultSet>()
-            .FromSqlRaw("SELECT * FROM CATALANA.centro_cuenta WHERE COD_CIA = {0} AND CENTRO_COSTO = {1}", codCia, codCc)
+            .FromSqlRaw("SELECT * FROM CONTABLE.centro_cuenta WHERE COD_CIA = {0} AND CENTRO_COSTO = {1}", codCia, codCc)
             .ToListAsync();
 
     public Task<CentroCuentaFormatoResultSet?> GetOne(string codCia, string centroCosto, string cta1, string cta2, string cta3, string cta4, string cta5, string cta6) {
         return _dbContext.Set<CentroCuentaFormatoResultSet>()
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.centro_cuenta WHERE COD_CIA = {0} AND CENTRO_COSTO = {1} AND CTA_1 = {2} AND CTA_2 = {3} AND CTA_3 = {4} AND CTA_4 = {5} AND CTA_5 = {6} AND CTA_6 = {7}",
+                "SELECT * FROM CONTABLE.centro_cuenta WHERE COD_CIA = {0} AND CENTRO_COSTO = {1} AND CTA_1 = {2} AND CTA_2 = {3} AND CTA_3 = {4} AND CTA_4 = {5} AND CTA_5 = {6} AND CTA_6 = {7}",
                 codCia, centroCosto, cta1, cta2, cta3, cta4, cta5, cta6
             ).FirstOrDefaultAsync();
     }

@@ -84,7 +84,7 @@ public class DmgDoctosRepository(
         try
         {
             return dbContext.DmgDoctos
-                .FromSqlRaw("SELECT * FROM CATALANA.ConsultarDocumentos({0}, {1})", codCia, DBNull.Value)
+                .FromSqlRaw("SELECT * FROM CONTABLE.ConsultarDocumentos({0}, {1})", codCia, DBNull.Value)
                 .Select(entity => new DmgDoctosResultSet()
                 {
                     COD_CIA = entity.COD_CIA,
@@ -113,7 +113,7 @@ public class DmgDoctosRepository(
         try
         {
             return dbContext.DmgDoctos
-                .FromSqlRaw("SELECT * FROM CATALANA.ConsultarDocumentos({0}, {1})", codCia, doctoType)
+                .FromSqlRaw("SELECT * FROM CONTABLE.ConsultarDocumentos({0}, {1})", codCia, doctoType)
                 .Select(entity => new DmgDoctosResultSet()
                 {
                     COD_CIA = entity.COD_CIA,

@@ -71,7 +71,7 @@ public class CiasRepository(
             .ToListAsync();
 
     public Task<List<CiaResultSet>> CallGetCias(string? filter = "0") => dbContext.Cias
-        .FromSqlRaw("SELECT * FROM CATALANA.Obtener_Empresas({0})", filter)
+        .FromSqlRaw("SELECT * FROM CONTABLE.Obtener_Empresas({0})", filter)
         .Select(cia => new CiaResultSet
         {
             Cod = cia.CodCia,
@@ -295,7 +295,7 @@ public class CiasRepository(
         try
         {
             var command = dbContext.Database.GetDbConnection().CreateCommand();
-            command.CommandText = "SELECT [CATALANA].[Obtener_Codigo_Cia] ()";
+            command.CommandText = "SELECT [CONTABLE].[Obtener_Codigo_Cia] ()";
 
             if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync();
             var result = (string)(await command.ExecuteScalarAsync())! ?? "";
@@ -314,8 +314,8 @@ public class CiasRepository(
     public Task<CiaResultSet?> GetOneCia(string ciaCod) {
         try {
             var result = dbContext.Cias
-                // .FromSql($"SELECT * FROM CATALANA.ObtenerDatosEmpresa({ciaCod})")
-                .Where(cia => cia.CodCia == ciaCod)
+                // .FromSql($"SELECT * FROM CONTABLE.ObtenerDatosEmpresa({ciaCod})")
+                .Where (cia => cia.CodCia == ciaCod)
                 .Select(cia => CiaResultSet.EntityToResultSet(cia))
                 .FirstOrDefaultAsync();
             return result;

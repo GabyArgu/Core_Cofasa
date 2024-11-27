@@ -3,7 +3,7 @@ namespace CoreContable.Models.ResultSet;
 public class ReporteBalanceComprobacionResultSet {
     public string CuentaContable { get; set; } // CUENTACONTABLE
 
-    public string Cta_Catalana { get; set; } // CUENTACONTABLE
+    public string Cta_CONTABLE { get; set; } // CUENTACONTABLE
 
     public int CTA_NIVEL { get; set; } // CTA_NIVEL (nivel de la cuenta contable)
 

@@ -17,7 +17,7 @@ public interface IDmgCuentasRepository
 
     Task<string> GetName(GetAccountNameDto data);
 
-    Task<string> GetCoreContableAccountFromCatalanaAccount(string codCia, string catalanaAccount);
+    Task<string> GetCoreContableAccountFromCONTABLEAccount(string codCia, string CONTABLEAccount);
 }
 
 public class DmgCuentasRepository(
@@ -27,7 +27,7 @@ public class DmgCuentasRepository(
 {
     public Task<List<DmgCuentasResultSet>> GetAllByCia(string codCia) =>
         dbContext.DmgCuentas
-            .FromSqlRaw("SELECT * FROM CATALANA.Obtener_Cuentas({0})", codCia)
+            .FromSqlRaw("SELECT * FROM CONTABLE.Obtener_Cuentas({0})", codCia)
             .Select(entity => new DmgCuentasResultSet
             {
                 COD_CIA = entity.COD_CIA,
@@ -44,7 +44,7 @@ public class DmgCuentasRepository(
     public Task<DmgCuentasResultSet?> GetOne(GetAccountNameDto data) =>
         dbContext.DmgCuentas
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.Obtener_Cuenta({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                "SELECT * FROM CONTABLE.Obtener_Cuenta({0}, {1}, {2}, {3}, {4}, {5}, {6})",
                 data.CodCia,
                 data.Cta1,
                 data.Cta2,
@@ -141,7 +141,7 @@ public class DmgCuentasRepository(
 
         try
         {
-            command.CommandText = "SELECT CATALANA.nom_cuenta (@p_codcia, @p_cta1, @p_cta2, @p_cta3, @p_cta4, @p_cta5, @p_cta6)";
+            command.CommandText = "SELECT CONTABLE.nom_cuenta (@p_codcia, @p_cta1, @p_cta2, @p_cta3, @p_cta4, @p_cta5, @p_cta6)";
             if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync();
 
             command.Parameters.Add(new SqlParameter("@p_codcia", SqlDbType.VarChar) { Value = data.CodCia });
@@ -165,18 +165,18 @@ public class DmgCuentasRepository(
         }
     }
 
-    public async Task<string> GetCoreContableAccountFromCatalanaAccount(string codCia, string catalanaAccount)
+    public async Task<string> GetCoreContableAccountFromCONTABLEAccount(string codCia, string CONTABLEAccount)
     {
         try
         {
             var result = await dbContext.CuentasContablesView
-                .Where(entity => entity.Cta_Catalana == catalanaAccount && entity.COD_CIA == codCia)
+                .Where(entity => entity.Cta_CONTABLE == CONTABLEAccount && entity.COD_CIA == codCia)
                 .FirstOrDefaultAsync();
             return result?.CuentaContable ?? "";
         } catch (Exception e)
         {
             logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(DmgCuentasRepository), nameof(GetCoreContableAccountFromCatalanaAccount));
+                nameof(DmgCuentasRepository), nameof(GetCoreContableAccountFromCONTABLEAccount));
             return "";
         }
     }

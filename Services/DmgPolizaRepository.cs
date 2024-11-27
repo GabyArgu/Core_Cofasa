@@ -40,7 +40,7 @@ public class DmgPolizaRepository(
     {
         return dbContext.ObtenerDatosDmgPolizaFromFunc
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.ObtenerDatosdmgpoliza({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                "SELECT * FROM CONTABLE.ObtenerDatosdmgpoliza({0}, {1}, {2}, {3}, {4}, {5}, {6})",
                 codCia!=null ? codCia : DBNull.Value,
                 periodo!=null ? periodo : DBNull.Value,
                 tipoDocto!=null ? tipoDocto : DBNull.Value,
@@ -136,7 +136,7 @@ public class DmgPolizaRepository(
         {
             return dbContext.ObtenerDatosDmgPolizaFromFunc
                 .FromSqlRaw(
-                    "SELECT * FROM CATALANA.ObtenerDatosdmgpoliza({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                    "SELECT * FROM CONTABLE.ObtenerDatosdmgpoliza({0}, {1}, {2}, {3}, {4}, {5}, {6})",
                     codCia!=null ? codCia : DBNull.Value,
                     periodo!=null ? periodo : DBNull.Value,
                     tipoDocto!=null ? tipoDocto : DBNull.Value,

@@ -605,7 +605,7 @@ public class ReportsController(
                     NombreCia = cuenta.NombreCia,
                     SaldoDelMes = getSaldoDelMesForBalanceComprobacion(cuenta),
                     CTA_NIVEL = cuenta.CTA_NIVEL,
-                    Cta_Catalana = cuenta.Cta_Catalana,
+                    Cta_CONTABLE = cuenta.Cta_CONTABLE,
                     // Determina el tipo de cuenta
                     TipoCuenta = cuenta.Clase_saldo == CC.SALDO_TIPO_DEUDOR ? "Activo" : "Pasivo"
                 };
@@ -648,7 +648,7 @@ public class ReportsController(
             NombreCia = cuenta.NombreCia,
             SaldoDelMes = getSaldoDelMesForBalanceComprobacion(cuenta),
             CTA_NIVEL = cuenta.CTA_NIVEL,
-            Cta_Catalana = cuenta.Cta_Catalana,
+            Cta_CONTABLE = cuenta.Cta_CONTABLE,
             TipoCuenta = cuenta.Clase_saldo == CC.SALDO_TIPO_DEUDOR ? "Activo" : "Pasivo"
         };
     }
@@ -727,7 +727,7 @@ public class ReportsController(
             // Llenado de datos
             foreach (var cuenta in reportData)
             {
-                worksheet.Cell(currentRow, 2).Value = cuenta.Cta_Catalana;
+                worksheet.Cell(currentRow, 2).Value = cuenta.Cta_CONTABLE;
                 worksheet.Cell(currentRow, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 worksheet.Cell(currentRow, 3).Value = cuenta.DescripEsp;
                 worksheet.Cell(currentRow, 4).Value = cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString("#,##0.00");
@@ -781,11 +781,11 @@ public class ReportsController(
     string mesInicio = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fechaInicioDt.ToString("MMMM", new CultureInfo("es-ES")));
 
     // Calcular totales
-    decimal totalIngresosVentas = reportData.Where(d => d.Cta_Catalana.StartsWith("51")).Sum(d => d.Saldo);
-    decimal totalGastos = reportData.Where(d => d.Cta_Catalana.StartsWith("4")).Sum(d => d.Saldo);
-    decimal resultadoBruto = totalIngresosVentas - reportData.Where(d => d.Cta_Catalana.StartsWith("42")).Sum(d => d.Saldo);
-    decimal resultadoOperacion = resultadoBruto - reportData.Where(d => d.Cta_Catalana.StartsWith("44")).Sum(d => d.Saldo);
-    decimal resultadoIntegralTotal = reportData.Where (d => d.Cta_Catalana.StartsWith ("5")).Sum (d => d.Saldo) - totalGastos;
+    decimal totalIngresosVentas = reportData.Where(d => d.Cta_CONTABLE.StartsWith("51")).Sum(d => d.Saldo);
+    decimal totalGastos = reportData.Where(d => d.Cta_CONTABLE.StartsWith("4")).Sum(d => d.Saldo);
+    decimal resultadoBruto = totalIngresosVentas - reportData.Where(d => d.Cta_CONTABLE.StartsWith("42")).Sum(d => d.Saldo);
+    decimal resultadoOperacion = resultadoBruto - reportData.Where(d => d.Cta_CONTABLE.StartsWith("44")).Sum(d => d.Saldo);
+    decimal resultadoIntegralTotal = reportData.Where (d => d.Cta_CONTABLE.StartsWith ("5")).Sum (d => d.Saldo) - totalGastos;
 
         // Crear archivo Excel
         using (var workbook = new XLWorkbook ( )) {
@@ -826,7 +826,7 @@ public class ReportsController(
         };
 
             foreach (var titulo in titulos) {
-                decimal total = reportData.Where (d => d.Cta_Catalana.StartsWith (titulo.Key)).Sum (d => d.Saldo);
+                decimal total = reportData.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).Sum (d => d.Saldo);
 
                 // Fila de espacio
                 worksheet.Cell (currentRow, 1).Value = "";  // Fila en blanco entre meses y más/menos
@@ -855,7 +855,7 @@ public class ReportsController(
                 currentRow++;
 
                 // Detalles por cuenta
-                foreach (var cuenta in reportData.Where (d => d.Cta_Catalana.StartsWith (titulo.Key)).ToList ( )) {
+                foreach (var cuenta in reportData.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).ToList ( )) {
                     worksheet.Cell (currentRow, 2).Value = cuenta.Descrip_Esp;
                     worksheet.Cell (currentRow, 3).Value = cuenta.Saldo.ToString ("#,##0.00");
                     worksheet.Cell (currentRow, 6).Value = cuenta.Saldo.ToString ("#,##0.00");

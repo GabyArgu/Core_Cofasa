@@ -18,11 +18,11 @@
         .Sum (d => d.Saldo);
 
     decimal totalIngresosT = Model.Detalles
-        .Where (d => d.Cta_Catalana.StartsWith ("5"))
+        .Where (d => d.Cta_CONTABLE.StartsWith ("5"))
         .Sum (d => d.Saldo);
 
     decimal totalGastosT = Model.Detalles
-        .Where (d => d.Cta_Catalana.StartsWith ("4"))
+        .Where (d => d.Cta_CONTABLE.StartsWith ("4"))
         .Sum (d => d.Saldo);
 
     // Luego, calcula el resultado integral total
@@ -159,11 +159,11 @@
                 { "46", "OTROS GASTOS" },
                 };
 
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.Contains ("51")).ToList ( ))
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.Contains ("51")).ToList ( ))
                     {
                         totalIngresosVentas += detalle.Saldo;
                     }
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.StartsWith ("4")).ToList ( ))
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.StartsWith ("4")).ToList ( ))
                     {
                         totalGastos += detalle.Saldo;
                     }
@@ -182,7 +182,7 @@
                             <td colspan="7"><p>INGRESOS, COSTOS Y GASTOS DE NO OPERACIÓN</p></td>
                         </tr>
                     }
-                    foreach (var detalle2 in Model.Detalles.Where (d => d.Cta_Catalana.Substring (0, 2) == titulo.Key).ToList ( ))
+                    foreach (var detalle2 in Model.Detalles.Where (d => d.Cta_CONTABLE.Substring (0, 2) == titulo.Key).ToList ( ))
                     {
                         total += detalle2.Saldo;
                     }
@@ -199,7 +199,7 @@
                         <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)</p></td>
                     </tr>
 
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.Substring (0, 2) == titulo.Key).ToList ( ))
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.Substring (0, 2) == titulo.Key).ToList ( ))
                     {
                         <tr>
                             <td><p>@detalle.Descrip_Esp</p></td>

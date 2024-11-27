@@ -32,7 +32,7 @@ public class CentroCostoRepository(
         if (query.IsNullOrEmpty())
         {
             return dbContext.CentroCosto
-                    .FromSqlRaw("SELECT * FROM CATALANA.ConsultarCentro_Costo({0}, {1})", codCia, DBNull.Value)
+                    .FromSqlRaw("SELECT * FROM CONTABLE.ConsultarCentro_Costo({0}, {1})", codCia, DBNull.Value)
                 .Select(entity => new CentroCostoResultSet
                 {
                     COD_CIA = entity.COD_CIA,
@@ -97,7 +97,7 @@ public class CentroCostoRepository(
     public Task<CentroCostoResultSet?> GetOne(string codCia, string codCentroCosto) =>
         dbContext.CentroCosto
             .FromSqlRaw(
-                "SELECT * FROM CATALANA.ConsultarCentro_Costo({0}, {1})", codCia,codCentroCosto
+                "SELECT * FROM CONTABLE.ConsultarCentro_Costo({0}, {1})", codCia,codCentroCosto
             ).Select(entity => new CentroCostoResultSet
             {
                 COD_CIA = entity.COD_CIA,
