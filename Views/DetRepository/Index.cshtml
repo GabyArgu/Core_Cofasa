@@ -1,0 +1,118 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+<div class="card card-outline card-primary col-md-12">
+    <div class="card-header">
+        <h3 class="card-title">ENCABEZADO</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <partial name="../Repository/RepositoryForm"/>
+        </div>
+    </div>
+</div>
+
+<div class="card card-outline card-primary mt-5 col-md-12">
+    <div class="card-header">
+        <h3 class="card-title">DETALLE</h3>
+    </div>
+
+    <div class="card-body">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD)
+             || SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_UPDATE))
+        {
+            <div class="row"><partial name="../DetRepository/DetRepositoryForm"/></div>
+        }
+
+        <div class="row mt-3">
+            <div class="col-md-12 table-responsive">
+                <table id="detRepoDataTable" class="" style="width:100%!important;">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">#</th> @* CORRELAT *@
+                        <th rowspan="2">CENTRO_COSTO_ID</th>
+                        <th rowspan="2">CENTRO_CONTABLE_ID</th>
+                        <th rowspan="2">CENTRO_CONTABLE_TEXT</th>
+                        <th rowspan="2"><center>Centro costo</center></th> @* NUM_POLIZA *@
+                        <th colspan="7"><center>Cuenta contable</center></th> @* CTA_1, CTA_2, CTA_3, CTA_4, CTA_5, CTA_6 *@
+                        <th rowspan="2">Concepto</th> @* CONCEPTO *@
+                        <th rowspan="2">Cargos</th> @* CARGO *@
+                        <th rowspan="2">Abonos</th> @* ABONO *@
+                        <th rowspan="2">Acciones</th>
+                    </tr>
+                    <tr>
+                        <th>#1</th>
+                        <th>#2</th>
+                        <th>#3</th>
+                        <th>#4</th>
+                        <th>#5</th>
+                        <th>#6</th>
+                        <th>Nombre</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="13" style="text-align:right">TOTAL:</th>
+                        <th id="totalCargos"></th>
+                        <th id="totalAbonos"></th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD)
+     || SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_UPDATE))
+{
+    <div class="row mt-5 mb-1">
+        <div class="col-12">
+            <button class="btn btn-primary btn-md float-right" id="repositoryFormAddAllButton" type="submit">
+                <i class="fa fa-floppy-o"></i>&nbsp;
+                <span id="repositoryFormAddButtonText">Guardar todo</span>
+            </button>
+        </div>
+    </div>
+}
+
+<textarea id="detRepositoryDataTableActionsContainer" style="display:none;">
+     <div class="btn-group" data-row="{data-child}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD))
+        {
+            <button class='btn btn-warning btn-sm button-edit' data-action="editdetrepo" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+        }
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_UPDATE))
+        {
+            <button class="btn btn-danger btn-sm button-cancel" data-action="deletedetrepo" title="Eliminar">
+                <i class="fa fa-times"></i>
+            </button>
+        }
+    </div>
+</textarea>
+
+<textarea id="detRepositoryDataTableActionsContainerOffline" style="display:none;">
+     <div class="btn-group" data-row="{data-child}" style="">
+         @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD))
+         {
+            <button class='btn btn-warning btn-sm button-edit-det-off' data-action="editRetRepoOffline" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+         }
+         @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_UPDATE))
+         {
+            <button class="btn btn-danger btn-sm button-delete-det-off" data-action="deleteDetRepoOffline" title="Eliminar">
+                <i class="fa fa-times"></i>
+            </button>
+         }
+    </div>
+</textarea>

@@ -1,0 +1,121 @@
+@model CoreContable.Models.Report.ReporteHistoricoCuentas
+
+@{
+    Layout = null;
+    var Cabecera = Model.Cabecera;
+    var Detalles = Model.Detalles;
+    var Titulos = Model.Titulos;
+    decimal saldoAnterior = Titulos.FirstOrDefault()?.SaldoAnterior ?? 0; // Obtiene el saldo anterior del primer registro.
+    decimal saldoAcumulado = saldoAnterior; // Inicializa saldoAcumulado con el saldo anterior
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Cuentas</title>
+    <style>
+        body { font-family: 'Calibri', sans-serif; }
+        p.title { font-weight: bold; font-size: 20px; margin: 0; }
+
+        p.sub-title {
+            font-size: 16px;
+            margin: 0;
+            padding-top: 6px;
+        }
+        p { font-size: 14px; margin: 0; padding: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        th, td { padding: 8px; text-align: left; word-wrap: break-word; }
+        th { background-color: #f0f0f0; font-size: 14px; }
+        td.money { text-align: right; }
+        .bottom-line { border: 0.9px solid black; font-weight: bold; background-color: #f0f0f0; }
+        .center { text-align: center; }
+
+        .dataTable { border: 0.9px solid black; }
+
+        /* Definición de las columnas */
+        .col-asiento { width: 10%; border: 0.9px solid black; }
+        .col-fecha { width: 10%; border: 0.9px solid black; }
+        .col-referencia { width: 45%; border: 0.9px solid black; }
+        .col-saldo, .col-cargos, .col-abonos { width: 10%; border: 0.9px solid black; }
+        .bold { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container" id="reportContainer">
+        <center>
+            <p class="title">@Cabecera.NombreCia</p>
+            <p class="sub-title">(Expresado en dólares US$)</p>
+        </center>
+
+        <table>
+            <tr>
+                <td style="width: 50%;"><p>Movimiento de la cuenta: @Cabecera.NumeroCuenta - @Cabecera.NombreCuenta</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        Movimientos entre:
+                        @(DateTime.ParseExact(Cabecera.FechaInicio, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture).ToString("dd/MM/yyyy"))
+                        y
+                        @(DateTime.ParseExact(Cabecera.FechaFin, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture).ToString("dd/MM/yyyy"))
+                    </p>
+
+
+                </td>
+
+            </tr>
+        </table>
+
+        <!-- Tabla de detalles -->
+        <table class="dataTable">
+            <thead>
+                <tr>
+                    <th class="center col-fecha">FECHA</th>
+                    <th class="center col-asiento">POLIZA</th>
+                    <th class="center col-asiento">TIPO TRANSACCIÓN</th>
+                    <th class="center col-fecha">CENTRO DE COSTO</th>
+                    <th class="center col-referencia">DETALLE</th>
+                    <th class="center col-cargos">CARGOS</th>
+                    <th class="center col-abonos">ABONOS</th>
+                    <th class="center col-saldo">SALDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Agregar fila de saldo inicial como primera fila -->
+                <tr>
+                    <td class="center col-fecha bold" colspan="3">@Cabecera.NumeroCuenta</td>
+                    <td class="col-referencia bold" colspan="3">@Cabecera.NombreCuenta</td>
+                    <td class="money col-abonos bold">Saldo Inicial:</td>
+                    <td class="money col-saldo bold">@MoneyUtils.FormatStringFromDecimalTwoDecimals(saldoAnterior)</td>
+                </tr>
+                @foreach (var detalle in Detalles)
+                {
+                    saldoAcumulado += (decimal)(detalle.Cargo.GetValueOrDefault ( ) - detalle.Abono.GetValueOrDefault ( ));
+                    <tr>
+                        <td class="center col-fecha">@detalle.Fecha</td>
+                        <td class="center col-asiento">@detalle.Asiento</td>
+                        <td class="center col-fecha">@detalle.TipoDocto</td>
+                        <td class="center col-asiento">@detalle.Centro</td>
+                        <td class="col-referencia">@detalle.Concepto</td>
+                        <td class="money col-cargos">@MoneyUtils.FormatStringFromDoubleTwoDecimals(detalle.Cargo)</td>
+                        <td class="money col-abonos">@MoneyUtils.FormatStringFromDoubleTwoDecimals(detalle.Abono)</td>
+                        <td class="money col-saldo">@MoneyUtils.FormatStringFromDecimalTwoDecimals(saldoAcumulado)</td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="bottom-line" style="text-align:right">Totales:</td>
+                    <td class="money bottom-line">@MoneyUtils.FormatStringFromDoubleTwoDecimals(Detalles.Sum(d => d.Cargo))</td>
+                    <td class="money bottom-line">@MoneyUtils.FormatStringFromDoubleTwoDecimals(Detalles.Sum(d => d.Abono))</td>
+                    <td class="money bottom-line"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+</html>

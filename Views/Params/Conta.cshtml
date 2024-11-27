@@ -1,0 +1,215 @@
+@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Parámetros Contables";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"/>
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true"/>
+}
+
+@section BreadCrumb{
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form role="form" id="contaParamsForm">
+            <input type="hidden" value="@SecurityRepository.GetSessionCiaCode()" id="COD_CIA" name="COD_CIA">
+
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 30%;"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="width: 30%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Cuenta de caja (CxC)</td>
+                    <td><input type="text" class="form-control" id="DT1" name="DT1" /></td>
+                    <td><input type="text" class="form-control" id="DT2" name="DT2" /></td>
+                    <td><input type="text" class="form-control" id="DT3" name="DT3" /></td>
+                    <td><input type="text" class="form-control" id="DT4" name="DT4" /></td>
+                    <td><input type="text" class="form-control" id="DT5" name="DT5" /></td>
+                    <td><input type="text" class="form-control" id="DT6" name="DT6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_DEPOSITOS" name="NOM_DEPOSITOS" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Cuentas por cobrar clientes</td>
+                    <td><input type="text" class="form-control" id="CXC1" name="CXC1" /></td>
+                    <td><input type="text" class="form-control" id="CXC2" name="CXC2" /></td>
+                    <td><input type="text" class="form-control" id="CXC3" name="CXC3" /></td>
+                    <td><input type="text" class="form-control" id="CXC4" name="CXC4" /></td>
+                    <td><input type="text" class="form-control" id="CXC5" name="CXC5" /></td>
+                    <td><input type="text" class="form-control" id="CXC6" name="CXC6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_CXC" name="NOM_CXC" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Cuentas por pagar proveedores</td>
+                    <td><input type="text" class="form-control" id="CXP1" name="CXP1" /></td>
+                    <td><input type="text" class="form-control" id="CXP2" name="CXP2" /></td>
+                    <td><input type="text" class="form-control" id="CXP3" name="CXP3" /></td>
+                    <td><input type="text" class="form-control" id="CXP4" name="CXP4" /></td>
+                    <td><input type="text" class="form-control" id="CXP5" name="CXP5" /></td>
+                    <td><input type="text" class="form-control" id="CXP6" name="CXP6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_CXP" name="NOM_CXP" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Proyectos - ordenes en proceso</td>
+                    <td><input type="text" class="form-control" id="EPF1" name="EPF1" /></td>
+                    <td><input type="text" class="form-control" id="EPF2" name="EPF2" /></td>
+                    <td><input type="text" class="form-control" id="EPF3" name="EPF3" /></td>
+                    <td><input type="text" class="form-control" id="EPF4" name="EPF4" /></td>
+                    <td><input type="text" class="form-control" id="EPF5" name="EPF5" /></td>
+                    <td><input type="text" class="form-control" id="EPF6" name="EPF6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_EPF" name="NOM_EPF" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>I.V.A. Ventas</td>
+                    <td><input type="text" class="form-control" id="IVA1" name="IVA1" /></td>
+                    <td><input type="text" class="form-control" id="IVA2" name="IVA2" /></td>
+                    <td><input type="text" class="form-control" id="IVA3" name="IVA3" /></td>
+                    <td><input type="text" class="form-control" id="IVA4" name="IVA4" /></td>
+                    <td><input type="text" class="form-control" id="IVA5" name="IVA5" /></td>
+                    <td><input type="text" class="form-control" id="IVA6" name="IVA6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_IVA" name="NOM_IVA" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>I.V.A. Compras</td>
+                    <td><input type="text" class="form-control" id="IVAD1" name="IVAD1" /></td>
+                    <td><input type="text" class="form-control" id="IVAD2" name="IVAD2" /></td>
+                    <td><input type="text" class="form-control" id="IVAD3" name="IVAD3" /></td>
+                    <td><input type="text" class="form-control" id="IVAD4" name="IVAD4" /></td>
+                    <td><input type="text" class="form-control" id="IVAD5" name="IVAD5" /></td>
+                    <td><input type="text" class="form-control" id="IVAD6" name="IVAD6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_IVAD" name="NOM_IVA" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Retenci&oacute; de I.V.A.</td>
+                    <td><input type="text" class="form-control" id="RIVA1" name="RIVA1" /></td>
+                    <td><input type="text" class="form-control" id="RIVA2" name="RIVA2" /></td>
+                    <td><input type="text" class="form-control" id="RIVA3" name="RIVA3" /></td>
+                    <td><input type="text" class="form-control" id="RIVA4" name="RIVA4" /></td>
+                    <td><input type="text" class="form-control" id="RIVA5" name="RIVA5" /></td>
+                    <td><input type="text" class="form-control" id="RIVA6" name="RIVA6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_RIVA" name="NOM_RIVA" disabled/></td>
+                </tr>
+
+                @* TODO: Corregir los nombres de los campos *@
+                <tr>
+                    <td>Abonos a CxC con tarjeta de cr&eacute;dito</td>
+                    <td><input type="text" class="form-control" id="CXC_TC1" name="CXC_TC1" /></td>
+                    <td><input type="text" class="form-control" id="CXC_TC2" name="CXC_TC2" /></td>
+                    <td><input type="text" class="form-control" id="CXC_TC3" name="CXC_TC3" /></td>
+                    <td><input type="text" class="form-control" id="CXC_TC4" name="CXC_TC4" /></td>
+                    <td><input type="text" class="form-control" id="CXC_TC5" name="CXC_TC5" /></td>
+                    <td><input type="text" class="form-control" id="CXC_TC6" name="CXC_TC6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_CXCTC" name="NOM_CXCTC" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Devoluciones sobre ventas</td>
+                    <td><input type="text" class="form-control" id="DSV1" name="DSV1" /></td>
+                    <td><input type="text" class="form-control" id="DSV2" name="DSV2" /></td>
+                    <td><input type="text" class="form-control" id="DSV3" name="DSV3" /></td>
+                    <td><input type="text" class="form-control" id="DSV4" name="DSV4" /></td>
+                    <td><input type="text" class="form-control" id="DSV5" name="DSV5" /></td>
+                    <td><input type="text" class="form-control" id="DSV6" name="DSV6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_DEVSVTAS" name="NOM_DEVSVTAS" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Cuentas por pagar (extranjeros)</td>
+                    <td><input type="text" class="form-control" id="CXPE1" name="CXPE1" /></td>
+                    <td><input type="text" class="form-control" id="CXPE2" name="CXPE2" /></td>
+                    <td><input type="text" class="form-control" id="CXPE3" name="CXPE3" /></td>
+                    <td><input type="text" class="form-control" id="CXPE4" name="CXPE4" /></td>
+                    <td><input type="text" class="form-control" id="CXPE5" name="CXPE5" /></td>
+                    <td><input type="text" class="form-control" id="CXPE6" name="CXPE6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_CXPE" name="NOM_CXPE" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Valores remesados dem&aacute;s</td>
+                    <td><input type="text" class="form-control" id="AGE1" name="AGE1" /></td>
+                    <td><input type="text" class="form-control" id="AGE2" name="AGE2" /></td>
+                    <td><input type="text" class="form-control" id="AGE3" name="AGE3" /></td>
+                    <td><input type="text" class="form-control" id="AGE4" name="AGE4" /></td>
+                    <td><input type="text" class="form-control" id="AGE5" name="AGE5" /></td>
+                    <td><input type="text" class="form-control" id="AGE6" name="AGE6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_AGE" name="NOM_AGE" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Saldo a favor del cliente</td>
+                    <td><input type="text" class="form-control" id="DIF1" name="DIF1" /></td>
+                    <td><input type="text" class="form-control" id="DIF2" name="DIF2" /></td>
+                    <td><input type="text" class="form-control" id="DIF3" name="DIF3" /></td>
+                    <td><input type="text" class="form-control" id="DIF4" name="DIF4" /></td>
+                    <td><input type="text" class="form-control" id="DIF5" name="DIF5" /></td>
+                    <td><input type="text" class="form-control" id="DIF6" name="DIF6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_DIF" name="NOM_DIF" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Cuenta disponible</td>
+                    <td><input type="text" class="form-control" id="DIA1" name="DIA1" /></td>
+                    <td><input type="text" class="form-control" id="DIA2" name="DIA2" /></td>
+                    <td><input type="text" class="form-control" id="DIA3" name="DIA3" /></td>
+                    <td><input type="text" class="form-control" id="DIA4" name="DIA4" /></td>
+                    <td><input type="text" class="form-control" id="DIA5" name="DIA5" /></td>
+                    <td><input type="text" class="form-control" id="DIA6" name="DIA6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_DIA" name="NOM_DIA" disabled/></td>
+                </tr>
+
+                <tr>
+                    <td>Cuenta disponible</td>
+                    <td><input type="text" class="form-control" id="OTR1" name="OTR1" /></td>
+                    <td><input type="text" class="form-control" id="OTR2" name="OTR2" /></td>
+                    <td><input type="text" class="form-control" id="OTR3" name="OTR3" /></td>
+                    <td><input type="text" class="form-control" id="OTR4" name="OTR4" /></td>
+                    <td><input type="text" class="form-control" id="OTR5" name="OTR5" /></td>
+                    <td><input type="text" class="form-control" id="OTR6" name="OTR6" /></td>
+                    <td><input type="text" class="form-control" id="NOM_OTR" name="NOM_OTR" disabled/></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <div class="row">
+                <div class="col-12" style="margin-top:20px;">
+                    <button class="btn btn-primary btn-md float-right" id="btnUpdateContaParams" type="submit">
+                        <i class="fa fa-floppy-o"></i>&nbsp;
+                        <span id="btnUpdateContaParamsText">Guardar</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/plugins/moment/moment-with-locales.js" asp-append-version="true"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/params.conta.js" asp-append-version="true"></script>
+}

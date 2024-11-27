@@ -1,0 +1,59 @@
+﻿<div class="card card-outline card-primary col-md-12">
+    <div class="card-header">
+        <h3 class="card-title">ENCABEZADO</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <partial name="../DmgPoliza/DmgPolizaForm"/>
+        </div>
+    </div>
+</div>
+
+<div class="card card-outline card-primary mt-5 col-md-12">
+    <div class="card-header">
+        <h3 class="card-title">DETALLE</h3>
+    </div>
+
+    <div class="card-body">
+        @* <div class="row"><partial name="../DmgDetalle/DmgDetalleForm"/></div> *@
+
+        <div class="row mt-3">
+            <div class="col-md-12 table-responsive">
+                <table id="dmgDetalleDataTable" class="" style="width:100%!important;">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">#</th> @* CORRELAT *@
+                        <th rowspan="2"><center>Centro costo</center></th> @* NUM_POLIZA *@
+                        <th colspan="7"><center>Cuenta contable</center></th> @* CTA_1, CTA_2, CTA_3, CTA_4, CTA_5, CTA_6 *@
+                        <th rowspan="2">Concepto</th> @* CONCEPTO *@
+                        <th rowspan="2">Cargos</th> @* CARGO *@
+                        <th rowspan="2">Abonos</th> @* ABONO *@
+                    </tr>
+                    <tr>
+                        <th>#1</th>
+                        <th>#2</th>
+                        <th>#3</th>
+                        <th>#4</th>
+                        <th>#5</th>
+                        <th>#6</th>
+                        <th>Nombre</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="10" style="text-align:right">TOTAL:</th>
+                        <th id="totalCargos" class="text-right"></th>
+                        <th id="totalAbonos" class="text-right"></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

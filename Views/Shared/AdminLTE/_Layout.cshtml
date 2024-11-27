@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - CoreContable</title>
+    <link rel="stylesheet" href="~/css/adminlte.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="~/plugins/font-awesome-4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/plugins/select2-3/css/select2.css" />
+    <link rel="stylesheet" href="~/plugins/select2-3/css/select2-bootstrap.css" />
+    <link rel="stylesheet" href="~/plugins/toastify-js/toastify.min.css"/>
+    <link rel="stylesheet" href="~/css/custom-fonts.css"/>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        @await Component.InvokeAsync("TopNav")
+        @await Component.InvokeAsync("MainNav")
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6"> 
+                            <h1 class="m-0">@ViewData["Title"]</h1>
+                        </div><!-- /.col -->
+                        @if (IsSectionDefined("BreadCrumb"))
+                        {
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="/home/index">Inicio</a></li>
+                                    @RenderSection("BreadCrumb", required: false)
+                                </ol>
+                            </div><!-- /.col -->
+                        }
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <partial name="AdminLTE/_Footer"/>
+    </div>
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/plugins/select2-3/js/select2.min.js"></script>
+    <script src="~/plugins/select2-3/js/select2_locale_es.js"></script>
+    <script src="~/plugins/select2-3/js/utils.js" asp-append-version="true"></script>
+    <script src="~/js/adminlte.min.js"></script>
+    <script src="~/plugins/toastify-js/toastify-js.js"></script>
+    <script src="~/js/utils/constants.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        if(typeof(moment)!=='undefined') moment.locale('es');
+        if (typeof($.fn.dataTable) !== 'undefined') {
+            $.extend($.fn.dataTable.defaults, {language: { url: '/plugins/jquery.dataTables/1.13.7/i18n/es-MX.json' }});
+            $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { console.log(message); };
+        }
+        if ($.validator) {
+            $.holdReady(true);
+            $.getScript('/plugins/jqueryValidate-1.19/messages_es.js', function() { $.holdReady(false); });
+
+            // Corrige el mostrado de errores con el plugin select2.
+            $.validator.setDefaults({
+                highlight: function (element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    if (typeof (element.id) == "undefined") { element.closest('.form-group').removeClass('has-error'); }
+                    else { $(element).closest('.form-group').removeClass('has-error'); }
+                },
+                errorClass: 'custom-error-label',
+                ignore: '',
+                errorPlacement: function (error, element) {
+                    if (element.parent().is('.input-group') || element.parent().is('.radio-inline'))
+                        error.appendTo(element.parents(".form-group:first"));
+                    else
+                        error.insertAfter(element);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

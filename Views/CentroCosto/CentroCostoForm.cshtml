@@ -1,0 +1,32 @@
+<form role="form" id="centroCostoForm" style="margin-left:15px; margin-right:15px;">
+    <div class="col-md-12">
+        <input type="hidden" class="form-control" id="isUpdating" name="isUpdating" jv-required="false" jv-minlength="1"/>
+        <input type="hidden" class="form-control" id="COD_CIA" name="COD_CIA" jv-required="true" jv-minlength="3" jv-maxlength="3"/>
+
+        <div class="form-group">
+            <label>C&oacute;digo del centro de costo</label>
+            <input type="text" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" placeholder="00-000-00" jv-required="true" jv-minlength="9" jv-maxlength="9"/>
+        </div>
+
+        <div class="form-group">
+            <label>Descripci&oacute;n</label>
+            <input type="text" class="form-control" id="DESCRIPCION" name="DESCRIPCION" jv-required="true" jv-minlength="2" jv-maxlength="200"/>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="ACEPTA_DATOS" name="ACEPTA_DATOS" jv-required="false" jv-maxlength="1"/>
+            <label class="form-check-label" for="ACEPTA_DATOS">
+                Acepta datos
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="col-12" style="margin-top:20px;">
+                <button class="btn btn-primary btn-md float-right" id="centroCostoFormBtnSave" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="centroCostoFormBtnSaveText">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

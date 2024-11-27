@@ -1,0 +1,316 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using CoreContable.Models.Report;
+@using System.Globalization
+@model ReporteEstadoResultados
+
+@{
+    Layout = null;
+
+
+}
+
+
+@{
+    decimal totalVentas = Model.Detalles
+        .Where (d => d.Grupo_Cta == "RESULTADOS")
+        .Sum (d => d.Saldo);
+
+    decimal totalIngresosT = Model.Detalles
+        .Where (d => d.Cta_Catalana.StartsWith ("5"))
+        .Sum (d => d.Saldo);
+
+    decimal totalGastosT = Model.Detalles
+        .Where (d => d.Cta_Catalana.StartsWith ("4"))
+        .Sum (d => d.Saldo);
+
+    // Luego, calcula el resultado integral total
+    decimal resultadoIntegralTotal = totalIngresosT - totalGastosT;
+
+    // Calcula el porcentaje de resultado integral total respecto a los ingresos totales
+    decimal porcentajeResultadoTotal = totalIngresosT != 0 ? (resultadoIntegralTotal / totalIngresosT) * 100 : 0;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Estado de Resultados</title>
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+
+        p.title {
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        p.sub-title {
+            font-size: 16px;
+            margin: 0;
+            padding-top: 6px;
+        }
+
+        p {
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .money {
+            text-align: right !important;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .bold {
+            font-weight: bold;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        #firmas p {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .p-thead {
+            font-weight: bold;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        table.dataTable {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            table.dataTable thead {
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+
+            table.dataTable tfoot {
+                border-top: 1px solid black;
+                font-weight: bold;
+            }
+
+        .border-top {
+            border-top: 1px solid black !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="reportContainer">
+        <center>
+            <p class="title">@Model.NombreCia</p>
+            <p class="sub-title">
+                Estado de Resultados del @(
+                DateTime.TryParse (Model.FechaInicio, out var fechaInicio) ? fechaInicio.ToString ("dd/MM/yyyy") : "Fecha no válida"
+                )
+                al @(
+                 DateTime.TryParse (Model.FechaFin, out var fechaFin) ? fechaFin.ToString ("dd/MM/yyyy") : "Fecha no válida"
+                 )
+            </p>
+            <p class="sub-title">(Expresado en dólares US$)</p>
+        </center>
+
+        <table style="margin-top: 20px;" class="dataTable">
+            <thead>
+                <tr>
+                    <th colspan="3" style="text-align: right">
+                        @(
+                            DateTime.TryParse (Model.FechaInicio, out var inicioMes)
+                            ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase (inicioMes.ToString ("MMMM"))
+                            : "Mes no válido"
+                            )
+                    </th>
+                    <th>%</th>
+                    <th colspan="2">Acumulado</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    decimal totalIngresosVentas = 0;
+                    decimal totalGastos = 0;
+                    decimal resultadoBruto = 0;
+                    decimal resultadoOperacion = 0;
+
+                    Dictionary<string, string> titulos = new Dictionary<string, string>
+                {
+                { "51", "INGRESOS POR VENTAS" },
+                { "42", "COSTO DE VENTA" },
+                { "44", "GASTOS DE OPERACIÓN" },
+                { "52", "INGRESOS POR OTRAS VENTAS" },
+                { "45", "GASTOS FINANCIEROS" },
+                { "46", "OTROS GASTOS" },
+                };
+
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.Contains ("51")).ToList ( ))
+                    {
+                        totalIngresosVentas += detalle.Saldo;
+                    }
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.StartsWith ("4")).ToList ( ))
+                    {
+                        totalGastos += detalle.Saldo;
+                    }
+                }
+
+                @foreach (var titulo in titulos)
+                {
+                    decimal total = 0;
+
+                    <tr>
+                        <td colspan="7"><br /></td>
+                    </tr>
+                    if (titulo.Key.Equals ("52"))
+                    {
+                        <tr>
+                            <td colspan="7"><p>INGRESOS, COSTOS Y GASTOS DE NO OPERACIÓN</p></td>
+                        </tr>
+                    }
+                    foreach (var detalle2 in Model.Detalles.Where (d => d.Cta_Catalana.Substring (0, 2) == titulo.Key).ToList ( ))
+                    {
+                        total += detalle2.Saldo;
+                    }
+                    <tr>
+                        <td colspan="7"><p>@(titulo.Key.StartsWith ("4") ? "MENOS:" : "MÁS:")</p></td>
+                    </tr>
+                    <tr>
+                        <td><p>@titulo.Value</p></td>
+                        <td></td>
+                        <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (@total))</p></td>
+                        <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)%</p></td>
+                        <td></td>
+                        <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (@total))</p></td>
+                        <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)</p></td>
+                    </tr>
+
+                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_Catalana.Substring (0, 2) == titulo.Key).ToList ( ))
+                    {
+                        <tr>
+                            <td><p>@detalle.Descrip_Esp</p></td>
+                            <td class="text-right"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (detalle.Saldo))</p></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (detalle.Saldo))</p></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+
+                    if(titulo.Key.Equals("42"))
+                    {
+                        resultadoBruto = totalIngresosVentas - total;
+                        <tr>
+                            <td colspan="7"><br /></td>
+                        </tr>
+                        <tr>
+                            <td><p>RESULTADO BRUTO</p></td>
+                            <td></td>
+                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoBruto))</p></td>
+                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto / totalIngresosVentas * 100)%</p></td>
+                            <td></td>
+                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoBruto))</p></td>
+                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto / totalIngresosVentas * 100)</p></td>
+                        </tr>
+                    }
+
+                    if (titulo.Key.Equals ("44"))
+                    {
+                        resultadoOperacion = resultadoBruto - total;
+                        <tr>
+                            <td colspan="7"><br /></td>
+                        </tr>
+                        <tr>
+                            <td><p>RESULTADO DE OPERACIÓN</p></td>
+                            <td></td>
+                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoOperacion))</p></td>
+                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion / totalIngresosVentas * 100)%</p></td>
+                            <td></td>
+                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoOperacion))</p></td>
+                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion / totalIngresosVentas * 100)</p></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="2" >RESULTADO ANTES DE IMPUESTOS</td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
+                <td></td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+            </tr>
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="2">RESULTADO DEL EJERCICIO</td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
+                <td></td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+            </tr>
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="5">OTROS RESULTADOS INTEGRALES</td>
+            </tr>
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="bold ">RESULTADO INTEGRAL TOTAL DEL EJERCICIO</td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
+                <td></td>
+                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+            </tr>
+        </table>
+        <table style="width:100%; margin-top:100px;" id="firmas">
+            <tr>
+                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
+                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
+                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
+            </tr>
+            <tr>
+                <td><center><p>Ana María Vidiella Duch</p></center></td>
+                <td><center><p>Giovanni Bladimir Diaz Reyes</p></center></td>
+                <td><center><p>ACOEX, S.A de C.V</p></center></td>
+            </tr>
+            <tr>
+                <td class="bold"><center><p>Representante Legal</p></center></td>
+                <td class="bold"><center><p>Contador General</p></center></td>
+                <td class="bold"><center><p>Auditor Externo</p></center></td>
+            </tr>
+        </table>
+
+        <br />
+        <br />
+    </div>
+    
+</body>
+</html>

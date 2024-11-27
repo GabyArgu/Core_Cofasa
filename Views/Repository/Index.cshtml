@@ -1,0 +1,122 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Asientos contables";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/plugins/jquery.dataTables/1.13.7/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/repo.admin.css" asp-append-version="true" />
+}
+
+@section BreadCrumb {
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                <input type="hidden" class="form-control" id="tipoDoctoFilter" name="tipoDoctoFilter" />
+            </div>
+            <div class="col-9">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="" style="margin-bottom:20px;">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-warning" id="repositoryImportButton">
+                            <i class="fa fa-upload"></i>&nbsp;Importar
+                        </button>
+                    </div>
+                    @if (SecurityRepository.HasPermission(CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD))
+                    {
+                        <div class="btn-group mr-2" role="group" aria-label="">
+                            <button class="btn btn-primary" id="repositoryAddButtonId">
+                                <i class="fa fa-plus"></i>&nbsp;Agregar
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <table id="repositoryDataTableId" class="" style="width:100%!important;">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    @* <th>FECHA_CAMBIO</th> *@
+                    <th>Fecha</th>
+                    @* <th>A&ntilde;o</th> *@
+                    @* <th>Mes</th> *@
+                    <th>P&oacute;liza</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                    <th>Diferencia</th>
+                    <th style="width: 10%;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<textarea id="repositoryDataTableActionsContainerId" style="display:none;">
+<div class="btn-group" data-row="{data}" style="">
+        @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO))
+        {
+    <button class='btn btn-warning btn-sm button-edit' data-action="asientos" title="Asientos">
+    <i class='fa fa-pencil'></i>
+                </button>
+        }
+        @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_DELETE))
+        {
+    <button class="btn btn-danger btn-sm button-cancel" data-action="deleterepo" title="Eliminar">
+    <i class="fa fa-times"></i>
+                </button>
+        }
+        @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_CAPITALIZE))
+        {
+    <button class='btn btn-primary btn-sm button-up' data-action="capitalizerepo" title="Mayorizar" style="{mayorizar_style}">
+    <i class='fa fa-arrow-up'></i>
+                </button>
+        }
+        @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_PRINT))
+        {
+    <button class='btn bg-info btn-sm' data-action="repoprint" title="Imprimir">
+    <i class='fa fa-print'></i>
+                </button>
+        }
+        @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_PRINT))
+        {
+    <button class='btn bg-olive btn-sm' data-action="excelprint" title="Excel">
+    <i class='fa fa-file-excel'></i>
+                </button>
+        }
+    </div>
+</textarea>
+
+<textarea id="detRepoGridHtml" style="display:none;"><partial name="../DetRepository/Index" /></textarea>
+<textarea id="importRepoFormHtml" style="display:none;"><partial name="UploadFile" /></textarea>
+<textarea id="repoReportHTML" style="display:none;"><canvas id="the-canvas"></canvas></textarea>
+
+@section Scripts {
+    <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/messages_es.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/utils/drop.file.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/reports.helper.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/base.grid.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/contarepo.admin.js" asp-append-version="true"></script>
+    <script src="~/js/pages/contarepo.admin.detrepo.js" asp-append-version="true"></script>
+}

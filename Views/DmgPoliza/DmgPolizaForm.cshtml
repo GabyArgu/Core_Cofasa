@@ -1,0 +1,52 @@
+@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+<div class="col-md-12">
+    <form role="form" id="repositoryForm">
+        <input type="hidden" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
+        <input type="hidden" id="NUM_REFERENCIA" name="NUM_REFERENCIA" />
+        <input type="hidden" id="OPERACION" name="OPERACION" />
+        <input type="hidden" id="PERIODO" name="PERIODO" />
+        <input type="hidden" id="ANIO" name="ANIO" />
+        <input type="hidden" id="MES" name="MES" />
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label" for="selSTAT_POLIZA">Estado (*)</label>
+                <input type="hidden" class="form-control" id="selSTAT_POLIZA" name="STAT_POLIZA"/>
+            </div>
+    
+            <div class="form-group col-md-4">
+                <label class="form-label" for="NUM_POLIZA">N&uacute;mero (*)</label> @* Numero entero. TODO: se va a generar desde la DB. *@
+                <input type="text" class="form-control" id="NUM_POLIZA" name="NUM_POLIZA" readonly="" />
+            </div>
+    
+            <div class="form-group col-md-4">
+                <label class="form-label" for="selTIPO_DOCTO">Tipo p&oacute;liza (*)</label> @* Viene de: DMGDOCTOS *@
+                <input type="hidden" class="form-control" id="selTIPO_DOCTO" name="TIPO_DOCTO" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label" for="FECHA">Fecha</label> @* Fecha en formato DD/MM/YYYY *@
+                <div class="input-group date" id="FECHA_container" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#FECHA_container" id="FECHA" name="FECHA" readonly="" />
+                    <div class="input-group-append" data-target="#FECHA_container" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group col-md-4">
+                <label class="form-label" for="TOTAL_POLIZA">Total p&oacute;liza</label>
+                <input type="text" class="form-control" id="TOTAL_POLIZA" name="TOTAL_POLIZA" readonly="" />
+            </div>
+            
+            <div class="form-group col-md-4">
+                <label class="form-label" for="CONCEPTO">Concepto</label>
+                <input type="text" class="form-control" id="CONCEPTO" name="CONCEPTO" readonly="" />
+            </div>
+        </div>
+    </form>
+</div>

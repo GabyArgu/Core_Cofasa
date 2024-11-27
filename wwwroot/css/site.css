@@ -1,0 +1,23 @@
+.sidebar-dark-primary { background-color: #0159c9; }
+
+/*COLOR DE TEXTO DE LOS PADRES*/
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link {
+    color: #fff;
+}
+
+/*COLOR DE TEXTO DE LOS HIJOS*/
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
+    color: #fff;
+}
+
+/*COLOR DE PADRE ACTIVO*/
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: #ff9e0d;
+    color: #fff;
+}
+
+.break-word {
+    word-wrap: break-word;
+    word-break: break-all;
+    max-width: 100%;
+}

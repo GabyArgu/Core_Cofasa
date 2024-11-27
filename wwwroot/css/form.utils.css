@@ -1,0 +1,5 @@
+.input-validation-error {border: 2px solid red;color: red;}
+.input-validation-error:focus { border: 2px solid red; }
+.input-validation-error::placeholder {color: #f65656;opacity: 1;}
+.field-validation-error { color: red; font-weight: 700; }
+/*.form-group:has(.input-validation-error) .form-label{color: red;}*/

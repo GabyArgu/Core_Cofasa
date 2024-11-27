@@ -1,0 +1,96 @@
+@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+<div class="col-md-12">
+    <form role="form" id="repositoryForm">
+        @* <input type="hidden" id="COD_CIA" name="COD_CIA" jv-required="true" jv-minlength="3" jv-maxlength="3"/> *@
+        <input type="hidden" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
+        @* Es la fecha en formato DD/MM/YYY *@
+        <input type="hidden" id="NUM_REFERENCIA" name="NUM_REFERENCIA" />
+        <input type="hidden" id="OPERACION" name="OPERACION" />
+
+        <input type="hidden" id="PERIODO" name="PERIODO" />
+        <input type="hidden" id="ANIO" name="ANIO" />
+        <input type="hidden" id="MES" name="MES" />
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label" for="selSTAT_POLIZA">Estado</label> @* Es un select *@
+                <input type="hidden" class="form-control" id="selSTAT_POLIZA" name="STAT_POLIZA" jv-required="true">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-label" for="NUM_POLIZA">N&uacute;mero</label> @* Numero entero. TODO: se va a generar desde la DB. *@
+                <input type="text" class="form-control" id="NUM_POLIZA" name="NUM_POLIZA" jv-required="false" readonly="" />
+            </div>
+    
+            <div class="form-group col-md-4">
+                <label class="form-label" for="selTIPO_DOCTO">Tipo p&oacute;liza</label> @* Viene de: DMGDOCTOS *@
+                <input type="hidden" class="form-control" id="selTIPO_DOCTO" name="TIPO_DOCTO" jv-required="true" jv-minlength="1" jv-maxlength="2"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="form-label" for="FECHA">Fecha</label> @* Fecha en formato DD/MM/YYYY *@
+                <div class="input-group date" id="FECHA_container" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#FECHA_container" id="FECHA" name="FECHA" jv-required="true" />
+                    <div class="input-group-append" data-target="#FECHA_container" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            @* <div class="form-group col-md-4"> *@
+            @*     <label class="form-label" for="TOTAL_POLIZA">Total p&oacute;liza</label> *@
+            @*     <input type="text" class="form-control" id="TOTAL_POLIZA" name="TOTAL_POLIZA" jv-required="false" jv-digits="true"/> *@
+            @* </div> *@
+
+            <div class="form-group col-md-8">
+                <label class="form-label" for="CONCEPTO">Concepto</label>
+                <input type="text" class="form-control" id="CONCEPTO" name="CONCEPTO" jv-required="true"/>
+            </div>
+
+            @* <div class="form-group col-md-6"> *@
+            @*     <label class="form-label" for="PERIODO">Per&iacute;odo (*)</label> $1$ Fecha (año) #1# *@
+            @*     <div class="input-group date" id="PERIODO_container" data-target-input="nearest"> *@
+            @*         <input type="text" class="form-control datetimepicker-input" data-target="#PERIODO_container" id="PERIODO" name="PERIODO" jv-required="true" jv-digits="true" /> *@
+            @*         <div class="input-group-append" data-target="#PERIODO_container" data-toggle="datetimepicker"> *@
+            @*             <div class="input-group-text"><i class="fa fa-calendar"></i></div> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+        </div>
+
+        @* <div class="row"> *@
+            @* <div class="form-group col-md-3"> *@
+            @*     <label class="form-label" for="ANIO">A&ntilde;o (*)</label> $1$ Numero entero: ano actual #1# *@
+            @*     <div class="input-group date" id="ANIO_container" data-target-input="nearest"> *@
+            @*         <input type="text" class="form-control datetimepicker-input" data-target="#ANIO_container" id="ANIO" name="ANIO" jv-required="true" jv-digits="true" /> *@
+            @*         <div class="input-group-append" data-target="#ANIO_container" data-toggle="datetimepicker"> *@
+            @*             <div class="input-group-text"><i class="fa fa-calendar"></i></div> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+    
+            @* <div class="form-group col-md-3"> *@
+            @*     <label class="form-label" for="MES">Mes (*)</label> $1$ Numero entero: mes actual #1# *@
+            @*     <div class="input-group date" id="MES_container" data-target-input="nearest"> *@
+            @*         <input type="text" class="form-control datetimepicker-input" data-target="#MES_container" id="MES" name="MES" jv-required="true" jv-digits="true" /> *@
+            @*         <div class="input-group-append" data-target="#MES_container" data-toggle="datetimepicker"> *@
+            @*             <div class="input-group-text"><i class="fa fa-calendar"></i></div> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+        @* </div> *@
+
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-primary btn-md float-right" id="repositoryFormAddButton" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="repositoryFormAddButtonText">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

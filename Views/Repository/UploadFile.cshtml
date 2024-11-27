@@ -1,0 +1,27 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+<div class="col-md-12">
+    <form role="form" id="uploadFileForm">
+        <input type="hidden" id="codCia" name="codCia" value="@SecurityRepository.GetSessionCiaCode()" />
+
+        <div class="drag-file-container">
+            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+            <h6>Arrastra el archivo aquí</h6>
+            <span>O</span>
+            <button id="browseFiles" type="button" class="mt-1">Explorar archivos</button>
+            <input type="file" hidden/>
+        </div>
+
+        @* <button id="removeFile" style="display: none;">Eliminar</button> *@
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <button class="btn btn-primary btn-md float-right" id="importFileButton" type="submit" disabled="">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="repositoryFormAddButtonText">Importar</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

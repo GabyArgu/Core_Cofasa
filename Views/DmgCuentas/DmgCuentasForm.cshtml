@@ -1,0 +1,126 @@
+<form role="form" id="dmgCuentasForm" style="margin-left:15px; margin-right:15px;">
+    <div class="col-md-12">
+        <div class="row">
+            <input type="hidden" class="form-control" placeholder="" id="isUpdating" name="isUpdating" jv-required="false"/>
+            <input type="hidden" class="form-control" placeholder="" id="COD_CIA" name="COD_CIA" jv-required="true" jv-minlength="3" jv-maxlength="3"/>
+            
+            <div class="form-group col-md-12">
+                <label>Nombre</label>
+                <input type="text" class="form-control" placeholder="" id="DESCRIP_ESP" name="DESCRIP_ESP" jv-required="true" jv-minlength="2" jv-maxlength="100"/>
+            </div>
+
+            @* <div class="form-group col-md-6"> *@
+            @*     <label>Descripci&oacute;n Ingl&eacute;s</label> *@
+            @*     <input type="text" class="form-control" placeholder="" id="DESCRIP_ING" name="DESCRIP_ING" jv-required="false" jv-minlength="2" jv-maxlength="70"> *@
+            @* </div> *@
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="CLASE_SALDO" class="form-label">Clase de saldo</label>
+                <select class="form-control" id="CLASE_SALDO" name="CLASE_SALDO" jv-required="false" jv-minlength="1" jv-maxlength="2">
+                    <option value="">Seleccione un valor</option>
+                    <option value="A">Acreedor</option>
+                    <option value="D">Deudor</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="GRUPO_CTA" class="form-label">Grupo de cuenta</label>
+                <select class="form-control" id="GRUPO_CTA" name="GRUPO_CTA" jv-required="false" jv-minlength="1" jv-maxlength="2">
+                    <option value="">Seleccione un valor</option>
+                    <option value="A">Activo</option>
+                    <option value="P">Pasivo</option>
+                    <option value="C">Capital</option>
+                    <option value="R">Resultados</option>
+                    <option value="O">Cuenta de orden</option>
+                    <option value="Z">Reguladoras de activos</option>
+                    <option value="L">Liquidadoras</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="BANDERA" class="form-label">Divisi&oacute;n</label>
+                <select class="form-control" id="BANDERA" name="BANDERA" jv-required="false" jv-minlength="1" jv-maxlength="2">
+                    <option value="">Seleccione un valor</option>
+                    <option value="CC">Caja chica</option>
+                    <option value="NI">Ninguno</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table>
+                    <tr>
+                        <td style="width: 30%;"><label class="form-label">Cuenta contable:</label></td>
+                        <td><input type="text" name="CTA_1" id="CTA_1" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_2" id="CTA_2" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_3" id="CTA_3" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_4" id="CTA_4" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_5" id="CTA_5" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_6" id="CTA_6" class="form-control" jv-required="true" jv-digits="true"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <table>
+                    <tr>
+                        <td style="width: 30%;"><label class="form-label">Cuenta principal de agrupaci&oacute;n:</label></td>
+                        <td><input type="text" name="CTA_1P" id="CTA_1P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_2P" id="CTA_2P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_3P" id="CTA_3P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_4P" id="CTA_4P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_5P" id="CTA_5P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_6P" id="CTA_6P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <br/>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="ACEP_MOV" name="ACEP_MOV" jv-required="false" jv-maxlength="1"/>
+                    <label class="form-check-label" for="ACEP_MOV">
+                        Acepta transacciones
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="ACEP_PRESUP" name="ACEP_PRESUP" jv-required="false" jv-maxlength="1">
+                    <label class="form-check-label" for="ACEP_PRESUP">
+                        Acepta presupuesto
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="ACEP_PRESUP_COMPRAS" name="ACEP_PRESUP_COMPRAS" jv-required="false" jv-maxlength="1">
+                    <label class="form-check-label" for="ACEP_PRESUP_COMPRAS">
+                        Acepta presupuesto de compras
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="CATALOGO" name="CATALOGO" jv-required="false" jv-maxlength="1" required="">
+                    <label class="form-check-label" for="CATALOGO">
+                        No se muestra en el cat&aacute;logo impreso
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="UTIL_CTA" class="form-label">Comentarios</label>
+                <ttextarea class="form-control" id="UTIL_CTA" name="UTIL_CTA" rows="3" jv-required="false" jv-maxlength="250"></ttextarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12" style="margin-top:20px;">
+                <button class="btn btn-primary btn-md float-right" id="btnSaveDmgCuentas" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="btnSaveDmgCuentasText">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,284 @@
+﻿<form role="form" id="ciasForm" style="margin-left:15px; margin-right:15px;">
+    <div class="col-md-12">
+        <fieldset class="fieldset-filters">
+            <legend class="fieldset-label">Información general</legend>
+
+            <div class="row">
+                @* <div class="form-group col-12"> *@
+                @*     <label>Código de compañía</label> *@
+                @*     <input type="text" class="form-control" placeholder="COD_CIA" id="COD_CIA" name="COD_CIA" required /> *@
+                @* </div> *@
+                
+                <input type="hidden" class="form-control" placeholder="" id="COD_CIA" name="COD_CIA"/>
+                <input type="hidden" class="form-control" placeholder="" id="IS_COPYING" name="IS_COPYING"/>
+                
+                <div class="form-group col-md-6">
+                    <label>Razón social</label>
+                    <input type="text" class="form-control" placeholder="" id="RAZON_SOCIAL" name="RAZON_SOCIAL"/>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Nombre comercial</label>
+                    <input type="text" class="form-control" placeholder="" id="NOM_COMERCIAL" name="NOM_COMERCIAL">
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO (VOLVER A PREGUNTAR)!!! -->
+                @* <div class="form-group col-md-6"> *@
+                @*     <label>Nombre corto</label> *@
+                @*     <input type="text" class="form-control" placeholder="NOM_CORTO" id="NOM_CORTO" name="NOM_CORTO"/> *@
+                @* </div> *@
+
+                <div class="form-group col-md-12">
+                    <label>Dirección</label>
+                    <input type="text" class="form-control" placeholder="" id="DIREC_EMPRESA" name="DIREC_EMPRESA">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Teléfono empresa</label>
+                    <input type="text" class="form-control" placeholder="" id="TELEF_EMPRESA" name="TELEF_EMPRESA" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>N.I.T. empresa</label>
+                    <input type="text" class="form-control" placeholder="" id="NIT_EMPRESA" name="NIT_EMPRESA">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Número patronal</label>
+                    <input type="text" class="form-control" placeholder="" id="NUMERO_PATRONAL" name="NUMERO_PATRONAL" />
+                </div>
+                
+                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO, si esta... es codmoneda -->
+                <div class="form-group col-md-6">
+                    <label for="COD_MONEDA">Moneda</label>
+                    <input type="hidden" class="form-control" placeholder="" id="COD_MONEDA" name="COD_MONEDA">
+                </div>
+            </div>
+
+            <div class="row">
+                @* TODO: NUMERO *@
+                <div class="form-group col-md-4">
+                    <label>Periodo</label>
+                    <input type="text" class="form-control" placeholder="" id="PERIODO" name="PERIODO" />
+                </div>
+
+                <!-- TODO: NUMERO -->
+                <div class="form-group col-md-4">
+                    <label>Mes de cierre contable</label>
+                    <input type="text" min="1" max="12" class="form-control" placeholder="" id="MES_CIERRE" name="MES_CIERRE">
+                </div>
+
+                <!-- TODO: NUMERO -->
+                <div class="form-group col-md-4">
+                    <label>Mes en proceso</label>
+                    <input type="text" min="1" max="12" class="form-control" placeholder="" id="MES_PROCESO" name="MES_PROCESO">
+                </div>
+                
+                <!-- TODO: FALTA PONER "INICIALES" (VOLVER A PREGUNTAR) -->
+                @* <div class="form-group col-md-3"> *@
+                @*     <label>Iniciales</label> *@
+                @*     <input type="text" class="form-control" placeholder="INICIALES" id="INICIALES" name="INICIALES"> *@
+                @* </div> *@
+            </div>
+        </fieldset>
+
+        <br/>
+
+        <fieldset class="fieldset-filters">
+            <legend class="fieldset-label">Información de impuestos</legend>
+
+            <div class="row">
+                <div class="form-group col">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;"></th> @* IMPUESTO *@
+                                <th style="width: 10%;"></th> @* PORCENTAJE *@
+                                @* <th colspan="2" class="text-center" style="border-bottom: 1pt solid black;">DECRETO</th> *@
+                                <th style="width: 10%;"></th> @* NUMERO *@
+                                <th style="width: 12%;"></th> @* FECHA *@
+                                <th></th>
+                                <th style="width: 10%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Impuesto</td>
+                                <td style="border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Porcentaje</td>
+                                <td style="border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Número</td>
+                                <td style="border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Fecha</td>
+                                <td style="border-bottom: 1pt solid black;" colspan="2"></td>
+                                @* <td></td> *@
+                            </tr>
+
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Impuesto a la transferencia de bienes muebles y las prestaciones de servicios (IVA):</td>
+                                @* TODO: NUMERO *@
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="IVA" id="IVA_PORC" name="IVA_PORC" /></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="IVA" id="ND_IVA" name="ND_IVA" /></td>
+                                <td style="border-right: 1pt solid black;">
+                                    <div style="position:relative"><input type="text" class="form-control" id="FD_IVA" name="FD_IVA" data-toggle="datetimepicker" placeholder="dd/mm/yyyy" /></div>
+                                </td>
+                                <td>Tipo cambio USA $</td>
+                                <td><input type="text" class="form-control" placeholder="" id="TASA_CAM" name="TASA_CAM" /></td>
+                            </tr>
+
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Impuesto sobre la renta (ISR):</td>
+                                @* TODO: NUMERO *@
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="ISR" id="ISR_PORC" name="ISR_PORC" /></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="ISR" id="ND_ISR" name="ND_ISR" /></td>
+                                <td style="border-right: 1pt solid black;">
+                                    <div style="position:relative"><input type="text" class="form-control" id="FD_ISR" name="FD_ISR" data-toggle="datetimepicker" placeholder="dd/mm/yyyy"/></div>
+                                </td>
+                                <td>Valor mínimo a depreciar</td>
+                                @* TODO: NUMERO *@
+                                <td><input type="text" class="form-control" placeholder="" id="VAL_MIN_DEPRECIAR" name="VAL_MIN_DEPRECIAR" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+        
+        <br/>
+
+        <fieldset class="fieldset-filters">
+            <legend class="fieldset-label">Información contable</legend>
+
+            <div class="row">
+                <div class="form-group col">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 20%; border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Cuenta</th>
+                                <th colspan="6" style="width: 35%; border-bottom: 1pt solid black; border-right: 1pt solid black;" class="text-center">Número</th>
+                                <th style="width: 45%; border-bottom: 1pt solid black;" class="text-center">Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Resultado actual:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_1RESUL_ACT" name="CTA_1RESUL_ACT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_2RESUL_ACT" name="CTA_2RESUL_ACT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_3RESUL_ACT" name="CTA_3RESUL_ACT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_4RESUL_ACT" name="CTA_4RESUL_ACT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_5RESUL_ACT" name="CTA_5RESUL_ACT"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="CTA_6RESUL_ACT" name="CTA_6RESUL_ACT"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_RESUL_ACT" name="NOM_RESUL_ACT" disabled/></td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Resultado anterior:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_1RESUL_ANT" name="CTA_1RESUL_ANT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_2RESUL_ANT" name="CTA_2RESUL_ANT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_3RESUL_ANT" name="CTA_3RESUL_ANT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_4RESUL_ANT" name="CTA_4RESUL_ANT"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_5RESUL_ANT" name="CTA_5RESUL_ANT"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="CTA_6RESUL_ANT" name="CTA_6RESUL_ANT"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_RESUL_ANT" name="NOM_RESUL_ANT" disabled/></td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Pérdidas y ganancias:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_1PER_GAN" name="CTA_1PER_GAN"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_2PER_GAN" name="CTA_2PER_GAN"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_3PER_GAN" name="CTA_3PER_GAN"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_4PER_GAN" name="CTA_4PER_GAN"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="CTA_5PER_GAN" name="CTA_5PER_GAN"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="CTA_6PER_GAN" name="CTA_6PER_GAN"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_PER_GAN" name="NOM_PER_GAN" disabled/></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Principal de ingresos:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA1" name="INGRESO_CTA1"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA2" name="INGRESO_CTA2"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA3" name="INGRESO_CTA3"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA4" name="INGRESO_CTA4"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA5" name="INGRESO_CTA5"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="INGRESO_CTA6" name="INGRESO_CTA6"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_INGRESO" name="NOM_INGRESO" disabled/></td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Gastos de operación:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="GASTO_CTA1" name="GASTO_CTA1"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="GASTO_CTA2" name="GASTO_CTA2"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="GASTO_CTA3" name="GASTO_CTA3"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="GASTO_CTA4" name="GASTO_CTA4"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="GASTO_CTA5" name="GASTO_CTA5"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="GASTO_CTA6" name="GASTO_CTA6"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_GASTO" name="NOM_GASTO" disabled/></td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 1pt solid black;">Costo producción:</td>
+                                <td><input type="text" class="form-control" placeholder="#" id="COSTO_CTA1" name="COSTO_CTA1"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="COSTO_CTA2" name="COSTO_CTA2"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="COSTO_CTA3" name="COSTO_CTA3"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="COSTO_CTA4" name="COSTO_CTA4"/></td>
+                                <td><input type="text" class="form-control" placeholder="#" id="COSTO_CTA5" name="COSTO_CTA5"/></td>
+                                <td style="border-right: 1pt solid black;"><input type="text" class="form-control" placeholder="#" id="COSTO_CTA6" name="COSTO_CTA6"/></td>
+                                <!-- TODO: NO ESTA EN LA BASE DE DATOS ... IGNORAR DE MOMENTO -->
+                                <td><input type="text" class="form-control" placeholder="Nombre" id="NOM_COSTO" name="NOM_COSTO" disabled/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="FEC_ULT_CIE">Fecha último cierre contable</label>
+                    <div class="input-group date" id="FEC_ULT_CIE_container" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#FEC_ULT_CIE_container" id="FEC_ULT_CIE" name="FEC_ULT_CIE" />
+                        <div class="input-group-append" data-target="#FEC_ULT_CIE_container" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" id="DUP_DET_PARTIDAD" name="DUP_DET_PARTIDAD">
+                        <label class="form-check-label" for="DUP_DET_PARTIDAD">
+                            Permitir duplicidad de cuentas en partidas
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" id="APLICA_POLIZA_IMPUESTO" name="APLICA_POLIZA_IMPUESTO">
+                        <label class="form-check-label" for="APLICA_POLIZA_IMPUESTO">
+                            Aplicar póliza impuesto
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="1" id="CONTA_X_CLIENTE" name="CONTA_X_CLIENTE">
+                      <label class="form-check-label" for="CONTA_X_CLIENTE">
+                        Contabilización cuenta contable por cliente en facturación
+                      </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <div class="row">
+            <div class="col-12" style="margin-top:20px;">
+                <button class="btn btn-primary btn-md float-right" id="btnSaveCia" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="btnSaveCiaText">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

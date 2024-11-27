@@ -1,0 +1,50 @@
+﻿.drag-file-container {
+    border: 1px dashed #737373;
+    height: 400px;
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.drag-file-container.active{
+    border: 2px solid #737373;
+}
+.drag-file-container .icon{
+    font-size: 30px;
+    color: #737373;
+}
+.drag-file-container h6{
+    font-size: 20px;
+    color: #737373;
+}
+.drag-file-container span{
+    font-size: 14px;
+    color: #737373;
+}
+.drag-file-container button{
+    padding: 10px 25px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    background:transparent;
+    color: #737373;
+    border: 1px solid #737373;
+    border-radius: 5px;
+    cursor: pointer;
+    transition:all 0.5s;
+}
+
+.drag-file-container button:hover{
+    background-color:#fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.drag-file-container img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}

@@ -1,0 +1,84 @@
+@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Centro de reportes";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
+}
+
+@section BreadCrumb {
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form role="form" id="reportsFilters">
+            <input type="hidden" id="codCia" name="codCia" value="@SecurityRepository.GetSessionCiaCode()" />
+            <div class="row">
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="selReportType">Tipo de reporte:</label>
+                    <input type="hidden" class="form-control" id="selReportType" name="selReportType" />
+                </div>
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="CENTRO_COSTO">Centro costo:</label>
+                    <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" />
+                </div>
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="selCuentaContable">Cuenta contable:</label>
+                    <input type="hidden" class="form-control" id="selCuentaContable" name="selCuentaContable" />
+                </div>
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="startDate">Fecha inicial:</label>
+                    <div class="input-group date" id="startDateContainer" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#startDateContainer" id="startDate" name="startDate" />
+                        <div class="input-group-append" data-target="#startDateContainer" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="finishDate">Fecha final:</label>
+                    <div class="input-group date" id="finishDateContainer" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#finishDateContainer" id="finishDate" name="finishDate" />
+                        <div class="input-group-append" data-target="#finishDateContainer" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-3 col-lg-2">
+                    <label class="form-label" for="selReportLevel">Nivel de cuenta:</label>
+                    <input type="hidden" class="form-control" id="selReportLevel" name="selReportLevel" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-end" style="gap: 0.3rem;">
+                    <button class="btn btn-primary btn-md" id="btnGenerateReport" type="submit">
+                        <i class="fa fa-external-link"></i>&nbsp;
+                        <span id="btnGenerateReportText">Generar reporte</span>
+                    </button>
+
+
+                    <button onclick="makeExcel()" class="btn btn-success btn-md" id="btnGenerateExcel">
+                        <i class="fa fa-file-excel"></i>&nbsp; Exportar a Excel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/messages_es.js"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/base.grid.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/reports.helper.js" asp-append-version="true"></script>
+}

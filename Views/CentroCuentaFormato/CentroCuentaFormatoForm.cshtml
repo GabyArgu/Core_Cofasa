@@ -1,0 +1,44 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+<div class="col-md-12">
+    <form role="form" id="centroCuentaFormatoForm">
+        <input type="hidden" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
+        <input type="hidden" id="OPERACION" name="OPERACION" />
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label" for="CENTRO_COSTO">Centro Costo</label>
+                <input type="text" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" required />
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="form-label" for="CuentaContable">Cuenta Contable</label>
+                <input type="text" class="form-control" id="CuentaContable" name="CuentaContable" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="form-label" for="ESTADO">Estado</label>
+                <select class="form-control" id="ESTADO" name="ESTADO">
+                    <option value="A">Activo</option>
+                    <option value="I">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="form-label" for="Descripcion_CTA">Descripción</label>
+                <input type="text" class="form-control" id="Descripcion_CTA" name="Descripcion_CTA" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-primary btn-md float-right" id="formSaveButton" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

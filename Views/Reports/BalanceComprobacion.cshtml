@@ -1,0 +1,136 @@
+@using CoreContable.Models.Report
+@model ReporteBalanceComprobacion
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Balance de comprobaci&oacute;n</title>
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .sub-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 !important;
+        }
+
+        .report-container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: space-between !important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 2px 4px;
+            text-align: left;
+            font-size: 0.8rem;
+            border: 0.9px solid #000;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .money {
+            text-align: right !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .border-top {
+            border-top: 0.9px solid black !important;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #e6e6e6; /* Color suave para resaltar la fila de totales */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container" id="reportContainer">
+        <center>
+            <p class="title">@Model.CiaNombre</p>
+            <p class="sub-title">@Model.Subtitulo?.ToUpper() AL @Model.Dia/@Model.Mes/@Model.Anio</p>
+            <p class="sub-title">(Expresado en dólares US$)</p>
+        </center>
+
+        <table style="width: 100%; margin-top: 25px;" class="dataTable">
+            <thead>
+                <tr>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">CUENTA</p></th>
+                    <th style="width: 30%;"><p class="p-thead">DESCRIPCIÓN</p></th>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO ANTERIOR</p></th>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">CARGOS</p></th>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">ABONOS</p></th>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO DEL MES</p></th>
+                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO ACTUAL</p></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var cuenta in @Model.CuentasUnificadas)
+                {
+                    <tr>
+                        <td><p style="text-align: center;">@cuenta.Cta_Catalana</p></td>
+                        <td><p>@cuenta.DescripEsp</p></td>
+                        <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
+                        <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>
+                        <td><p class="money">@((cuenta.Abonos == 0) ? "0.00" : cuenta.Abonos.ToString ("#,##0.00"))</p></td>
+                        <td><p class="money">@((cuenta.SaldoDelMes == 0) ? "0.00" : cuenta.SaldoDelMes.ToString ("#,##0.00"))</p></td>
+                        <td><p class="money">@((cuenta.SaldoActual == 0) ? "0.00" : cuenta.SaldoActual.ToString ("#,##0.00"))</p></td>
+                    </tr>
+                }
+
+
+                <tr class="total-row">
+                    <td colspan="3" class="text-center" style="padding-bottom:0.8rem; padding-top: 0.8rem;">TOTAL</td>
+                    <td class="money" style="padding-bottom:0.8rem; padding-top: 0.8rem;">
+                        @MoneyUtils.GetDefaultFormatAsString(
+                        (Model.CuentasUnificadas?.Sum (c => c.Cargos) ?? 0)
+                        )
+                    </td>
+                    <td class="money" style="padding-bottom:0.8rem; padding-top: 0.8rem;">
+                        @MoneyUtils.GetDefaultFormatAsString(
+                        (Model.CuentasUnificadas?.Sum (c => c.Abonos) ?? 0)
+                        )
+                    </td>
+                    <td colspan="2" class="money" style="padding-bottom:0.8rem; padding-top: 0.8rem;">-</td>
+                </tr>
+
+
+            </tbody>
+
+        </table>
+    </div>
+</body>
+</html>

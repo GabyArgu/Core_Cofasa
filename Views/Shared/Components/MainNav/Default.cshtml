@@ -1,0 +1,53 @@
+﻿<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a asp-action="index" asp-controller="home" class="brand-link">
+        <img src="~/img/Catalana.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+        <span class="brand-text font-weight-light">Catalana</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                @foreach (var father in Model)
+                {
+                    @if (father.FatherVisibility)
+                    {
+                        <li class="nav-item parent" id="menu_@father.FatherId">
+                            <a href="@father.FatherUrl" class="nav-link">
+                                <i class="nav-icon @father.FatherIcon"></i>
+                                <p>
+                                    @father.FatherName
+                                    @if (father.ChildrenList != null && father.ChildrenList.Count > 0)
+                                    {
+                                        <i class="right fas fa-angle-left"></i>
+                                    }
+                                </p>
+                            </a>
+                            @if (father.ChildrenList != null && father.ChildrenList.Count > 0)
+                            {
+                                <ul class="nav nav-treeview">
+                                    @foreach (var children in father.ChildrenList)
+                                    {
+                                        @if (children.ChildrenVisibility)
+                                        {
+                                            <li class="nav-item" id="menu_@children.ChildrenId">
+                                                <a href="@children.ChildrenUrl" class="nav-link">
+                                                    <i class="nav-icon @children.ChildrenIcon"></i>
+                                                    <p>@children.ChildrenName</p>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

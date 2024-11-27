@@ -1,0 +1,88 @@
+﻿@using CoreContable.Services
+@using CoreContable.Utils
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Administrador de empresas";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/jquery.dataTables/1.13.7/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
+}
+
+@section BreadCrumb{
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="card">
+    <div class="card-body">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_ADD))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary btn-md button-create float-right" id="addCiaBtn" style="margin-bottom:20px;">
+                        <i class="fa fa-plus"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        }
+
+        <table id="ciasDt" class="display" style="width:100%">
+            <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th>Código</th>
+                <th>Razón social</th>
+                <th>Nombre comercial</th>
+                <th>Dirección</th>
+                <th style="width: 10%;">Acciones</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<textarea id="ciasGridButtons" style="display:none;">
+    <div class="btn-group" data-row="{data}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_UPDATE))
+        {
+            <button class='btn btn-warning btn-sm button-edit' data-action="edit" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+        }
+        
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_DELETE))
+        {
+            @* <button class='btn btn-danger btn-sm button-delete' data-action="delete" title="Inactivar"> *@
+            @*     <i class='fa fa-times'></i> *@
+            @* </button> *@
+        }
+        
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_COPY))
+        {
+            <button class='btn btn-primary btn-sm button-detail' data-action="copy" title="Crear una copia">
+                <i class="fa fa-files-o" aria-hidden="true"></i>
+            </button>
+        }
+    </div>
+</textarea>
+
+<textarea id="ciasFormBody" style="display:none;"><partial name="CiaForm" /></textarea>
+
+@section Scripts{
+    <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js" asp-append-version="true"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/cias.admin.js" asp-append-version="true"></script>
+}

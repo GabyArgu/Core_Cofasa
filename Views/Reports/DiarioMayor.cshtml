@@ -1,0 +1,185 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using CoreContable.Models.Report;
+
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diario Mayor Auxiliar</title>
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+
+        p.title {
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        p.sub-title {
+            font-size: 16px;
+            margin: 0;
+            padding-top: 6px;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-size: 14px;
+        }
+
+        td.money {
+            text-align: right;
+        }
+
+        .bottom-line {
+            border: 0.9px solid black;
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .dataTable {
+            border: 0.9px solid black;
+        }
+
+        /* Definición de las columnas */
+        .col-asiento {
+            width: 10%;
+            border: 0.9px solid black;
+        }
+
+        .col-fecha {
+            width: 10%;
+            border: 0.9px solid black;
+        }
+
+        .col-referencia {
+            width: 45%;
+            border: 0.9px solid black;
+        }
+
+        .col-saldo, .col-cargos, .col-abonos {
+            width: 10%;
+            border: 0.9px solid black;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="reportContainer">
+        <center>
+            <p class="title">@Model.NombreCompania</p>
+            <p class="sub-title">
+                Diario Mayor Auxiliar del:
+                @Convert.ToDateTime(Model.FechaInicio).ToString("dd/MM/yyyy")
+                al
+                @Convert.ToDateTime(Model.FechaFin).ToString("dd/MM/yyyy")
+            </p>
+
+        </center>
+
+        <table class="dataTable">
+            <thead>
+                <tr>
+                    <th class="center col-fecha">FECHA</th>
+                    <th class="center col-asiento">POLIZA</th>
+                    <th class="center col-asiento">TIPO TRANSACCIÓN</th>
+                    <th class="center col-fecha">CENTRO DE COSTO</th>
+                    <th class="center col-referencia">CONCEPTO</th>
+                    <th class="center col-cargos">CARGOS</th>
+                    <th class="center col-abonos">ABONOS</th>
+                    <th class="center col-saldo">SALDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string descripcionActual = null;
+                    bool firstConcept = true;
+                    decimal saldoAcumulado = 0; // Inicializa el saldo acumulado
+                    double totalCargo = 0;  // Acumulador para Cargos
+                    double totalAbono = 0;  // Acumulador para Abonos
+                }
+
+                @foreach (var item in Model.Detalles)
+                {
+                    saldoAcumulado += (decimal)(item.CARGO - item.ABONO); // Calcula el saldo acumulado
+                    if (descripcionActual != item.NombreCuenta)
+                    {
+                        descripcionActual = item.NombreCuenta;
+                        firstConcept = true;
+                        <tr>
+                            <td class="center col-fecha bold" colspan="2">@item.FullAccountNumber</td>
+                            <td class="col-referencia bold" colspan="4">@item.NombreCuenta</td>
+                            <td class="center col-fecha bold">Saldo inicial:</td>
+                            <td class="center col-fecha bold">@item.CENTRO_COSTO</td>
+                        </tr>
+                    }
+
+                    if (!firstConcept || descripcionActual == item.NombreCuenta)
+                    {
+                        <tr>
+                            <td class="center col-fecha">@item.Fecha_Poliza?.ToString("dd/MM/yyyy")</td>
+                            <td class="center col-asiento">@item.NUM_POLIZA</td>
+                            <td class="center col-asiento">@item.TIPO_DOCTO</td>
+                            <td class="center col-fecha">@item.CENTRO_COSTO</td>
+                            <td class="col-referencia">@item.ConceptoDetalle</td>
+                            <td class="money col-cargos">@MoneyUtils.GetDefaultFormatAsString(item.CARGO)</td>
+                            <td class="money col-abonos">@MoneyUtils.GetDefaultFormatAsString(item.ABONO)</td>
+                        </tr>
+                        firstConcept = false;
+                    }
+
+                    // Acumulación de los totales
+                    totalCargo += item.CARGO;
+                    totalAbono += item.ABONO;
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="bottom-line" style="text-align:right">Totales:</td>
+                    <td class="money bold bottom-line">
+                        <p>@MoneyUtils.FormatStringFromDoubleTwoDecimals(totalCargo)</p>
+                    </td>
+                    <td class="money bold bottom-line">
+                        <p>@MoneyUtils.FormatStringFromDoubleTwoDecimals(totalAbono)</p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+</html>

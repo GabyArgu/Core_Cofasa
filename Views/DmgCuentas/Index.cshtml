@@ -1,0 +1,80 @@
+﻿@using CoreContable.Services
+@using CoreContable.Utils
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Cuentas contables";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/jquery.dataTables/1.13.7/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
+}
+
+@section BreadCrumb{
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<input type="hidden" id="codCia" name="codCia" value="@SecurityRepository.GetSessionCiaCode()">
+
+<div class="card">
+    <div class="card-body">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_ADD))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary btn-md button-create float-right" id="addDmgCuentas" style="margin-bottom:20px;">
+                        <i class="fa fa-plus"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        }
+
+        <table id="dmgCuentasDt" class="" style="width:100%!important;">
+            <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th>Nivel 1</th>
+                <th>Nivel 2</th>
+                <th>Nivel 3</th>
+                <th>Nivel 4</th>
+                <th>Nivel 5</th>
+                <th>Nivel 6</th>
+                <th>Nombre</th>
+                <th style="width: 10%;">Acciones</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<textarea id="dmgDoctosGridButtons" style="display:none;">
+    <div class="btn-group" data-row="{data}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_UPDATE))
+        {
+            <button class='btn btn-warning btn-sm button-edit' data-action="edit" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+        }
+    </div>
+</textarea>
+
+<textarea id="dmgCuentasFormBody" style="display:none;"><partial name="DmgCuentasForm" /></textarea>
+
+@section Scripts{
+    <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/pages/utils/base.grid.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/dmgcuentas.admin.js" asp-append-version="true"></script>
+}

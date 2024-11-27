@@ -1,0 +1,88 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Tipos de partidas contables";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/jquery.dataTables/1.13.7/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
+}
+
+@section BreadCrumb{
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<input type="hidden" id="codCia" name="codCia" value="@SecurityRepository.GetSessionCiaCode()">
+
+<div class="card">
+    <div class="card-body">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_ADD))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary btn-md button-create float-right" id="addDmgDoctos" style="margin-bottom:20px;">
+                        <i class="fa fa-plus"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        }
+
+        <table id="dmgDoctosDt" class="display" style="width:100%">
+            <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th>Compa&ntilde;&iacute;a</th>
+                <th>C&oacute;digo</th>
+                <th>Contador p&oacute;liza</th>
+                <th>Descripci&oacute;n de la p&oacute;liza</th>
+                <th>Proceso</th>
+                <th>Grabaci&oacute;n de p&oacute;liza</th>
+                <th style="width: 10%;">Acciones</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<textarea id="dmgDoctosGridButtons" style="display:none;">
+    <div class="btn-group" data-row="{data}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_UPDATE))
+        {
+            <button class='btn btn-warning btn-sm button-edit' data-action="edit" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+        }
+    </div>
+</textarea>
+
+<textarea id="dmgDoctosGridSelect" style="display:none;">
+    @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_UPDATE))
+    {
+        <select name="{codCia}" id="{codCia}" class="form-control" data-row="{data}">
+        @*     <option value="" {0}>Cambiar estado</option> *@
+             <option value="M" {1}>Manual</option>
+             <option value="A" {2}>Automático</option>
+        </select>
+    }
+</textarea>
+
+<textarea id="dmgDoctosFormBody" style="display:none;"><partial name="DoctosForm" /></textarea>
+
+@section Scripts{
+    <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/pages/utils/base.grid.js" asp-append-version="true"></script>
+    <script src="~/js/pages/dmgdoctos.admin.js" asp-append-version="true"></script>
+}

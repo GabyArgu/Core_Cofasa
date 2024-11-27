@@ -1,0 +1,109 @@
+﻿@using CoreContable.Services
+@inject ISecurityRepository SecurityRepository
+
+@{
+    ViewData["Title"] = "Asientos mayorizados";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/plugins/jquery.dataTables/1.13.7/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"/>
+    <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true"/>
+}
+
+@section BreadCrumb{
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                <input type="hidden" class="form-control" id="tipoDoctoFilter" name="tipoDoctoFilter"/>
+            </div>
+            <div class="col-3 form-group">
+                <div class="input-group date" id="FECHA-INICIO_container" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#FECHA-INICIO_container" id="FECHA-INICIO" name="FECHA-INICIO" placeholder="Fecha inicio"/>
+                    <div class="input-group-append" data-target="#FECHA-INICIO_container" data-toggle="datetimepicker">
+                        <div class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 form-group">
+                <div class="input-group date" id="FECHA-FIN_container" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#FECHA-FIN_container" id="FECHA-FIN" name="FECHA-FIN" placeholder="Fecha fin" disabled=""/>
+                    <div class="input-group-append" data-target="#FECHA-FIN_container" data-toggle="datetimepicker">
+                        <div class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table id="dmgPolizaDataTableId" class="" style="width:100%!important;">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th>Fecha</th>
+                        @* <th>A&ntilde;o</th> *@
+                        @* <th>Mes</th> *@
+                        <th>P&oacute;liza</th>
+                        <th>Tipo</th>
+                        @* <th>Estado</th> *@
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Diferencia</th>
+                        <th>Estado</th>
+                        <th style="width: 10%;">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<textarea id="dmgPolizaDataTableActionsContainerId" style="display:none;">
+    <div class="btn-group" data-row="{data}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGPOLIZA_CAN_SEE_DETAIL)) {
+            <button class='btn btn-warning btn-sm button-warning' data-action="detail" title="Ver detalle">
+                <i class='fa fa-eye'></i>
+            </button>
+        }
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGPOLIZA_CAN_UNCAPITALIZE)) {
+            <button class='btn btn-primary btn-sm button-down' data-action="uncapitalize" title="Desmayorizar">
+                <i class='fa fa-arrow-down'></i>
+            </button>
+        }
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGPOLIZA_CAN_PRINT)) {
+            <button class='btn bg-olive btn-sm' data-action="report" title="Imprimir">
+                <i class='fa fa-print'></i>
+            </button>
+        }
+    </div>
+</textarea>
+@if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DMGPOLIZA_CAN_SEE_DETAIL)) {
+    <textarea id="dmgDetalleGridHtml" style="display:none;"><partial name="../DmgDetalle/Index" /></textarea>
+}
+
+@section Scripts{
+    <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/plugins/moment/moment-with-locales.js"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/additional-methods.min.js"></script>
+    <script src="~/plugins/jqueryValidate-1.19/messages_es.js"></script>
+    <script src="~/plugins/base64/base64.js"></script>
+    <script src="~/plugins/JSON-js/json2.js"></script>
+    <script src="~/plugins/jquery-json/jquery.json.min.js"></script>
+    <script src="~/js/pages/utils/base.grid.js" asp-append-version="true"></script>
+    <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
+    <script src="~/js/pages/dmgpoliza.admin.js" asp-append-version="true"></script>
+    <script src="~/js/pages/dmgpoliza.admin.dmgdetalle.js" asp-append-version="true"></script>
+}

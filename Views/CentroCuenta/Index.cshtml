@@ -1,0 +1,49 @@
+﻿@using CoreContable.Services
+@using CoreContable.Utils
+@inject ISecurityRepository SecurityRepository
+
+<div class="card">
+    <div class="card-body">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CENTRO_CUENTA_CAN_ADD))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary btn-md button-create float-right" id="ccAccountsAddButton" style="margin-bottom:20px;">
+                        <i class="fa fa-plus"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        }
+
+        <table id="ccAccountsDataTable" class="" style="width:100%!important;">
+            <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th>Nivel 1</th>
+                <th>Nivel 2</th>
+                <th>Nivel 3</th>
+                <th>Nivel 4</th>
+                <th>Nivel 5</th>
+                <th>Nivel 6</th>
+                <th>Estado</th>
+                <th>Nombre</th>
+                <th style="width: 10%;">Acciones</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<textarea id="ccAccountsDataTableActionsContainer" style="display:none;">
+    <div class="btn-group" data-row="{data-child}" style="">
+        @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_CENTRO_CUENTA_CAN_UPDATE))
+        {
+            <button class='btn btn-warning btn-sm button-edit' data-action="edit" title="Editar">
+                <i class='fa fa-pencil'></i>
+            </button>
+        }
+    </div>
+</textarea>
+<textarea id="ccAccountsFormHtml" style="display:none;"><partial name="../CentroCuenta/CentroCuentaForm" /></textarea>

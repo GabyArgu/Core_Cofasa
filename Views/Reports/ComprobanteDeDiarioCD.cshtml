@@ -1,0 +1,226 @@
+@model CoreContable.Models.Report.ReportePolizaDiario
+
+@{
+    Layout = null;
+    var firstObject = Model.Cabecera;
+    var cuentas = Model.Cuentas;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@firstObject?.NombreReporte</title>
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+
+        p.title {
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        p.sub-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .p-thead {
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #f2f2f2;
+            padding: 8px;
+        }
+
+        .p-thead2 {
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #f2f2f2;
+            padding: 8px;
+        }
+
+        table.dataTable {
+            border-collapse: collapse;
+            border: 0.9px solid black;
+        }
+
+            table.dataTable thead {
+                border: 0.9px solid black;
+            }
+
+            table.dataTable tfoot {
+                border: 0.9px solid black;
+                font-weight: bold;
+            }
+
+            table.dataTable tr td {
+                padding: 6px;
+                border: 0.9px solid black;
+            }
+
+        table.signatureTable tr td {
+            border: 0.9px solid black;
+        }
+
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            max-width: 100%;
+        }
+
+        tfoot {
+            display: table-row-group;
+        }
+
+        th {
+            border: 0.9px solid black;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="reportContainer">
+        <div>
+            <p style="font-size: 0.8rem;">Emision: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+            <center>
+                <p class="title">@firstObject?.NombreCompania </p>
+            </center>
+        </div>
+
+        <center>
+			<table style="width: 80%; margin-top: 20px;">
+				<tr>
+					<td style="width: 40%;"><p class="sub-title">@firstObject?.DescripcionTipoDocumento</p></td>
+					<td style="width: 20%;"><p class="sub-title">@firstObject?.NUM_POLIZA</p></td>
+					<td style="width: 20%; text-align: right;"><p class="sub-title">@DateTimeUtils.FormatToString(firstObject?.Fecha_Poliza)</p></td>
+				</tr>
+			</table>
+        </center>
+       
+
+        <table style="width: 100%; margin-top: 20px;">
+            <tr>
+                <td class="item-2 break-word">@firstObject?.ConceptoEncabezado</td>
+                <td class="item-2" style="width: 22%;">(Expresado en dolares US$)</td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; margin-top: 20px;" class="dataTable">
+            <thead>
+                <tr>
+                    <th style="width: 14%; text-align:center;"><p class="p-thead">CENTRO COSTOS</p></th>
+                    <th style="width: 14%; text-align:center;"><p class="p-thead">CUENTA</p></th>
+                    <th colspan="2" style="width: 48%; text-align: left;"><p class="p-thead">CONCEPTO</p></th>
+                    <th style="width: 12%; text-align: right ;"><p class="p-thead2">CARGOS</p></th>
+                    <th style="width: 12%; text-align: right ;"><p class="p-thead2">ABONOS</p></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    string cuentaActual = null;
+                    string nombreCuentaActual = null;
+                    decimal subtotalCargo = 0;
+                    decimal subtotalAbono = 0;
+                    int totalAbonos = 0;
+                    int countAbono = 0;
+                }
+
+                @foreach (var cuenta in cuentas)
+                {
+                    countAbono++;
+                    //Calculamos el total de abonos de cada cuenta en el primer registro
+                    if (countAbono == 1)
+                    {
+                        @foreach (var tempCount in cuentas)
+                        {
+                            if (tempCount.NombreCuenta == cuenta.NombreCuenta)
+                            {
+                                totalAbonos++;
+                            }
+                        }
+                    }
+
+                    if (totalAbonos == 0)
+                    {
+                        <tr id="@cuenta.NombreCuenta">
+                            <td style="text-align:center;"><p>@cuenta.CentroCosto</p></td>
+                            <td style="text-align:center;"><p>@cuenta.NumeroDeCuenta</p></td>
+                            <td><p>@cuenta.NombreCuenta</p></td>
+                            <td><p class="break-word">@cuenta.Concepto</p></td>
+                            <td style="text-align:right;"> <p>$ @((cuenta.Cargo ?? 0.0).ToString("#,##0.00"))</p></td>
+                            <td style="text-align:right;"><p>$ @((cuenta.Abono ?? 0.0).ToString("#,##0.00"))</p></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        if (countAbono == 1)
+                        {
+                            <tr>
+                                <td style="text-align:center;"><p>@cuenta.CentroCosto</p></td>
+                                <td style="text-align:center;"><p>@cuenta.NumeroDeCuenta</p></td>
+                                <td colspan="4"><p>@cuenta.NombreCuenta</p></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"><p class="break-word">@cuenta.Concepto</p></td>
+                            <td style="text-align:right;"><p>$ @((cuenta.Cargo ?? 0.0).ToString ("#,##0.00"))</p></td>
+                            <td style="text-align:right;"><p>$ @((cuenta.Abono ?? 0.0).ToString ("#,##0.00"))</p></td>
+                        </tr>
+                    }
+
+                    // Acumula los subtotales
+                    subtotalCargo += (decimal)(cuenta.Cargo ?? 0);
+                    subtotalAbono += (decimal)(cuenta.Abono ?? 0);
+
+                    // Verifica si estamos en el abono final
+                    if (countAbono == totalAbonos)
+                    {
+                        subtotalCargo = 0;
+                        subtotalAbono = 0;
+                        totalAbonos = 0;
+                        countAbono = 0;
+                    }
+                }
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align:right"><p>TOTAL DOCUMENTO:</p></td>
+                    <td style="text-align:right;"><p>@MoneyUtils.FormatToString(cuentas.Sum (cuenta => cuenta.Cargo))</p></td>
+                    <td style="text-align:right;"><p>@MoneyUtils.FormatToString(cuentas.Sum (cuenta => cuenta.Abono))</p></td>
+                    <span class="page-number"></span>
+                </tr>
+            </tfoot>
+        </table>
+
+        <table style="width: 100%; margin-top: 7rem" class="signatureTable">
+            <tr>
+                <td style="width: 25%;"><center><div style="width: 80%; border-bottom: 1px solid black;"></div></center></td>
+                <td style="width: 25%;"><center><div style="width: 80%; border-bottom: 1px solid black;"></div></center></td>
+                <td style="width: 25%;"><center><div style="width: 80%; border-bottom: 1px solid black;"></div></center></td>
+            </tr>
+            <tr>
+                <td><center><p>ELABORADO POR</p></center></td>
+                <td><center><p>REVISADO POR</p></center></td>
+                <td><center><p>CONTADOR</p></center></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
