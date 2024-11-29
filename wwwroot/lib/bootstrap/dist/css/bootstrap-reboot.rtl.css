@@ -250,7 +250,7 @@ table {
 caption {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  color: #6c757d;
+  color: #5a4780;
   text-align: right;
 }
 
@@ -374,7 +374,7 @@ legend + * {
 }
 
 [type=search] {
-  outline-offset: -2px;
+  outline-offset: none !important;
   -webkit-appearance: textfield;
 }
 

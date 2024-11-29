@@ -3,8 +3,9 @@
     Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
 }
 
+<!-- Fila 1 de tarjetas -->
 <div class="row">
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-info">
             <div class="inner">
                 <h3 id="ciasNumber">0</h3>
@@ -13,11 +14,11 @@
             <div class="icon">
                 <i class="fa fa-building"></i>
             </div>
-            <a href="/Cias/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/Cias/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3 id="usersNumber">0</h3>
@@ -26,13 +27,11 @@
             <div class="icon">
                 <i class="fa fa-user"></i>
             </div>
-            <a href="/Users/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/Users/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-</div>
 
-<div class="row mt-4">
-    <div class="col-lg-3 col-12">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-primary">
             <div class="inner">
                 <h3 id="repositoryNumber">0</h3>
@@ -41,11 +40,14 @@
             <div class="icon">
                 <i class="fa fa-folder-open-o"></i>
             </div>
-            <a href="/Repository/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/Repository/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+</div>
 
-    <div class="col-lg-3 col-6">
+<!-- Fila 2 de tarjetas -->
+<div class="row mt-4">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3 id="repositoryCanUpperNumber">0</h3>
@@ -54,11 +56,11 @@
             <div class="icon">
                 <i class="fa fa-check"></i>
             </div>
-            <a href="/Repository/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/Repository/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3 id="repositoryNotEqualsNumber">0</h3>
@@ -67,13 +69,11 @@
             <div class="icon">
                 <i class="fa fa-times"></i>
             </div>
-            <a href="/Repository/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/Repository/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-</div>
 
-<div class="row mt-4">
-    <div class="col-lg-3 col-12">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-secondary">
             <div class="inner">
                 <h3 id="dmgpolizaNumber">0</h3>
@@ -82,11 +82,14 @@
             <div class="icon">
                 <i class="fa fa-arrow-up"></i>
             </div>
-            <a href="/DmgPoliza/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/DmgPoliza/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+</div>
 
-    <div class="col-lg-3 col-6">
+<!-- Fila 3 de tarjetas -->
+<div class="row mt-4">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3 id="dmgpolizaPrintedNumber">0</h3>
@@ -95,11 +98,11 @@
             <div class="icon">
                 <i class="fa fa-check"></i>
             </div>
-            <a href="/DmgPoliza/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/DmgPoliza/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
-    <div class="col-lg-3 col-6">
+    <div class="col-lg-4 col-md-4 col-12">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3 id="dmgpolizaNotPrintedNumber">0</h3>
@@ -108,10 +111,13 @@
             <div class="icon">
                 <i class="fa fa-times"></i>
             </div>
-            <a href="/DmgPoliza/Index" class="small-box-footer">M&aacute;s informaci&oacute;n <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/DmgPoliza/Index" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+
+    <!-- Puedes agregar más tarjetas si lo deseas -->
 </div>
+
 
 @section Scripts{
     <script src="~/js/pages/dashboard.admin.js" asp-append-version="true"></script>

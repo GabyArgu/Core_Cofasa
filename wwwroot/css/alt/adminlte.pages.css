@@ -341,7 +341,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 }
 
 .mailbox-attachment-info {
-  background-color: #f8f9fa;
+  background-color:  #f4f4f9;
   padding: 10px;
 }
 
@@ -454,7 +454,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 }
 
 .dark-mode .lockscreen-image {
-  background-color: #6c757d;
+  background-color: #5a4780;
 }
 
 .login-logo,
@@ -536,7 +536,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 .login-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text,
 .register-card-body .input-group .form-control.is-valid ~ .input-group-prepend .input-group-text,
 .register-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text {
-  border-color: #28a745;
+  border-color: #4caf50;
 }
 
 .login-card-body .input-group .form-control.is-invalid:focus,
@@ -546,7 +546,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .login-card-body .input-group .form-control.is-invalid ~ .input-group-append .input-group-text,
 .register-card-body .input-group .form-control.is-invalid ~ .input-group-append .input-group-text {
-  border-color: #dc3545;
+  border-color: #e53935;
 }
 
 .login-card-body .input-group .input-group-text,
@@ -573,7 +573,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 .dark-mode .login-card-body,
 .dark-mode .register-card-body {
   background-color: #343a40;
-  border-color: #6c757d;
+  border-color: #5a4780;
   color: #fff;
 }
 
@@ -678,7 +678,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .dark-mode .post {
   color: #fff;
-  border-color: #6c757d;
+  border-color: #5a4780;
 }
 
 .product-image {
@@ -769,7 +769,7 @@ body.iframe-mode-fullscreen.layout-navbar-fixed .wrapper .content-wrapper {
 }
 
 .content-wrapper.iframe-mode .btn-iframe-close {
-  color: #dc3545;
+  color: #e53935;
   position: absolute;
   line-height: 1;
   right: .125rem;

@@ -317,7 +317,7 @@
 }
 
 .small-box p > small {
-  color: #f8f9fa;
+  color:  #f4f4f9;
   display: block;
   font-size: .9rem;
   margin-top: 5px;
@@ -782,7 +782,7 @@
 
 .timeline-inverse > div > .timeline-item {
   box-shadow: none;
-  background-color: #f8f9fa;
+  background-color:  #f4f4f9;
   border: 1px solid #dee2e6;
 }
 
@@ -791,18 +791,18 @@
 }
 
 .dark-mode .timeline::before {
-  background-color: #6c757d;
+  background-color: #5a4780;
 }
 
 .dark-mode .timeline > div > .timeline-item {
   background-color: #343a40;
   color: #fff;
-  border-color: #6c757d;
+  border-color: #5a4780;
 }
 
 .dark-mode .timeline > div > .timeline-item > .timeline-header {
   color: #ced4da;
-  border-color: #6c757d;
+  border-color: #5a4780;
 }
 
 .dark-mode .timeline > div > .timeline-item > .time {
@@ -845,7 +845,7 @@
 }
 
 .products-list .product-description {
-  color: #6c757d;
+  color: #5a4780;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -864,7 +864,7 @@
 .dark-mode .products-list > .item {
   background-color: #343a40;
   color: #fff;
-  border-bottom-color: #6c757d;
+  border-bottom-color: #5a4780;
 }
 
 .dark-mode .product-description {
@@ -1008,7 +1008,7 @@
 }
 
 .direct-chat-contacts-light {
-  background-color: #f8f9fa;
+  background-color:  #f4f4f9;
 }
 
 .direct-chat-contacts-light .contacts-list-name {
@@ -1016,7 +1016,7 @@
 }
 
 .direct-chat-contacts-light .contacts-list-date {
-  color: #6c757d;
+  color: #5a4780;
 }
 
 .direct-chat-contacts-light .contacts-list-msg {
@@ -1078,73 +1078,73 @@
 }
 
 .direct-chat-primary .right > .direct-chat-text {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4b339c;
+  border-color: #4b339c;
   color: #fff;
 }
 
 .direct-chat-primary .right > .direct-chat-text::after, .direct-chat-primary .right > .direct-chat-text::before {
-  border-left-color: #007bff;
+  border-left-color: #4b339c;
 }
 
 .direct-chat-secondary .right > .direct-chat-text {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #5a4780;
+  border-color: #5a4780;
   color: #fff;
 }
 
 .direct-chat-secondary .right > .direct-chat-text::after, .direct-chat-secondary .right > .direct-chat-text::before {
-  border-left-color: #6c757d;
+  border-left-color: #5a4780;
 }
 
 .direct-chat-success .right > .direct-chat-text {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #4caf50;
+  border-color: #4caf50;
   color: #fff;
 }
 
 .direct-chat-success .right > .direct-chat-text::after, .direct-chat-success .right > .direct-chat-text::before {
-  border-left-color: #28a745;
+  border-left-color: #4caf50;
 }
 
 .direct-chat-info .right > .direct-chat-text {
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  background-color: #2196f3;
+  border-color: #2196f3;
   color: #fff;
 }
 
 .direct-chat-info .right > .direct-chat-text::after, .direct-chat-info .right > .direct-chat-text::before {
-  border-left-color: #17a2b8;
+  border-left-color: #2196f3;
 }
 
 .direct-chat-warning .right > .direct-chat-text {
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: #ffb74d ;
+  border-color: #ffb74d ;
   color: #1f2d3d;
 }
 
 .direct-chat-warning .right > .direct-chat-text::after, .direct-chat-warning .right > .direct-chat-text::before {
-  border-left-color: #ffc107;
+  border-left-color: #ffb74d ;
 }
 
 .direct-chat-danger .right > .direct-chat-text {
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: #e53935;
+  border-color: #e53935;
   color: #fff;
 }
 
 .direct-chat-danger .right > .direct-chat-text::after, .direct-chat-danger .right > .direct-chat-text::before {
-  border-left-color: #dc3545;
+  border-left-color: #e53935;
 }
 
 .direct-chat-light .right > .direct-chat-text {
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  background-color:  #f4f4f9;
+  border-color:  #f4f4f9;
   color: #1f2d3d;
 }
 
 .direct-chat-light .right > .direct-chat-text::after, .direct-chat-light .right > .direct-chat-text::before {
-  border-left-color: #f8f9fa;
+  border-left-color:  #f4f4f9;
 }
 
 .direct-chat-dark .right > .direct-chat-text {
@@ -1218,13 +1218,13 @@
 }
 
 .direct-chat-blue .right > .direct-chat-text {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #4b339c;
+  border-color: #4b339c;
   color: #fff;
 }
 
 .direct-chat-blue .right > .direct-chat-text::after, .direct-chat-blue .right > .direct-chat-text::before {
-  border-left-color: #007bff;
+  border-left-color: #4b339c;
 }
 
 .direct-chat-indigo .right > .direct-chat-text {
@@ -1258,13 +1258,13 @@
 }
 
 .direct-chat-red .right > .direct-chat-text {
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: #e53935;
+  border-color: #e53935;
   color: #fff;
 }
 
 .direct-chat-red .right > .direct-chat-text::after, .direct-chat-red .right > .direct-chat-text::before {
-  border-left-color: #dc3545;
+  border-left-color: #e53935;
 }
 
 .direct-chat-orange .right > .direct-chat-text {
@@ -1278,23 +1278,23 @@
 }
 
 .direct-chat-yellow .right > .direct-chat-text {
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: #ffb74d ;
+  border-color: #ffb74d ;
   color: #1f2d3d;
 }
 
 .direct-chat-yellow .right > .direct-chat-text::after, .direct-chat-yellow .right > .direct-chat-text::before {
-  border-left-color: #ffc107;
+  border-left-color: #ffb74d ;
 }
 
 .direct-chat-green .right > .direct-chat-text {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #4caf50;
+  border-color: #4caf50;
   color: #fff;
 }
 
 .direct-chat-green .right > .direct-chat-text::after, .direct-chat-green .right > .direct-chat-text::before {
-  border-left-color: #28a745;
+  border-left-color: #4caf50;
 }
 
 .direct-chat-teal .right > .direct-chat-text {
@@ -1308,13 +1308,13 @@
 }
 
 .direct-chat-cyan .right > .direct-chat-text {
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  background-color: #2196f3;
+  border-color: #2196f3;
   color: #fff;
 }
 
 .direct-chat-cyan .right > .direct-chat-text::after, .direct-chat-cyan .right > .direct-chat-text::before {
-  border-left-color: #17a2b8;
+  border-left-color: #2196f3;
 }
 
 .direct-chat-white .right > .direct-chat-text {
@@ -1328,13 +1328,13 @@
 }
 
 .direct-chat-gray .right > .direct-chat-text {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #5a4780;
+  border-color: #5a4780;
   color: #fff;
 }
 
 .direct-chat-gray .right > .direct-chat-text::after, .direct-chat-gray .right > .direct-chat-text::before {
-  border-left-color: #6c757d;
+  border-left-color: #5a4780;
 }
 
 .direct-chat-gray-dark .right > .direct-chat-text {
@@ -1376,13 +1376,13 @@
 }
 
 .dark-mode .direct-chat-secondary .right > .direct-chat-text {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #5a4780;
+  border-color: #5a4780;
   color: #fff;
 }
 
 .dark-mode .direct-chat-secondary .right > .direct-chat-text::after, .dark-mode .direct-chat-secondary .right > .direct-chat-text::before {
-  border-left-color: #6c757d;
+  border-left-color: #5a4780;
 }
 
 .dark-mode .direct-chat-success .right > .direct-chat-text {
@@ -1426,13 +1426,13 @@
 }
 
 .dark-mode .direct-chat-light .right > .direct-chat-text {
-  background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  background-color:  #f4f4f9;
+  border-color:  #f4f4f9;
   color: #1f2d3d;
 }
 
 .dark-mode .direct-chat-light .right > .direct-chat-text::after, .dark-mode .direct-chat-light .right > .direct-chat-text::before {
-  border-left-color: #f8f9fa;
+  border-left-color:  #f4f4f9;
 }
 
 .dark-mode .direct-chat-dark .right > .direct-chat-text {
@@ -1616,13 +1616,13 @@
 }
 
 .dark-mode .direct-chat-gray .right > .direct-chat-text {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #5a4780;
+  border-color: #5a4780;
   color: #fff;
 }
 
 .dark-mode .direct-chat-gray .right > .direct-chat-text::after, .dark-mode .direct-chat-gray .right > .direct-chat-text::before {
-  border-left-color: #6c757d;
+  border-left-color: #5a4780;
 }
 
 .dark-mode .direct-chat-gray-dark .right > .direct-chat-text {

@@ -1,11 +1,87 @@
-﻿<!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+﻿<style >
+    .nav-pills .nav-link {
+        color: #FEECE2 !important;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: #fff;
+        background-color: #301D71;
+    }
+
+    .bg-primary {
+        background-color: #301D71 !important;
+        border-color: #301D71 !important;
+    }
+
+    .bg-secondary {
+        background-color: #5a4780 !important;
+        border-color: #5a4780 !important;
+    }
+
+    .bg-success {
+        background-color: #4caf50 !important;
+        border-color: #4caf50 !important;
+    }
+
+    .bg-info {
+        background-color: #2196f3 !important;
+        border-color: #2196f3 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffb74d !important;
+        border-color: #ffb74d !important;
+    }
+
+    .bg-danger {
+        background-color: #e53935 !important;
+        border-color: #e53935 !important;
+    }
+
+    .bg-light {
+        background-color: #f4f4f9 !important;
+        border-color: #f4f4f9 !important;
+    }
+
+    .bg-dark {
+        background-color: #201c4b !important;
+        border-color: #201c4b !important;
+    }
+
+</style>
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar elevation-4" style="background-color:#221451">
 
     <!-- Brand Logo -->
     <a asp-action="index" asp-controller="home" class="brand-link d-flex align-items-center justify-content-center position-relative overflow-hidden" style="height: 100px;">
-        <!-- Imagen como fondo -->
-        <img src="~/img/contable.png" alt="Logo Catalana" class="w-75 h-auto position-relative" style="filter: brightness(0) invert(1);">
+        <img id="logo-img" src="~/img/contable.png" alt="Logo Catalana" class="w-75 h-auto position-relative" style="filter: brightness(0) invert(1);">
     </a>
+
+    <script>
+        // Función para verificar el tamaño de la imagen y cambiarla
+        function checkLogoSize() {
+            var logoImg = document.getElementById('logo-img');
+
+            // Verifica si el ancho de la imagen es menor a 100px
+            if (logoImg.clientWidth < 100) {
+                logoImg.src = '/img/contable2.png'; 
+            } else {
+                logoImg.src = '/img/contable.png';   
+            }
+        }
+
+        // Llamar la función al cargar la página
+        window.addEventListener('load', checkLogoSize);
+
+        // Evaluar continuamente el tamaño de la imagen cada vez que la ventana se redimensione
+        window.addEventListener('resize', checkLogoSize);
+
+        // Verificar la imagen constantemente en intervalos
+        setInterval(checkLogoSize, 10);  // Verifica cada 100ms
+
+    </script>
+
 
     <!-- Sidebar -->
     <div class="sidebar">
