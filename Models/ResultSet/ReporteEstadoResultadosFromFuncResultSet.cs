@@ -7,6 +7,6 @@
         public string DescripEsp { get; set; }
         public string GrupoCta { get; set; }
         public string SubGrupo { get; set; }
-        public decimal Saldo { get; set; }
+        public double Saldo { get; set; }
     }
 }

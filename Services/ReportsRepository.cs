@@ -17,7 +17,7 @@ public interface IReportsRepository {
 
     Task<List<ReporteBalanceComprobacionResultSet>> GetDataForBalanceComprobacion (string codCia, string fechaInicio,
         string fechaFin, string level);
-    Task<List<ReporteBalanceGralFromFunc>> GetDataForBalanceGral (string fecha, string codCia);
+    Task<List<ReporteBalanceGralFromFunc>> GetDataForBalanceGral (string fechaInicio, string fechaFin, string codCia);
 
     Task<List<ReporteDiarioMayorFromFunc>> GetDataForDiarioMayor (
     string codCia, string centroCosto, string fechaInicio, string fechaFin, int cta1, int cta2, int cta3, int cta4, int cta5, int cta6);
@@ -201,13 +201,13 @@ public class ReportsRepository(
         }
     }
 
-    public async Task<List<ReporteBalanceGralFromFunc>> GetDataForBalanceGral(string fecha, string codCia) {
+    public async Task<List<ReporteBalanceGralFromFunc>> GetDataForBalanceGral(string fechaInicio, string fechaFin, string codCia) {
         try {
             var result = await dbContext.Set<ReporteBalanceGralFromFunc>()
                 .FromSqlRaw(
-                    "SELECT * FROM CONTABLE.Rpt_Balance_Gral(@p0, @p1)",
+                    "SELECT * FROM CONTABLE.Rpt_Balance_Gral(@p0, @p1 , @p2)",
 
-                    fecha, codCia
+                    fechaInicio, fechaFin, codCia
                 )
                 .ToListAsync();
 
@@ -265,18 +265,46 @@ public class ReportsRepository(
     }
 
     public async Task<List<ReporteEstadoResultadosDetalle>> GetDataForEstadoResultados (string codCia, string startDate, string endDate) {
+        var resultados = new List<ReporteEstadoResultadosDetalle> ( );
         try {
-            var data = await dbContext.ReporteEstadoResultadosFromFunc
-                .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_Saldos_Cta_Resultados(@p0, @p1, @p2)",
-                            startDate, endDate, codCia)  
+            // Lista de cuentas y niveles predefinidos
+            var configuraciones = new List<(string Cuenta, int Nivel)>
+            {
+            // Diccionario actualizado
+                ("5101", 4),  // Ventas
+                ("4201", 4),  // Costo de Ventas
+                ("4401", 3),  // Gastos de Venta
+                ("4402", 3),  // Gastos de Administración
+                //("5201", 3),  // Este no deberá presentarse, porque saldría consolidado INGRESOS POR OTRAS VENTAS
+                ("520101", 4),  // INGRESOS Materia Prima
+                ("520102", 4),  // INGRESOS Materiales de Empaque
+                ("520103", 4),  // INGRESOS Materiales de Empaque
+                ("5206", 3),  // OTROS INGRESOS
+                ("5204", 3), //INGRESOS FINANCIEROS
+                ("430101", 4),  // COSTOS Materia Prima
+                ("430102", 4),  // COSTOS Material de Empaque
+                ("430103", 4),  // COSTOS Activos Biológicos
+                ("450101", 4),  // GASTOS por Intereses Naturales y Jurídicos
+                ("450103", 4),  // GASTOS por Comisiones Instituciones Financieras
+                ("4502", 4),  // OTROS GASTOS
+            };
 
-                .ToListAsync ( );
-            return data;
+            foreach (var config in configuraciones) {
+                var data = await dbContext.ReporteEstadoResultadosFromFunc
+                    .FromSqlRaw ("SELECT * FROM CONTABLE.Rpt_Saldos_Cta_Resultados(@p0, @p1, @p2, @p3, @p4)",
+                                startDate, endDate, codCia, config.Cuenta, config.Nivel)
+                    .ToListAsync ( );
+
+                resultados.AddRange (data);
+            }
+
+            return resultados;
         }
         catch (Exception e) {
             logger.LogError (e, "Error al obtener datos para Estado de Resultados");
             return new List<ReporteEstadoResultadosDetalle> ( );
         }
     }
+
 
 }

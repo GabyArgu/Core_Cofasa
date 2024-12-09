@@ -58,7 +58,7 @@ public class MachineAuthorizationMiddleware(
         }
 
         await next(context);
-    }
+        }
 
     private static string GetMacAddress()
     {

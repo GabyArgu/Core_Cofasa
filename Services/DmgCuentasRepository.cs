@@ -165,19 +165,20 @@ public class DmgCuentasRepository(
         }
     }
 
-    public async Task<string> GetCoreContableAccountFromCONTABLEAccount(string codCia, string CONTABLEAccount)
-    {
-        try
-        {
+    public async Task<string> GetCoreContableAccountFromCONTABLEAccount (string codCia, string CONTABLEAccount) {
+        try {
             var result = await dbContext.CuentasContablesView
-                .Where(entity => entity.Cta_CONTABLE == CONTABLEAccount && entity.COD_CIA == codCia)
-                .FirstOrDefaultAsync();
-            return result?.CuentaContable ?? "";
-        } catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(DmgCuentasRepository), nameof(GetCoreContableAccountFromCONTABLEAccount));
+                .Where (entity => entity.Cta_CONTABLE == CONTABLEAccount && entity.COD_CIA == codCia)
+                .Select (entity => new { Cta_Nivel = entity.Cta_Nivel.ToString ( ) }) // Conversión explícita
+                .FirstOrDefaultAsync ( );
+
+            return result?.Cta_Nivel ?? "";
+        }
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (DmgCuentasRepository), nameof (GetCoreContableAccountFromCONTABLEAccount));
             return "";
         }
     }
+
 }

@@ -111,7 +111,7 @@
 
         <div class="row">
             <!-- Columna izquierda: Activos -->
-            <div class="col-6 group-section" style="width: 48%; float: left; margin-bottom: 20px;">
+            <div class="col-6 group-section" style="width: 49%; float: left; margin-bottom: 20px;">
                 @foreach (var subGrupo in new[] { "CORRIENTE", "NO CORRIENTE" })
                 {
                     var detallesActivos = Model.Detalles.Where (x => x.grupo_cta == "ACTIVO" && x.sub_grupo == subGrupo).ToList ( );
@@ -123,7 +123,7 @@
                                 @foreach (var item in detallesActivos)
                                 {
                                     <tr>
-                                        <td>@item.DESCRIP_ESP</td>
+                                        <td>@item.DESCRIPCION</td>
                                         <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
                                     </tr>
                                 }
@@ -156,7 +156,7 @@
                                             @foreach (var item in subDetalles)
                                             {
                                                 <tr>
-                                                    <td>@item.DESCRIP_ESP</td>
+                                                    <td>@item.DESCRIPCION</td>
                                                     <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
                                                 </tr>
                                             }
@@ -174,7 +174,7 @@
                                     @foreach (var item in detallesDerecha)
                                     {
                                         <tr>
-                                            <td>@item.DESCRIP_ESP</td>
+                                            <td>@item.DESCRIPCION</td>
                                             <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
                                         </tr>
                                     }

@@ -124,14 +124,6 @@
     <None Include="Views\**\*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="Views\CentroCuentaFormato\CentroCuentaFormatoForm.cshtml" />
-    <Content Remove="Views\CentroCuentaFormato\CentroCuentaFormatoUploadFile.cshtml" />
-    <Content Remove="Views\CentroCuentaFormato\Index.cshtml" />
-    <Content Remove="Views\Reports\BalanceGral.cshtml" />
-    <Content Remove="Views\Reports\DiarioMayor.cshtml" />
-    <Content Remove="Views\Reports\EstadosResultados.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="Views\DetRepository\DetRepositoryForm.cshtml" />

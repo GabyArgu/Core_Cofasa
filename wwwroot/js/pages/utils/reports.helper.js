@@ -146,7 +146,7 @@ function watchFilters(selectedReport) {
                 true,  // selCentroCostoReadOnly (disable CentroCosto)
                 true,  // selCuentaContableReadOnly (disable CuentaContable)
                 false, // startDateReadOnly (enable startDate as unique date required)
-                true,  // finishDateReadOnly (disable finishDate)
+                false,  // finishDateReadOnly (disable finishDate)
                 true,   // selReportLevelReadOnly
                 false, // btnGenerateReportDisable
                 false, // btnGenerateExcelDisable
@@ -252,10 +252,9 @@ function makeReport() {
 
     if ($('#selReportType').val() === 'BGR') { // Balance General
         const formattedStartDate = formatDate(startDate); // Formatear solo para Balance General
-        const grupoCta = 'ACTIVO';//??? no necesario
-        const subGrupo = 'CORRIENTE';//??? no necesario
+        const formattedFinishDate = formatDate(finishDate);
 
-        const url = `/Reports/BalanceGral?fecha=${formattedStartDate}&codCia=${codCia}&grupoCta=${grupoCta}&subGrupo=${subGrupo}`;
+        const url = `/Reports/BalanceGral?startDate=${formattedStartDate}&finishDate=${formattedFinishDate}&codCia=${codCia}`;
         window.open(url, '_blank');
     }
 
@@ -315,10 +314,9 @@ function makeExcel() {
 
     if ($('#selReportType').val() === 'BGR') { // Balance General
         const formattedStartDate = formatDate(startDate); // Formatear solo para Balance General
-        const grupoCta = 'ACTIVO';//??? no necesario
-        const subGrupo = 'CORRIENTE';//??? no necesario
+        const formattedFinishDate = formatDate(finishDate);
 
-        const url = `/Reports/ExportarBalanceGralExcel?fecha=${formattedStartDate}&codCia=${codCia}&grupoCta=${grupoCta}&subGrupo=${subGrupo}`;
+        const url = `/Reports/ExportarBalanceGralExcel?startDate=${formattedStartDate}&finishDate=${formattedFinishDate}&codCia=${codCia}`;
         window.open(url, '_blank');
     }
 

@@ -45,7 +45,7 @@
             padding: 2px 4px;
             text-align: left;
             font-size: 0.8rem;
-            border: 0.9px solid #000;
+    
         }
 
         th {
@@ -89,11 +89,11 @@
                 <tr>
                     <th style="width: 10%; text-align: center;"><p class="p-thead">CUENTA</p></th>
                     <th style="width: 30%;"><p class="p-thead">DESCRIPCIÓN</p></th>
-                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO ANTERIOR</p></th>
-                    <th style="width: 10%; text-align: center;"><p class="p-thead">CARGOS</p></th>
-                    <th style="width: 10%; text-align: center;"><p class="p-thead">ABONOS</p></th>
-                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO DEL MES</p></th>
-                    <th style="width: 10%; text-align: center;"><p class="p-thead">SALDO ACTUAL</p></th>
+                    <th style="width: 10%; text-align: right;"><p class="p-thead">SALDO ANTERIOR</p></th>
+                    <th style="width: 10%; text-align: right;"><p class="p-thead">CARGOS</p></th>
+                    <th style="width: 10%; text-align: right;"><p class="p-thead">ABONOS</p></th>
+                    <th style="width: 10%; text-align: right;"><p class="p-thead">SALDO DEL MES</p></th>
+                    <th style="width: 10%; text-align: right;"><p class="p-thead">SALDO ACTUAL</p></th>
                 </tr>
             </thead>
 
@@ -101,7 +101,7 @@
                 @foreach (var cuenta in @Model.CuentasUnificadas)
                 {
                     <tr>
-                        <td><p style="text-align: center;">@cuenta.Cta_CONTABLE</p></td>
+                        <td><p style="text-align: left;">@cuenta.Cta_CONTABLE</p></td>
                         <td><p>@cuenta.DescripEsp</p></td>
                         <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
                         <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>

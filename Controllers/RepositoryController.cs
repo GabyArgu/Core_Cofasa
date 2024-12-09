@@ -274,7 +274,7 @@ public class RepositoryController(
             if (elapsed < 1000)
             {
                 var milliseconds = 1000 - (int)elapsed;
-                Thread.Sleep(milliseconds);
+                await Task.Delay (milliseconds);
             }
         }
         catch (Exception e)
@@ -314,62 +314,76 @@ public class RepositoryController(
         );
     }
 
-    [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_IMPORT_FROM_EXCEL}")]
+
+    private static int GetNumberFromCuentaContable (string cuentaContable, int index) {
+        // Verificar si cuentaContable es nulo o vacío
+        if (string.IsNullOrEmpty (cuentaContable)) {
+            return 0; // Retornar 0 si la cuenta contable es nula o vacía
+        }
+
+        // Verificar si el índice está fuera de los límites de la cadena
+        if (index < 0 || index >= cuentaContable.Length) {
+            return 0; // Retornar 0 si el índice es inválido
+        }
+
+        // Intentar obtener el número de la subcadena
+        try {
+            return int.Parse (cuentaContable.Substring (index, 1));
+        }
+        catch (FormatException) {
+            return 0; // Retornar 0 si el valor en la posición no es un número válido
+        }
+    }
+
+
+
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_IMPORT_FROM_EXCEL}")]
     [HttpPost]
-    public async Task<JsonResult> ImportFromExcel(IFormFile file)
-    {
-        try
-        {
-            if (!IsValidExcelFormat(file.FileName))
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "Formato de archivo no permitido."
-                });
+    public async Task<JsonResult> ImportFromExcel (IFormFile file) {
+        try {
+            if (!IsValidExcelFormat (file.FileName)) {
+                throw new InvalidOperationException ("Formato de archivo no permitido.");
             }
 
-            var rows = await GetRowsFromExcel(file);
-            var groupRepos = GroupListByOrderNumber(rows);
-            var currentCia = securityRepository.GetSessionCiaCode();
+            var rows = await GetRowsFromExcel (file);
+            var groupRepos = GroupListByOrderNumber (rows);
+            var currentCia = securityRepository.GetSessionCiaCode ( );
             var currentDate = DateTime.Now;
-            var currentUser = securityRepository.GetSessionUserName();
+            var currentUser = securityRepository.GetSessionUserName ( );
 
             var successHeadersCount = 0;
             var successDetailsCount = 0;
+            var totalsToBeUpdated = new List<RepositoryIterable> ( );
 
-            var totalsToBeUpdated = new List<RepositoryIterable>();
+            foreach (var header in groupRepos) {
+                var rowsByAccountingAccount = GetRowsByOrderNumber (rows, header);
+                var firstRow = rowsByAccountingAccount.First ( );
 
-            foreach (var header in groupRepos)
-            {
-                var rowsByAccountingAccount = GetRowsByOrderNumber(rows, header);
-                var firstRow = rowsByAccountingAccount.First();
-
-                var headerData = new RepositorioDto
-                {
+                var headerData = new RepositorioDto {
                     COD_CIA = currentCia,
-                    PERIODO = $"{DateTimeUtils.getYearFromStringDate(firstRow.FECHA)}",
+                    PERIODO = $"{DateTimeUtils.getYearFromStringDate (firstRow.FECHA)}",
                     TIPO_DOCTO = firstRow.TIPO_DOCTO,
                     NUM_REFERENCIA = firstRow.FECHA,
                     FECHA = firstRow.FECHA,
-                    ANIO = $"{DateTimeUtils.getYearFromStringDate(firstRow.FECHA)}",
-                    MES = $"{DateTimeUtils.getMonthFromStringDate(firstRow.FECHA)}",
+                    ANIO = $"{DateTimeUtils.getYearFromStringDate (firstRow.FECHA)}",
+                    MES = $"{DateTimeUtils.getMonthFromStringDate (firstRow.FECHA)}",
                     CONCEPTO = firstRow.CONCEPTO,
                     STAT_POLIZA = "G",
                     GRABACION_FECHA = currentDate,
                 };
 
-                for (var i = 0; i < rowsByAccountingAccount.Count; i++)
-                {
+                for (var i = 0; i < rowsByAccountingAccount.Count; i++) {
                     var currentRow = rowsByAccountingAccount[i];
-                    if (i == 0)
-                    {
-                        var (result, numPoliza) = await SaveRepositoryHeader(headerData, true);
-                        successHeadersCount += result == SaveRepositoryHeaderResult.Success ? 1 : 0;
-                        if (numPoliza != null && result == SaveRepositoryHeaderResult.Success)
-                        {
-                            totalsToBeUpdated.Add(new RepositoryIterable
-                            {
+
+                    if (i == 0) {
+                        var (result, numPoliza) = await SaveRepositoryHeader (headerData, true);
+                        if (result != SaveRepositoryHeaderResult.Success) {
+                            throw new InvalidOperationException ("Error al guardar el encabezado del repositorio.");
+                        }
+
+                        successHeadersCount++;
+                        if (numPoliza != null) {
+                            totalsToBeUpdated.Add (new RepositoryIterable {
                                 CodCia = currentCia,
                                 Periodo = headerData.PERIODO,
                                 TipoDocto = headerData.TIPO_DOCTO,
@@ -379,44 +393,44 @@ public class RepositoryController(
                     }
 
                     var coreAccountNumber = await dmgCuentasRepository
-                        .GetCoreContableAccountFromCONTABLEAccount(currentCia, currentRow.CUENTA_CONTABLE);
+                        .GetCoreContableAccountFromCONTABLEAccount (currentCia, currentRow.CUENTA_CONTABLE);
 
-                    var detailData = new DetRepositorioDto
-                    {
+                    var detailData = new DetRepositorioDto {
                         det_COD_CIA = currentCia,
-                        det_PERIODO = int.Parse(headerData.PERIODO),
+                        det_PERIODO = int.Parse (headerData.PERIODO),
                         det_TIPO_DOCTO = headerData.TIPO_DOCTO,
-                        det_NUM_POLIZA = int.Parse(headerData.NUM_POLIZA),
+                        det_NUM_POLIZA = int.Parse (headerData.NUM_POLIZA),
                         det_CORRELAT = i + 1,
-                        CTA_1 = GetNumberFromCuentaContable(coreAccountNumber, 0),
-                        CTA_2 = GetNumberFromCuentaContable(coreAccountNumber, 1),
-                        CTA_3 = GetNumberFromCuentaContable(coreAccountNumber, 2),
-                        CTA_4 = GetNumberFromCuentaContable(coreAccountNumber, 3),
-                        CTA_5 = GetNumberFromCuentaContable(coreAccountNumber, 4),
-                        CTA_6 = GetNumberFromCuentaContable(coreAccountNumber, 5),
+                        CTA_1 = GetNumberFromCuentaContable (coreAccountNumber, 0),
+                        CTA_2 = GetNumberFromCuentaContable (coreAccountNumber, 1),
+                        CTA_3 = GetNumberFromCuentaContable (coreAccountNumber, 2),
+                        CTA_4 = GetNumberFromCuentaContable (coreAccountNumber, 3),
+                        CTA_5 = GetNumberFromCuentaContable (coreAccountNumber, 4),
+                        CTA_6 = GetNumberFromCuentaContable (coreAccountNumber, 5),
                         det_CONCEPTO = currentRow.CONCEPTO_DETALLE,
-                        CARGO = currentRow.CARGO == "" ? 0 : double.Parse(currentRow.CARGO),
-                        ABONO = currentRow.ABONO == "" ? 0 : double.Parse(currentRow.ABONO),
+                        CARGO = string.IsNullOrWhiteSpace (currentRow.CARGO) ? 0 : double.Parse (currentRow.CARGO),
+                        ABONO = string.IsNullOrWhiteSpace (currentRow.ABONO) ? 0 : double.Parse (currentRow.ABONO),
                         CENTRO_COSTO = currentRow.CENTRO_COSTO,
                         GRABACION_FECHA = currentDate,
                         GRABACION_USUARIO = currentUser
                     };
 
-                    successDetailsCount += await detRepoRepository.SaveOne(detailData) ? 1 : 0;
+                    if (!await detRepoRepository.SaveOne (detailData)) {
+                        throw new InvalidOperationException ("Error al guardar un detalle del repositorio.");
+                    }
+
+                    successDetailsCount++;
                 }
             }
 
-            foreach (var total in totalsToBeUpdated)
-            {
-                await UpdatePolizaTotalJob(total);
+            foreach (var total in totalsToBeUpdated) {
+                await UpdatePolizaTotalJob (total);
             }
 
-            return Json(new
-            {
+            return Json (new {
                 success = true,
                 message = "Registros procesados correctamente.",
-                data = new
-                {
+                data = new {
                     totalHeaders = groupRepos.Count,
                     headersSaved = successHeadersCount,
                     totalDetails = rows.Count,
@@ -424,15 +438,14 @@ public class RepositoryController(
                 }
             });
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(ImportFromExcel));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (ImportFromExcel));
 
-            return Json(new
-            {
+            return Json (new {
                 success = false,
-                message = "Ocurrió un error al procesar el archivo."
+                message = "Ocurrió un error al procesar el archivo. " +
+                          "Detalles: " + e.Message
             });
         }
     }
@@ -525,13 +538,6 @@ public class RepositoryController(
         return result;
     }
 
-    ///
-    /// .xlsx: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-    /// .xls: application/vnd.ms-excel
-    /// .xlsm: application/vnd.ms-excel.sheet.macroEnabled.12
-    /// .xlsb: application/vnd.ms-excel.sheet.binary.macroEnabled.12
-    /// .csv: text/csv
-    ///
     public bool IsValidExcelFormat(string fileName)
     {
         // var validFormats = new List<string> { ".xlsx", ".xls", ".xlsm", ".xlsb", ".csv" };
@@ -638,9 +644,6 @@ public class RepositoryController(
             return [];
         }
     }
-
-    private static int GetNumberFromCuentaContable(string cuentaContable, int index)
-        => index is < 0 or > 5 ? 0 : int.Parse(cuentaContable.Substring(index, 1));
 
     private async Task LogImportResult(int numPoliza, string tipoDocto, string description)
     {
