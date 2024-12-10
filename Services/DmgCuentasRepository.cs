@@ -78,59 +78,63 @@ public class DmgCuentasRepository(
                 UTIL_CTA = entity.UTIL_CTA,
                 ACEP_PRESUP_COMPRAS = entity.ACEP_PRESUP_COMPRAS,
                 BANDERA = entity.BANDERA,
+                Catalogo = entity.Catalogo,
+                Grupo_Nivel = entity.Grupo_Nivel,
+                Sub_Grupo = entity.Sub_Grupo,
             })
             .FirstOrDefaultAsync();
 
-    public async Task<bool> SaveOrUpdate(DmgCuentasDto data)
-    {
-        var command = dbContext.Database.GetDbConnection().CreateCommand();
+    public async Task<bool> SaveOrUpdate (DmgCuentasDto data) {
 
-        try
-        {
+        var command = dbContext.Database.GetDbConnection ( ).CreateCommand ( );
+
+        try {
+
             command.CommandText = $"{CC.SCHEMA}.InsertarOActualizarCuenta";
             command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new SqlParameter("@COD_CIA", SqlDbType.VarChar) { Value = data.COD_CIA==null ? DBNull.Value : data.COD_CIA });
-            command.Parameters.Add(new SqlParameter("@CTA_1", SqlDbType.VarChar) { Value = data.CTA_1==null ? DBNull.Value : data.CTA_1 });
-            command.Parameters.Add(new SqlParameter("@CTA_2", SqlDbType.VarChar) { Value = data.CTA_2==null ? DBNull.Value : data.CTA_2 });
-            command.Parameters.Add(new SqlParameter("@CTA_3", SqlDbType.VarChar) { Value = data.CTA_3==null ? DBNull.Value : data.CTA_3 });
-            command.Parameters.Add(new SqlParameter("@CTA_4", SqlDbType.VarChar) { Value = data.CTA_4==null ? DBNull.Value : data.CTA_4 });
-            command.Parameters.Add(new SqlParameter("@CTA_5", SqlDbType.VarChar) { Value = data.CTA_5==null ? DBNull.Value : data.CTA_5 });
-            command.Parameters.Add(new SqlParameter("@CTA_6", SqlDbType.VarChar) { Value = data.CTA_6==null ? DBNull.Value : data.CTA_6 });
-            command.Parameters.Add(new SqlParameter("@DESCRIP_ESP", SqlDbType.VarChar) { Value = data.DESCRIP_ESP==null ? DBNull.Value : data.DESCRIP_ESP });
-            command.Parameters.Add(new SqlParameter("@DESCRIP_ING", SqlDbType.VarChar) { Value = data.DESCRIP_ING==null ? DBNull.Value : data.DESCRIP_ING });
-            command.Parameters.Add(new SqlParameter("@ACEP_MOV", SqlDbType.VarChar) { Value = data.ACEP_MOV==null ? DBNull.Value : data.ACEP_MOV });
-            command.Parameters.Add(new SqlParameter("@ACEP_PRESUP", SqlDbType.VarChar) { Value = data.ACEP_PRESUP==null ? DBNull.Value : data.ACEP_PRESUP });
-            command.Parameters.Add(new SqlParameter("@ACEP_ACTIV", SqlDbType.VarChar) { Value = data.ACEP_ACTIV==null ? DBNull.Value : data.ACEP_ACTIV });
-            command.Parameters.Add(new SqlParameter("@GRUPO_CTA", SqlDbType.VarChar) { Value = data.GRUPO_CTA==null ? DBNull.Value : data.GRUPO_CTA });
-            command.Parameters.Add(new SqlParameter("@CLASE_SALDO", SqlDbType.VarChar) { Value = data.CLASE_SALDO==null ? DBNull.Value : data.CLASE_SALDO });
-            command.Parameters.Add(new SqlParameter("@CTA_1P", SqlDbType.VarChar) { Value = data.CTA_1P==null ? DBNull.Value : data.CTA_1P });
-            command.Parameters.Add(new SqlParameter("@CTA_2P", SqlDbType.VarChar) { Value = data.CTA_2P==null ? DBNull.Value : data.CTA_2P });
-            command.Parameters.Add(new SqlParameter("@CTA_3P", SqlDbType.VarChar) { Value = data.CTA_3P==null ? DBNull.Value : data.CTA_3P });
-            command.Parameters.Add(new SqlParameter("@CTA_4P", SqlDbType.VarChar) { Value = data.CTA_4P==null ? DBNull.Value : data.CTA_4P });
-            command.Parameters.Add(new SqlParameter("@CTA_5P", SqlDbType.VarChar) { Value = data.CTA_5P==null ? DBNull.Value : data.CTA_5P });
-            command.Parameters.Add(new SqlParameter("@CTA_6P", SqlDbType.VarChar) { Value = data.CTA_6P==null ? DBNull.Value : data.CTA_6P });
-            command.Parameters.Add(new SqlParameter("@CTA_FLUJO", SqlDbType.VarChar) { Value = data.CTA_FLUJO==null ? DBNull.Value : data.CTA_FLUJO });
-            command.Parameters.Add(new SqlParameter("@UTIL_CTA", SqlDbType.VarChar) { Value = data.UTIL_CTA==null ? DBNull.Value : data.UTIL_CTA });
-            command.Parameters.Add(new SqlParameter("@ACEP_PRESUP_COMPRAS", SqlDbType.VarChar) { Value = data.ACEP_PRESUP_COMPRAS==null ? DBNull.Value : data.ACEP_PRESUP_COMPRAS });
-            command.Parameters.Add(new SqlParameter("@BANDERA", SqlDbType.VarChar) { Value = data.BANDERA==null ? DBNull.Value : data.BANDERA });
-            
-            command.Parameters.Add(new SqlParameter("@UsuarioCreacion", SqlDbType.VarChar) { Value = data.UsuarioCreacion==null ? DBNull.Value : data.UsuarioCreacion });
-            command.Parameters.Add(new SqlParameter("@UsuarioModificacion", SqlDbType.VarChar) { Value = data.UsuarioModificacion==null ? DBNull.Value : data.UsuarioModificacion });
-            command.Parameters.Add(new SqlParameter("@FechaCreacion", SqlDbType.DateTime) { Value = data.FechaCreacion==null ? DBNull.Value : data.FechaCreacion });
-            command.Parameters.Add(new SqlParameter("@FechaModificacion", SqlDbType.DateTime) { Value = data.FechaModificacion==null ? DBNull.Value : data.FechaModificacion });
+            command.Parameters.Add (new SqlParameter ("@COD_CIA", SqlDbType.VarChar) { Value = data.COD_CIA == null ? DBNull.Value : data.COD_CIA });
+            command.Parameters.Add (new SqlParameter ("@CTA_1", SqlDbType.VarChar) { Value = data.CTA_1 == null ? DBNull.Value : data.CTA_1 });
+            command.Parameters.Add (new SqlParameter ("@CTA_2", SqlDbType.VarChar) { Value = data.CTA_2 == null ? DBNull.Value : data.CTA_2 });
+            command.Parameters.Add (new SqlParameter ("@CTA_3", SqlDbType.VarChar) { Value = data.CTA_3 == null ? DBNull.Value : data.CTA_3 });
+            command.Parameters.Add (new SqlParameter ("@CTA_4", SqlDbType.VarChar) { Value = data.CTA_4 == null ? DBNull.Value : data.CTA_4 });
+            command.Parameters.Add (new SqlParameter ("@CTA_5", SqlDbType.VarChar) { Value = data.CTA_5 == null ? DBNull.Value : data.CTA_5 });
+            command.Parameters.Add (new SqlParameter ("@CTA_6", SqlDbType.VarChar) { Value = data.CTA_6 == null ? DBNull.Value : data.CTA_6 });
+            command.Parameters.Add (new SqlParameter ("@DESCRIP_ESP", SqlDbType.VarChar) { Value = data.DESCRIP_ESP == null ? DBNull.Value : data.DESCRIP_ESP });
+            command.Parameters.Add (new SqlParameter ("@DESCRIP_ING", SqlDbType.VarChar) { Value = data.DESCRIP_ING == null ? DBNull.Value : data.DESCRIP_ING });
+            command.Parameters.Add (new SqlParameter ("@ACEP_MOV", SqlDbType.VarChar) { Value = data.ACEP_MOV ?? "N" });
+            command.Parameters.Add (new SqlParameter ("@ACEP_PRESUP", SqlDbType.VarChar) { Value = data.ACEP_PRESUP ?? "N" });
+            command.Parameters.Add (new SqlParameter ("@ACEP_ACTIV", SqlDbType.VarChar) { Value = data.ACEP_ACTIV ?? "N" });
+            command.Parameters.Add (new SqlParameter ("@GRUPO_CTA", SqlDbType.VarChar) { Value = data.GRUPO_CTA ?? " " });
+            command.Parameters.Add (new SqlParameter ("@CLASE_SALDO", SqlDbType.VarChar) { Value = data.CLASE_SALDO == null ? DBNull.Value : data.CLASE_SALDO });
+            command.Parameters.Add (new SqlParameter ("@CTA_1P", SqlDbType.VarChar) { Value = data.CTA_1P == null ? DBNull.Value : data.CTA_1P });
+            command.Parameters.Add (new SqlParameter ("@CTA_2P", SqlDbType.VarChar) { Value = data.CTA_2P == null ? DBNull.Value : data.CTA_2P });
+            command.Parameters.Add (new SqlParameter ("@CTA_3P", SqlDbType.VarChar) { Value = data.CTA_3P == null ? DBNull.Value : data.CTA_3P });
+            command.Parameters.Add (new SqlParameter ("@CTA_4P", SqlDbType.VarChar) { Value = data.CTA_4P == null ? DBNull.Value : data.CTA_4P });
+            command.Parameters.Add (new SqlParameter ("@CTA_5P", SqlDbType.VarChar) { Value = data.CTA_5P == null ? DBNull.Value : data.CTA_5P });
+            command.Parameters.Add (new SqlParameter ("@CTA_6P", SqlDbType.VarChar) { Value = data.CTA_6P == null ? DBNull.Value : data.CTA_6P });
+            command.Parameters.Add (new SqlParameter ("@CTA_FLUJO", SqlDbType.VarChar) { Value = data.CTA_FLUJO == null ? DBNull.Value : data.CTA_FLUJO });
+            command.Parameters.Add (new SqlParameter ("@UTIL_CTA", SqlDbType.VarChar) { Value = data.UTIL_CTA == null ? DBNull.Value : data.UTIL_CTA });
+            command.Parameters.Add (new SqlParameter ("@ACEP_PRESUP_COMPRAS", SqlDbType.VarChar) { Value = data.ACEP_PRESUP_COMPRAS == null ? DBNull.Value : data.ACEP_PRESUP_COMPRAS });
+            command.Parameters.Add (new SqlParameter ("@BANDERA", SqlDbType.VarChar) { Value = data.BANDERA == null ? DBNull.Value : data.BANDERA });
+            command.Parameters.Add (new SqlParameter ("@UsuarioCreacion", SqlDbType.VarChar) { Value = data.UsuarioCreacion == null ? DBNull.Value : data.UsuarioCreacion });
+            command.Parameters.Add (new SqlParameter ("@UsuarioModificacion", SqlDbType.VarChar) { Value = data.UsuarioModificacion == null ? DBNull.Value : data.UsuarioModificacion });
+            command.Parameters.Add (new SqlParameter ("@FechaCreacion", SqlDbType.DateTime) { Value = data.FechaCreacion == null ? DBNull.Value : data.FechaCreacion });
+            command.Parameters.Add (new SqlParameter ("@FechaModificacion", SqlDbType.DateTime) { Value = data.FechaModificacion == null ? DBNull.Value : data.FechaModificacion });
+            command.Parameters.Add (new SqlParameter ("@CATALOGO", SqlDbType.VarChar) { Value = data.Catalogo ?? "N" });
+            command.Parameters.Add (new SqlParameter ("@Grupo_Nivel", SqlDbType.VarChar) { Value = data.Grupo_Nivel == null ? DBNull.Value : data.Grupo_Nivel });
+            command.Parameters.Add (new SqlParameter ("@Sub_Grupo", SqlDbType.VarChar) { Value = data.Sub_Grupo == null ? DBNull.Value : data.Sub_Grupo });
 
-            if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync();
-            await command.ExecuteNonQueryAsync();
-            if (command.Connection?.State == ConnectionState.Open)  await dbContext.Database.CloseConnectionAsync();
+            if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync ( );
+            await command.ExecuteNonQueryAsync ( );
+            if (command.Connection?.State == ConnectionState.Open) await dbContext.Database.CloseConnectionAsync ( );
 
             return true;
         }
-        catch (Exception e)
-        {
-            if (command.Connection?.State == ConnectionState.Open)  await dbContext.Database.CloseConnectionAsync();
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(DmgCuentasRepository), nameof(SaveOrUpdate));
+        catch (Exception e) {
+            if (command.Connection?.State == ConnectionState.Open) await dbContext.Database.CloseConnectionAsync ( );
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (DmgCuentasRepository), nameof (SaveOrUpdate));
             return false;
         }
     }
