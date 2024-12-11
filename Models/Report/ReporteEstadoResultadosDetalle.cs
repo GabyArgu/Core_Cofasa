@@ -16,5 +16,16 @@ namespace CoreContable.Models.Report {
 
         [NotMapped]
         public decimal PorcentajeAcumulado { get; set; }
+
+
+
+        public decimal saldo_acumulado { get; set; }
+
+        // Coincide con Saldo en la función
+        [NotMapped]
+        public decimal PorcentajeMes2 { get; set; }
+
+        [NotMapped]
+        public decimal PorcentajeAcumulado2 { get; set; }
     }
 }

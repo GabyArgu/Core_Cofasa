@@ -275,17 +275,19 @@ public class ReportsRepository(
                 ("4201", 4),  // Costo de Ventas
                 ("4401", 3),  // Gastos de Venta
                 ("4402", 3),  // Gastos de Administración
-                //("5201", 3),  // Este no deberá presentarse, porque saldría consolidado INGRESOS POR OTRAS VENTAS
-                ("520101", 4),  // INGRESOS Materia Prima
-                ("520102", 4),  // INGRESOS Materiales de Empaque
-                ("520103", 4),  // INGRESOS Materiales de Empaque
-                ("5206", 3),  // OTROS INGRESOS
-                ("5204", 3), //INGRESOS FINANCIEROS
-                ("430101", 4),  // COSTOS Materia Prima
-                ("430102", 4),  // COSTOS Material de Empaque
-                ("430103", 4),  // COSTOS Activos Biológicos
-                ("450101", 4),  // GASTOS por Intereses Naturales y Jurídicos
-                ("450103", 4),  // GASTOS por Comisiones Instituciones Financieras
+                ("5201", 4),  // Este no deberá presentarse, porque saldría consolidado INGRESOS POR OTRAS VENTAS
+                //("520101", 4),  // INGRESOS Materia Prima
+                //("520102", 4),  // INGRESOS Materiales de Empaque
+                //("520103", 4),  // INGRESOS Materiales de Empaque
+                ("5206", 4),  // OTROS INGRESOS
+                ("5205", 4),  // OTROS INGRESOS-------------------
+                ("5204", 4), //INGRESOS FINANCIEROS
+                ("4301", 4),  // COSTOS Materia Prima
+                //("430102", 4),  // COSTOS Material de Empaque
+                //("430103", 4),  // COSTOS Activos Biológicos
+                ("4501", 4),  // GASTOS por Intereses Naturales y Jurídicos
+                //("450102", 4),  // GASTOS por INTERESES INSTITUCIONES FINANCIERAS
+                //("450103", 4),  // GASTOS por Comisiones Instituciones Financieras
                 ("4502", 4),  // OTROS GASTOS
             };
 
@@ -298,6 +300,9 @@ public class ReportsRepository(
                 resultados.AddRange (data);
             }
 
+            // Filtrar resultados con saldo diferente de 0
+            resultados = resultados.Where (r => r.Saldo != 0).ToList ( );
+
             return resultados;
         }
         catch (Exception e) {
@@ -305,6 +310,7 @@ public class ReportsRepository(
             return new List<ReporteEstadoResultadosDetalle> ( );
         }
     }
+
 
 
 }

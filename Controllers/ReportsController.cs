@@ -351,9 +351,16 @@ public class ReportsController (
 
         decimal totalVentas = data.Where (d => d.Grupo_Cta == "VENTAS").Sum (d => d.Saldo);
 
+        decimal totalVentas2 = data.Where (d => d.Grupo_Cta == "VENTAS").Sum (d => d.saldo_acumulado);
+
         foreach (var detalle in data) {
             detalle.PorcentajeMes = totalVentas != 0 ? ((detalle.Saldo / totalVentas) * 100) : 0;
             detalle.PorcentajeAcumulado = detalle.PorcentajeMes;
+
+            //---------------------------------------------------------
+
+            detalle.PorcentajeMes2 = totalVentas2 != 0 ? ((detalle.saldo_acumulado / totalVentas2) * 100) : 0;
+            detalle.PorcentajeAcumulado2 = detalle.PorcentajeMes2;
         }
 
         return new ReporteEstadoResultados {

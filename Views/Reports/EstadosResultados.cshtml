@@ -30,6 +30,27 @@
 
     // Calcula el porcentaje de resultado integral total respecto a los ingresos totales
     decimal porcentajeResultadoTotal = totalIngresosT != 0 ? (resultadoIntegralTotal / totalIngresosT) * 100 : 0;
+
+
+    //---------------------------------------------------------Acumulado--------------------------------------------
+
+    decimal totalVentas2 = Model.Detalles
+        .Where (d => d.Grupo_Cta == "RESULTADOS")
+        .Sum (d => d.saldo_acumulado);
+
+    decimal totalIngresosT2 = Model.Detalles
+        .Where (d => d.Cta_CONTABLE.StartsWith ("5"))
+        .Sum (d => d.saldo_acumulado);
+
+    decimal totalGastosT2 = Model.Detalles
+        .Where (d => d.Cta_CONTABLE.StartsWith ("4"))
+        .Sum (d => d.saldo_acumulado);
+
+    // Luego, calcula el resultado integral total
+    decimal resultadoIntegralTotal2 = totalIngresosT - totalGastosT;
+
+    // Calcula el porcentaje de resultado integral total respecto a los ingresos totales
+    decimal porcentajeResultadoTotal2 = totalIngresosT != 0 ? (resultadoIntegralTotal / totalIngresosT) * 100 : 0;
 }
 
 <!doctype html>
@@ -132,7 +153,7 @@
                 <tr>
                     <th colspan="3" style="text-align: right">
                         @(
-                            DateTime.TryParse (Model.FechaInicio, out var inicioMes)
+                            DateTime.TryParse (Model.FechaFin, out var inicioMes)
                             ? CultureInfo.CurrentCulture.TextInfo.ToTitleCase (inicioMes.ToString ("MMMM"))
                             : "Mes no válido"
                             )
@@ -143,119 +164,154 @@
                 </tr>
             </thead>
             <tbody>
-                @{
-                    decimal totalIngresosVentas = 0;
-                    decimal totalGastos = 0;
-                    decimal resultadoBruto = 0;
-                    decimal resultadoOperacion = 0;
+    @{ 
+        decimal totalIngresosVentas = 0; 
+        decimal totalCostoVenta = 0;
+        decimal totalGastos = 0; 
+        decimal resultadoBruto = 0; 
+        decimal resultadoOperacion = 0; 
 
-                    Dictionary<string, string> titulos = new Dictionary<string, string>
-                {
-                    { "51", "INGRESOS POR VENTAS" },
-                    { "42", "COSTO DE VENTA" },
-                    { "44", "GASTOS DE OPERACIÓN" },
-                    { "5201", "INGRESOS POR OTRAS VENTAS" },
-                    { "5206", "OTROS INGRESOS" },
-                    { "43", "COSTO DE VENTA DE NO OPERACIÓN" },
-                    { "5204", "INGRESOS FINANCIEROS" },
-                    { "4501", "GASTOS FINANCIEROS" },
-                    { "4502", "OTROS GASTOS" },
-                    };
 
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.StartsWith ("5")).ToList ( ))
-                    {
-                        totalIngresosVentas += detalle.Saldo;
-                    }
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.StartsWith ("4")).ToList ( ))
-                    {
-                        totalGastos += detalle.Saldo;
-                    }
-                }
+        //---------------------------Acumulado---------------------------
+        decimal totalIngresosVentas2 = 0; 
+        decimal totalCostoVenta2 = 0;
+        decimal totalGastos2 = 0; 
+        decimal resultadoBruto2 = 0; 
+        decimal resultadoOperacion2 = 0; 
 
-                @foreach (var titulo in titulos)
-                {
-                    decimal total = 0;
 
-                    <tr>
-                        <td colspan="7"><br /></td>
-                    </tr>
-                    if (titulo.Key.Equals ("5201"))
-                    {
-                        <tr>
-                            <td colspan="7"><p>INGRESOS, COSTOS Y GASTOS DE NO OPERACIÓN</p></td>
-                        </tr>
-                    }
-                    if (titulo.Key.Equals ("4501"))
-                    {
-                        <tr>
-                            <td colspan="7"><p>GASTOS NO OPERACIONALES</p></td>
-                        </tr>
-                    }
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.StartsWith(titulo.Key)).ToList ( ))
-                    {
-                        total += detalle.Saldo;
-                    }
-                    <tr>
-                        <td colspan="7"><p>@(titulo.Key.StartsWith ("4") ? "MENOS:" : "MÁS:")</p></td>
-                    </tr>
-                    <tr>
-                        <td><p>@titulo.Value</p></td>
-                        <td></td>
-                        <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (@total))</p></td>
-                        <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)%</p></td>
-                        <td></td>
-                        <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (@total))</p></td>
-                        <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)</p></td>
-                    </tr>
+        Dictionary<string, string> titulos = new Dictionary<string, string>
+        {
+            { "51", "INGRESOS POR VENTAS" },
+            { "42", "COSTO DE VENTA" },
+            { "44", "GASTOS DE OPERACIÓN" },
+            { "5201", "INGRESOS POR OTRAS VENTAS" },
+            { "5206,5205", "OTROS INGRESOS" }, // Claves agrupadas
+            { "43", "COSTO DE VENTA DE NO OPERACIÓN" },
+            { "5204", "INGRESOS FINANCIEROS" },
+            { "4501", "GASTOS FINANCIEROS" },
+            { "4502", "OTROS GASTOS" },
+        };
 
-                    foreach (var detalle in Model.Detalles.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).ToList ( ))
-                    {
-                        <tr>
-                            <td><p>@detalle.Descrip_Esp</p></td>
-                            <td class="text-right"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (detalle.Saldo))</p></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-right"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (detalle.Saldo))</p></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    }
+        foreach (var detalle in Model.Detalles.Where(d => d.Cta_CONTABLE.StartsWith("51")).ToList())
+        {
+            totalIngresosVentas += detalle.Saldo;
+            totalIngresosVentas2 += detalle.saldo_acumulado;
+        }
+        foreach (var detalle in Model.Detalles.Where(d => d.Cta_CONTABLE.StartsWith("42")).ToList())
+        {
+            totalCostoVenta += detalle.Saldo;
+            totalCostoVenta2 += detalle.saldo_acumulado;
+        }
+        foreach (var detalle in Model.Detalles.Where(d => d.Cta_CONTABLE.StartsWith("4")).ToList())
+        {
+            totalGastos += detalle.Saldo;
+            totalGastos2 += detalle.saldo_acumulado;
+        }
 
-                    if(titulo.Key.Equals("42"))
-                    {
-                        resultadoBruto = totalIngresosVentas - total;
-                        <tr>
-                            <td colspan="7"><br /></td>
-                        </tr>
-                        <tr>
-                            <td><p>RESULTADO BRUTO</p></td>
-                            <td></td>
-                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoBruto))</p></td>
-                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto / totalIngresosVentas * 100)%</p></td>
-                            <td></td>
-                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoBruto))</p></td>
-                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto / totalIngresosVentas * 100)</p></td>
-                        </tr>
-                    }
+        resultadoBruto = totalIngresosVentas - totalCostoVenta;
 
-                    if (titulo.Key.Equals ("44"))
-                    {
-                        resultadoOperacion = resultadoBruto - total;
-                        <tr>
-                            <td colspan="7"><br /></td>
-                        </tr>
-                        <tr>
-                            <td><p>RESULTADO DE OPERACIÓN</p></td>
-                            <td></td>
-                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoOperacion))</p></td>
-                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion / totalIngresosVentas * 100)%</p></td>
-                            <td></td>
-                            <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoOperacion))</p></td>
-                            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion / totalIngresosVentas * 100)</p></td>
-                        </tr>
-                    }
-                }
-            </tbody>
+        resultadoBruto2 = totalIngresosVentas2 - totalCostoVenta2;
+
+    }
+
+    @foreach (var titulo in titulos)
+    {
+        decimal total = 0;
+        decimal total2 = 0;
+        var claves = titulo.Key.Split(','); // Separar claves agrupadas
+
+        <tr>
+            <td colspan="7"><br /></td>
+        </tr>
+        if (titulo.Key.Contains("5201"))
+        {
+            <tr>
+                <td colspan="7"><p>INGRESOS, COSTOS Y GASTOS DE NO OPERACIÓN</p></td>
+            </tr>
+        }
+        if (titulo.Key.Contains("4501"))
+        {
+            <tr>
+                <td colspan="7"><p>GASTOS NO OPERACIONALES</p></td>
+            </tr>
+        }
+
+        foreach (var clave in claves)
+        {
+            foreach (var detalle in Model.Detalles.Where(d => d.Cta_CONTABLE.StartsWith(clave)).ToList())
+            {
+                total += detalle.Saldo;
+                total2 += detalle.saldo_acumulado;
+            }
+        }
+
+        <tr>
+            <td colspan="7"><p>@(titulo.Key.StartsWith("4") ? "MENOS:" : "MÁS:")</p></td>
+        </tr>
+        <tr>
+            <td><p>@titulo.Value</p></td>
+            <td></td>
+            <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(@total))</p></td>
+            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total / totalIngresosVentas * 100)%</p></td>
+            <td></td>
+            <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(@total2))</p></td>
+            <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(total2 / totalIngresosVentas2 * 100)</p></td>
+        </tr>
+
+        foreach (var clave in claves)
+        {
+            foreach (var detalle in Model.Detalles.Where(d => d.Cta_CONTABLE.StartsWith(clave)).ToList())
+            {
+                <tr>
+                    <td><p>@detalle.Descrip_Esp</p></td>
+                    <td class="text-right"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(detalle.Saldo))</p></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(detalle.saldo_acumulado))</p></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        }
+
+        if (titulo.Key.Equals("42"))
+        {
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td><p>RESULTADO BRUTO</p></td>
+                <td></td>
+                <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoBruto))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto / totalIngresosVentas * 100)%</p></td>
+                <td></td>
+                <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoBruto2))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoBruto2 / totalIngresosVentas2 * 100)</p></td>
+            </tr>
+        }
+
+        if (titulo.Key.Equals("44"))
+        {
+            resultadoOperacion = resultadoBruto - total;
+            resultadoOperacion2 = resultadoBruto2 - total2;
+            <tr>
+                <td colspan="7"><br /></td>
+            </tr>
+            <tr>
+                <td><p>RESULTADO DE OPERACIÓN</p></td>
+                <td></td>
+                <td class="text-right bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoOperacion))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion / totalIngresosVentas * 100)%</p></td>
+                <td></td>
+                <td class="text-right bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoOperacion2))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(resultadoOperacion2 / totalIngresosVentas2 * 100)</p></td>
+            </tr>
+        }
+    }
+</tbody>
+
+
             <tr>
                 <td colspan="7"><br /></td>
             </tr>
@@ -264,8 +320,8 @@
                 <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
                 <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
                 <td></td>
-                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
-                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+                <td class=" bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal2))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal2)</p></td>
             </tr>
             <tr>
                 <td colspan="7"><br /></td>
@@ -276,8 +332,8 @@
                 <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
                 <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
                 <td></td>
-                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
-                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+                <td class=" bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal2))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal2)</p></td>
             </tr>
             <tr>
                 <td colspan="7"><br /></td>
@@ -293,8 +349,8 @@
                 <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble(resultadoIntegralTotal))</p></td>
                 <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)%</p></td>
                 <td></td>
-                <td class=" bold"><p class="money">@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal))</p></td>
-                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal)</p></td>
+                <td class=" bold"><p class="money">$@MoneyUtils.GetDefaultFormatAsString(Decimal.ToDouble (resultadoIntegralTotal2))</p></td>
+                <td class="text-center bold"><p>@MoneyUtils.FormatStringFromDecimalTwoDecimals(porcentajeResultadoTotal2)</p></td>
             </tr>
         </table>
         <table style="width:100%; margin-top:100px;" id="firmas">

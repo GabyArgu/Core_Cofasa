@@ -100,15 +100,33 @@
             <tbody>
                 @foreach (var cuenta in @Model.CuentasUnificadas)
                 {
-                    <tr>
-                        <td><p style="text-align: left;">@cuenta.Cta_CONTABLE</p></td>
-                        <td><p>@cuenta.DescripEsp</p></td>
-                        <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
-                        <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>
-                        <td><p class="money">@((cuenta.Abonos == 0) ? "0.00" : cuenta.Abonos.ToString ("#,##0.00"))</p></td>
-                        <td><p class="money">@((cuenta.SaldoDelMes == 0) ? "0.00" : cuenta.SaldoDelMes.ToString ("#,##0.00"))</p></td>
-                        <td><p class="money">@((cuenta.SaldoActual == 0) ? "0.00" : cuenta.SaldoActual.ToString ("#,##0.00"))</p></td>
-                    </tr>
+                    var ctaContable = cuenta.Cta_CONTABLE?.Trim ( ) ?? string.Empty; // Asegúrate de que no es null.
+
+
+                    if (ctaContable.Length <= 4)
+                    {
+                        <tr>
+                            <td><p style="text-align: left; font-weight:bold">@cuenta.Cta_CONTABLE</p></td>
+                            <td><p style="font-weight:bold">@cuenta.DescripEsp</p></td>
+                            <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.Abonos == 0) ? "0.00" : cuenta.Abonos.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.SaldoDelMes == 0) ? "0.00" : cuenta.SaldoDelMes.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.SaldoActual == 0) ? "0.00" : cuenta.SaldoActual.ToString ("#,##0.00"))</p></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td><p style="text-align: left;">@cuenta.Cta_CONTABLE</p></td>
+                            <td><p>@cuenta.DescripEsp</p></td>
+                            <td><p style="text-align: right;">@(cuenta.SaldoAnterior == 0 ? "0.00" : cuenta.SaldoAnterior.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.Cargos == 0) ? "0.00" : cuenta.Cargos.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.Abonos == 0) ? "0.00" : cuenta.Abonos.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.SaldoDelMes == 0) ? "0.00" : cuenta.SaldoDelMes.ToString ("#,##0.00"))</p></td>
+                            <td><p class="money">@((cuenta.SaldoActual == 0) ? "0.00" : cuenta.SaldoActual.ToString ("#,##0.00"))</p></td>
+                        </tr>
+                    }
                 }
 
 

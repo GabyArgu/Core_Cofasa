@@ -1,12 +1,12 @@
 <form role="form" id="dmgCuentasForm" style="margin-left:15px; margin-right:15px;">
     <div class="col-md-12">
         <div class="row">
-            <input type="hidden" class="form-control" placeholder="" id="isUpdating" name="isUpdating" jv-required="false" />
-            <input type="hidden" class="form-control" placeholder="" id="COD_CIA" name="COD_CIA" jv-required="true" jv-minlength="3" jv-maxlength="3" />
-
+            <input type="hidden" class="form-control" placeholder="" id="isUpdating" name="isUpdating" jv-required="false"/>
+            <input type="hidden" class="form-control" placeholder="" id="COD_CIA" name="COD_CIA" jv-required="true" jv-minlength="3" jv-maxlength="3"/>
+            
             <div class="form-group col-md-12">
                 <label>Nombre</label>
-                <input type="text" class="form-control" placeholder="" id="DESCRIP_ESP" name="DESCRIP_ESP" jv-required="true" jv-minlength="2" jv-maxlength="100" />
+                <input type="text" class="form-control" placeholder="" id="DESCRIP_ESP" name="DESCRIP_ESP" jv-required="true" jv-minlength="2" jv-maxlength="100"/>
             </div>
 
             @* <div class="form-group col-md-6"> *@
@@ -40,6 +40,15 @@
                 </select>
             </div>
 
+			<div class="form-group col-md-3">
+				<label for="Sub_Grupo" class="form-label">Sub Grupo</label>
+				<select class="form-control" id="Sub_Grupo" name="Sub_Grupo" jv-required="false" jv-minlength="1" jv-maxlength="2">
+					<option value="">Seleccione un valor</option>
+					<option value="CORRIENTE">Corriente</option>
+					<option value="NO CORRIENTE">No Corriente</option>
+				</select>
+			</div>
+
             <div class="form-group col-md-3">
                 <label for="Grupo_Nivel" class="form-label">Grupo Nivel</label>
                 <select class="form-control" id="Grupo_Nivel" name="Grupo_Nivel" jv-required="false" jv-minlength="1" jv-maxlength="2">
@@ -52,15 +61,7 @@
                     <option value="6">6</option>
                 </select>
             </div>
-
-            <div class="form-group col-md-3">
-                <label for="Sub_Grupo" class="form-label">Sub Grupo</label>
-                <select class="form-control" id="Sub_Grupo" name="Sub_Grupo" jv-required="false" jv-minlength="1" jv-maxlength="2">
-                    <option value="">Seleccione un valor</option>
-                    <option value="CORRIENTE">Corriente</option>
-                    <option value="NO CORRIENTE">No Corriente</option>
-                </select>
-            </div>
+     
         </div>
 
         <div class="row">
@@ -68,12 +69,12 @@
                 <table>
                     <tr>
                         <td style="width: 30%;"><label class="form-label">Cuenta contable:</label></td>
-                        <td><input type="text" name="CTA_1" id="CTA_1" class="form-control" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_2" id="CTA_2" class="form-control" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_3" id="CTA_3" class="form-control" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_4" id="CTA_4" class="form-control" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_5" id="CTA_5" class="form-control" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_6" id="CTA_6" class="form-control" jv-required="true" jv-digits="true" /></td>
+                        <td><input type="text" name="CTA_1" id="CTA_1" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_2" id="CTA_2" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_3" id="CTA_3" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_4" id="CTA_4" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_5" id="CTA_5" class="form-control" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_6" id="CTA_6" class="form-control" jv-required="true" jv-digits="true"/></td>
                     </tr>
                 </table>
             </div>
@@ -81,23 +82,23 @@
                 <table>
                     <tr>
                         <td style="width: 30%;"><label class="form-label">Cuenta principal de agrupaci&oacute;n:</label></td>
-                        <td><input type="text" name="CTA_1P" id="CTA_1P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_2P" id="CTA_2P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_3P" id="CTA_3P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_4P" id="CTA_4P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_5P" id="CTA_5P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
-                        <td><input type="text" name="CTA_6P" id="CTA_6P" class="form-control" readonly="" jv-required="true" jv-digits="true" /></td>
+                        <td><input type="text" name="CTA_1P" id="CTA_1P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_2P" id="CTA_2P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_3P" id="CTA_3P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_4P" id="CTA_4P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_5P" id="CTA_5P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
+                        <td><input type="text" name="CTA_6P" id="CTA_6P" class="form-control" readonly="" jv-required="true" jv-digits="true"/></td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <br />
+        <br/>
 
         <div class="row">
             <div class="col-md-4 form-group">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="S" id="ACEP_MOV" name="ACEP_MOV" jv-required="false" jv-maxlength="1" />
+                    <input class="form-check-input" type="checkbox" value="S" id="ACEP_MOV" name="ACEP_MOV" jv-required="false" jv-maxlength="1"/>
                     <label class="form-check-label" for="ACEP_MOV">
                         Acepta transacciones
                     </label>
@@ -108,13 +109,13 @@
                         Acepta presupuesto
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display:none; ">
                     <input class="form-check-input" type="checkbox" value="S" id="ACEP_PRESUP_COMPRAS" name="ACEP_PRESUP_COMPRAS" jv-required="false" jv-maxlength="1">
                     <label class="form-check-label" for="ACEP_PRESUP_COMPRAS">
                         Acepta presupuesto de compras
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" style="display:none; ">
                     <input class="form-check-input" type="checkbox" value="S" id="CATALOGO" name="CATALOGO" jv-required="false" jv-maxlength="1" required="">
                     <label class="form-check-label" for="CATALOGO">
                         No se muestra en el cat&aacute;logo impreso
