@@ -40,4 +40,6 @@ public class ReporteBalanceComprobacionResultSet {
 
 
     public decimal SaldoDelMes => Cargos - Abonos;
+
+    public int NivelSeleccionado { get; internal set; }
 }

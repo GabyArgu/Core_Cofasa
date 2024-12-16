@@ -13,6 +13,5 @@ public class ReporteBalanceComprobacion
     public string? Anio { get; set; }
 
     public List<ReporteBalanceComprobacionLista> CuentasUnificadas { get; set; } = new List<ReporteBalanceComprobacionLista> ( );
-
-
+    public int NivelSeleccionado { get; internal set; }
 }

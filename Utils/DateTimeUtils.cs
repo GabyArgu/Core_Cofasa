@@ -24,7 +24,7 @@ public abstract class DateTimeUtils
     {
         if (string.IsNullOrEmpty(rawDate)) return null;
 
-        var formats = new[] { "dd/MM/yyyy", "yyyy-MM-ddTHH:mm:ss" };
+        var formats = new[] { "yyyy-MM-dd", "yyyy-MM-ddTHH:mm:ss", "dd/MM/yyyy" };
         foreach (var format in formats)
         {
             if (DateTime.TryParseExact(rawDate, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))

@@ -246,7 +246,10 @@ function makeReport() {
     }
 
     if ($('#selReportType').val() === 'BDC') {
-        const url = `/Reports/BalanceComprobacion?codCia=${codCia}&startDate=${startDate}&finishDate=${finishDate}&level=${level}`;
+        const formattedStartDate = formatDate(startDate); // 
+        const formattedFinishDate = formatDate(finishDate);
+
+        const url = `/Reports/BalanceComprobacion?codCia=${codCia}&startDate=${formattedStartDate}&finishDate=${formattedFinishDate}&level=${level}`;
         window.open(url, '_blank');
     }
 
@@ -308,7 +311,10 @@ function makeExcel() {
     }
 
     if ($('#selReportType').val() === 'BDC') {
-        const url = `/Reports/ExportarBalanceComprobacionExcel?codCia=${codCia}&startDate=${startDate}&finishDate=${finishDate}&level=${level}`;
+        const formattedStartDate = formatDate(startDate); // 
+        const formattedFinishDate = formatDate(finishDate);
+
+        const url = `/Reports/ExportarBalanceComprobacionExcel?codCia=${codCia}&startDate=${formattedStartDate}&finishDate=${formattedFinishDate}&level=${level}`;
         window.open(url, '_blank');
     }
 

@@ -185,12 +185,14 @@ public class ReportsController (
                 Dia = DateTimeUtils.GetDayFromString (finishDate),
                 Mes = DateTimeUtils.GetMonthFromString (finishDate),
                 Anio = DateTimeUtils.GetYearFromString (finishDate),
+                NivelSeleccionado = int.Parse (level), // Nivel seleccionado pasado como parámetro
                 CuentasUnificadas = filteredData
-                    .OrderBy (cuenta => string.Join ("", cuenta.CuentaContable.Split (' '))) // Ordenar como cadena completa
-                    .ThenBy (cuenta => cuenta.CTA_NIVEL) // Si es necesario, ordenar por el nivel también
-                    .Select (cuenta => CreateReporteBalanceComprobacionLista (cuenta)) // Mapear los resultados a la estructura adecuada
-                    .ToList ( )
+                .OrderBy (cuenta => string.Join ("", cuenta.CuentaContable.Split (' ')))
+                .ThenBy (cuenta => cuenta.CTA_NIVEL)
+                .Select (cuenta => CreateReporteBalanceComprobacionLista (cuenta))
+                .ToList ( )
             };
+
 
             // Generación del archivo PDF
             var fileName = $"{codCia} - BALANCE_COMPROBACION - {DateTimeUtils.GetCurrentTimeSpanAsStringForFileName ( )}.pdf";
@@ -667,13 +669,25 @@ public class ReportsController (
             // Fila de total
             worksheet.Cell (currentRow, 2).Value = "TOTAL";
             worksheet.Range ($"B{currentRow}:D{currentRow}").Merge ( );
-            worksheet.Cell (currentRow, 5).Value = reportData.Sum (c => c.Cargos).ToString ("#,##0.00");
-            worksheet.Cell (currentRow, 6).Value = reportData.Sum (c => c.Abonos).ToString ("#,##0.00");
 
+            // Sumar cargos y abonos según la lógica
+            var totalCargos = reportData
+                .Where (c => c.NivelSeleccionado == 1 || c.Nivel == 2)
+                .Sum (c => c.Cargos);
+
+            var totalAbonos = reportData
+                .Where (c => c.NivelSeleccionado == 1 || c.Nivel == 2)
+                .Sum (c => c.Abonos);
+
+            worksheet.Cell (currentRow, 5).Value = totalCargos.ToString ("#,##0.00");
+            worksheet.Cell (currentRow, 6).Value = totalAbonos.ToString ("#,##0.00");
+
+            // Estilo para la fila de total
             worksheet.Range ($"B{currentRow}:H{currentRow}").Style.Font.Bold = true;
             worksheet.Range ($"B{currentRow}:H{currentRow}").Style.Fill.BackgroundColor = XLColor.LightGray;
             worksheet.Range ($"B{currentRow}:H{currentRow}").Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             worksheet.Range ($"B{currentRow}:H{currentRow}").Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
 
             // Autoajustar ancho de columnas
             worksheet.Columns ( ).AdjustToContents ( );
@@ -697,7 +711,7 @@ public class ReportsController (
 
         string fechaInicioFormateada = fechaInicioDt.ToString ("dd/MM/yyyy", new CultureInfo ("es-ES"));
         string fechaFinFormateada = fechaFinDt.ToString ("dd/MM/yyyy", new CultureInfo ("es-ES"));
-        string mesInicio = CultureInfo.CurrentCulture.TextInfo.ToTitleCase (fechaInicioDt.ToString ("MMMM", new CultureInfo ("es-ES")));
+        string mesInicio = CultureInfo.CurrentCulture.TextInfo.ToTitleCase (fechaFinDt.ToString ("MMMM", new CultureInfo ("es-ES")));
 
         // Calcular totales
         decimal totalIngresosVentas = reportData.Where (d => d.Cta_CONTABLE.StartsWith ("5")).Sum (d => d.Saldo);
@@ -705,6 +719,13 @@ public class ReportsController (
         decimal resultadoBruto = totalIngresosVentas - reportData.Where (d => d.Cta_CONTABLE.StartsWith ("42")).Sum (d => d.Saldo);
         decimal resultadoOperacion = resultadoBruto - reportData.Where (d => d.Cta_CONTABLE.StartsWith ("44")).Sum (d => d.Saldo);
         decimal resultadoIntegralTotal = totalIngresosVentas - totalGastos;
+
+        // Calcular totales2
+        decimal totalIngresosVentas2 = reportData.Where (d => d.Cta_CONTABLE.StartsWith ("5")).Sum (d => d.saldo_acumulado);
+        decimal totalGastos2 = reportData.Where (d => d.Cta_CONTABLE.StartsWith ("4")).Sum (d => d.saldo_acumulado);
+        decimal resultadoBruto2 = totalIngresosVentas2 - reportData.Where (d => d.Cta_CONTABLE.StartsWith ("42")).Sum (d => d.saldo_acumulado);
+        decimal resultadoOperacion2 = resultadoBruto2 - reportData.Where (d => d.Cta_CONTABLE.StartsWith ("44")).Sum (d => d.saldo_acumulado);
+        decimal resultadoIntegralTotal2 = totalIngresosVentas2 - totalGastos2;
 
         // Crear archivo Excel
         using (var workbook = new XLWorkbook ( )) {
@@ -749,6 +770,9 @@ public class ReportsController (
             foreach (var titulo in titulos) {
                 decimal total = reportData.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).Sum (d => d.Saldo);
 
+                decimal total2 = reportData.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).Sum (d => d.saldo_acumulado);
+
+
                 // Fila de espacio
                 worksheet.Cell (currentRow, 1).Value = "";  // Fila en blanco entre meses y más/menos
                 currentRow++;
@@ -775,8 +799,8 @@ public class ReportsController (
                 worksheet.Cell (currentRow, 2).Style.Font.Bold = true;
                 worksheet.Cell (currentRow, 4).Value = total.ToString ("#,##0.00");
                 worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (total / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-                worksheet.Cell (currentRow, 7).Value = total.ToString ("#,##0.00");
-                worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (total / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+                worksheet.Cell (currentRow, 7).Value = total2.ToString ("#,##0.00");
+                worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (total2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
                 worksheet.Range (currentRow, 4, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 worksheet.Range (currentRow, 4, currentRow, 8).Style.Font.Bold = true;
                 currentRow++;
@@ -785,7 +809,7 @@ public class ReportsController (
                 foreach (var cuenta in reportData.Where (d => d.Cta_CONTABLE.StartsWith (titulo.Key)).ToList ( )) {
                     worksheet.Cell (currentRow, 2).Value = cuenta.Descrip_Esp;
                     worksheet.Cell (currentRow, 3).Value = cuenta.Saldo.ToString ("#,##0.00");
-                    worksheet.Cell (currentRow, 6).Value = cuenta.Saldo.ToString ("#,##0.00");
+                    worksheet.Cell (currentRow, 6).Value = cuenta.saldo_acumulado.ToString ("#,##0.00");
 
                     worksheet.Range (currentRow, 3, currentRow, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                     currentRow++;
@@ -797,8 +821,8 @@ public class ReportsController (
                     worksheet.Cell (currentRow, 2).Style.Font.Bold = true;
                     worksheet.Cell (currentRow, 4).Value = resultadoBruto.ToString ("#,##0.00");
                     worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (resultadoBruto / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-                    worksheet.Cell (currentRow, 7).Value = resultadoBruto.ToString ("#,##0.00");
-                    worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoBruto / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+                    worksheet.Cell (currentRow, 7).Value = resultadoBruto2.ToString ("#,##0.00");
+                    worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoBruto2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
                     worksheet.Range (currentRow, 3, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                     worksheet.Range (currentRow, 2, currentRow, 8).Style.Font.Bold = true;
                     currentRow++;
@@ -809,8 +833,8 @@ public class ReportsController (
                     worksheet.Cell (currentRow, 2).Style.Font.Bold = true;
                     worksheet.Cell (currentRow, 4).Value = resultadoOperacion.ToString ("#,##0.00");
                     worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (resultadoOperacion / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-                    worksheet.Cell (currentRow, 7).Value = resultadoOperacion.ToString ("#,##0.00");
-                    worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoOperacion / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+                    worksheet.Cell (currentRow, 7).Value = resultadoOperacion2.ToString ("#,##0.00");
+                    worksheet.Cell (currentRow, 8).Value = totalIngresosVentas2 != 0 ? (resultadoOperacion2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
                     worksheet.Range (currentRow, 3, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                     worksheet.Range (currentRow, 2, currentRow, 8).Style.Font.Bold = true;
                     currentRow++;
@@ -824,8 +848,8 @@ public class ReportsController (
             worksheet.Range (currentRow, 2, currentRow, 8).Style.Font.Bold = true;
             worksheet.Cell (currentRow, 4).Value = resultadoIntegralTotal.ToString ("#,##0.00");
             worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal.ToString ("#,##0.00");
-            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal2.ToString ("#,##0.00");
+            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas2 != 0 ? (resultadoIntegralTotal2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
             worksheet.Range (currentRow, 3, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             currentRow++;
 
@@ -834,8 +858,8 @@ public class ReportsController (
             worksheet.Range (currentRow, 2, currentRow, 8).Style.Font.Bold = true;
             worksheet.Cell (currentRow, 4).Value = resultadoIntegralTotal.ToString ("#,##0.00");
             worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal.ToString ("#,##0.00");
-            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal2.ToString ("#,##0.00");
+            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas2 != 0 ? (resultadoIntegralTotal2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
             worksheet.Range (currentRow, 3, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             currentRow++;
 
@@ -848,8 +872,8 @@ public class ReportsController (
             worksheet.Range (currentRow, 2, currentRow, 8).Style.Font.Bold = true;
             worksheet.Cell (currentRow, 4).Value = resultadoIntegralTotal.ToString ("#,##0.00");
             worksheet.Cell (currentRow, 5).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") + "%" : "0.00%";
-            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal.ToString ("#,##0.00");
-            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas != 0 ? (resultadoIntegralTotal / totalIngresosVentas * 100).ToString ("0.00") : "0.00";
+            worksheet.Cell (currentRow, 7).Value = resultadoIntegralTotal2.ToString ("#,##0.00");
+            worksheet.Cell (currentRow, 8).Value = totalIngresosVentas2 != 0 ? (resultadoIntegralTotal2 / totalIngresosVentas2 * 100).ToString ("0.00") : "0.00";
             worksheet.Range (currentRow, 3, currentRow, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             currentRow++;
 
@@ -1123,7 +1147,6 @@ public class ReportsController (
             worksheet.Range ("B3:E3").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             worksheet.Range ("B3:E3").Style.Font.Bold = true;
             worksheet.Range ("B3:E3").Style.Font.FontSize = 16;
-
 
             // Información detallada del reporte
             worksheet.Cell (6, 2).Value = numPoliza;
