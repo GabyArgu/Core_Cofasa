@@ -3,35 +3,6 @@
 @using CoreContable.Services
 @inject ISecurityRepository SecurityRepository
 
-<style>
-    select {
-        background-color: white !important; 
-        color: #301D71 !important;
-        border: 1px solid #301D71 !important;
-        padding: 5px;
-        border-radius: 5px !important;
-        appearance: none !important; */
-        outline: none !important;
-        cursor: pointer;
-    }
-
-        select:hover {
-            background-color: #4B339C !important; 
-            color: white !important; 
-        }
-
-    option:hover {
-        background-color: #4B339C !important;
-        color: white !important;
-    }
-
-    option {
-        background-color: white !important;
-        color: #301D71 !important;
-    }
-</style>
-
-
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -57,9 +28,10 @@
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-header">Acciones</span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
+               @*  <a href="#" id="editMyUser" class="dropdown-item">
                     <i class="fas fa-user-edit mr-2"></i> Administrar perfil
-                </a>
+                </a> *@
+                <input type="hidden" id="myProfileId" name="myProfileId" value="@SecurityRepository.GetSessionUserId()" />
                 <div class="dropdown-divider"></div>
                 <a href="@Url.Action("LogOut", "Security")" class="dropdown-item">
                     <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
@@ -68,4 +40,6 @@
         </li>
     </ul>
 </nav>
+
+<textarea id="editMyUserFormHtmlId" style="display:none;"><partial name="Components/TopNav/MyUserForm" /></textarea>
 <!-- /.navbar -->

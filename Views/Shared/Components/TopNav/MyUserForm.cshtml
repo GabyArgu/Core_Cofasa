@@ -1,0 +1,88 @@
+﻿<form role="form" id="myProfileFormId">
+    <input type="hidden" id="MyProfileId" name="Id" />
+    <input type="hidden" id="OldRolesMyProfile" name="OldRoles" />
+    <input type="hidden" id="OldCiasMyProfile" name="OldCias" />
+
+    <div class="col-md-12">
+        <fieldset class="fieldset-filters">
+            <legend class="fieldset-label">Informaci&oacute;n personal</legend>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="FirstNameMyProfile">Nombres</label>
+                    <input type="text" class="form-control" id="FirstNameMyProfile" name="FirstName" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="LastNameMyProfile">Apellidos</label>
+                    <input type="text" class="form-control" id="LastNameMyProfile" name="LastName" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset-filters">
+            <legend class="fieldset-label">Informaci&oacute;n de inicio de seci&oacute;n</legend>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="UserNameMyProfile">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="UserNameMyProfile" name="UserName" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="EmailMyProfile">Correo</label>
+                    <input type="email" class="form-control" id="EmailMyProfile" name="Email" />
+                </div>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="changePasswordMyProfile">
+                <label class="form-check-label" for="changePasswordMyProfile">Cambiar contrase&ntilde;a</label>
+            </div>
+
+            <div class="row mt-2">
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="PasswordMyProfile">Contrase&ntilde;a</label>
+                    <input type="password" class="form-control" id="PasswordMyProfile" name="Password" autocomplete="off" disabled="disabled" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label class="form-label" for="RepeatPasswordMyProfile">Repita la contrase&ntilde;a</label>
+                    <input type="password" class="form-control" id="RepeatPasswordMyProfile" name="RepeatPassword" autocomplete="off" disabled="disabled" />
+                </div>
+            </div>
+
+            <div class="d-none">
+                <input class="form-check-input" type="checkbox" value="true" id="MyProfileActive" name="Active" checked disabled="disabled" />
+                <label class="form-check-label" for="MyProfileActive">Activo</label>
+            </div>
+        </fieldset>
+
+        <fieldset class="d-none">
+            <legend class="fieldset-label">Acceso empresarial</legend>
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label class="form-label" for="SelRolesMyProfile">Roles del usuario (para la empresa actual)</label>
+                    <input type="hidden" class="form-control" id="SelRolesMyProfile" name="SelRoles" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label class="form-label" for="SelCiasMyProfile">Empresas del usuario</label>
+                    <input type="hidden" class="form-control" id="SelCiasMyProfile" name="SelCias" autocomplete="off">
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="row">
+            <div class="col-12" style="margin-top:20px;">
+                <button class="btn btn-primary btn-md float-right" id="myProfileFormSaveButtonId" type="submit">
+                    <i class="fa fa-floppy-o"></i>&nbsp;
+                    <span id="myUserFormAddButtonTextId">Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

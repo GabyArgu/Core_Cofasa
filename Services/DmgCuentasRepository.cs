@@ -173,10 +173,8 @@ public class DmgCuentasRepository(
         try {
             var result = await dbContext.CuentasContablesView
                 .Where (entity => entity.Cta_CONTABLE == CONTABLEAccount && entity.COD_CIA == codCia)
-                .Select (entity => new { Cta_Nivel = entity.Cta_Nivel.ToString ( ) }) // Conversión explícita
                 .FirstOrDefaultAsync ( );
-
-            return result?.Cta_Nivel ?? "";
+            return result?.Cta_Nivel?.ToString ( ) ?? "";
         }
         catch (Exception e) {
             logger.LogError (e, "Ocurrió un error en {Class}.{Method}",

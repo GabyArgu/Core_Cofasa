@@ -123,7 +123,7 @@ public class CentroCostoRepository(
             command.Parameters.Add(new SqlParameter("@COD_CIA", SqlDbType.VarChar) { Value = data.COD_CIA==null ? DBNull.Value : data.COD_CIA });
             command.Parameters.Add(new SqlParameter("@CENTRO_COSTO", SqlDbType.VarChar) { Value = data.CENTRO_COSTO==null ? DBNull.Value : data.CENTRO_COSTO });
             command.Parameters.Add(new SqlParameter("@DESCRIPCION", SqlDbType.VarChar) { Value = data.DESCRIPCION==null ? DBNull.Value : data.DESCRIPCION });
-            command.Parameters.Add(new SqlParameter("@ACEPTA_DATOS", SqlDbType.VarChar) { Value = data.ACEPTA_DATOS==null ? DBNull.Value : data.ACEPTA_DATOS });
+            command.Parameters.Add (new SqlParameter ("@ACEPTA_DATOS", SqlDbType.VarChar) { Value = data.ACEPTA_DATOS == null ? "N" : data.ACEPTA_DATOS });
             command.Parameters.Add(new SqlParameter("@USUARIO_MODIFICACION", SqlDbType.VarChar) { Value = data.USUARIO_MODIFICACION==null ? DBNull.Value : data.USUARIO_MODIFICACION });
 
             if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync();

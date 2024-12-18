@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,13 +14,6 @@
     <link rel="stylesheet" href="~/css/custom-fonts.css"/>
     @await RenderSectionAsync("Styles", required: false)
 </head>
-
-<style>
-    a {
-        color: #221451 !important;
-    }
-</style>
-
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         @await Component.InvokeAsync("TopNav")
@@ -68,6 +61,11 @@
     <script src="~/plugins/toastify-js/toastify-js.js"></script>
     <script src="~/js/utils/constants.js" asp-append-version="true"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>
+
+    <script src="~/plugins/bootbox/bootbox.min.js"></script>
+    <script src="~/js/pages/myuser.admin.js" asp-append-version="true"></script>
+    <script src="~/plugins/jqueryValidate-1.19/jquery.validate.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         if(typeof(moment)!=='undefined') moment.locale('es');

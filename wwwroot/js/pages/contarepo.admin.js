@@ -58,8 +58,15 @@ function overrideInitDt() {
                     'type': 'POST',
                     'datatype': 'JSON',
                 },
-                'createdRow': function(row, data, dataIndex){
-                    if (!isUndefinedNullOrEmpty(data.DiferenciaCargoAbono) && data.DiferenciaCargoAbono !== 0) {
+                'createdRow': function(row, data, dataIndex) {
+                    // Verifica si ambos valores son 0 o nulos/indefinidos
+                    if ((data.DiferenciaCargoAbono === 0 || isUndefinedNullOrEmpty(data.DiferenciaCargoAbono)) &&
+                    (data.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(data.TOTAL_POLIZA))) {
+                        // Si ambos son 0, agrega la clase 'hasDifference'
+                        $(row).addClass('hasDifference');
+                    }
+                    // Si solo 'DiferenciaCargoAbono' tiene valor diferente de 0, se agrega la clase
+                    else if (!isUndefinedNullOrEmpty(data.DiferenciaCargoAbono) && data.DiferenciaCargoAbono !== 0) {
                         $(row).addClass('hasDifference');
                     }
                 },
@@ -108,7 +115,13 @@ function overrideInitDt() {
                             let buttons = gridButtons.replace('{data}',Base64.encode($.toJSON(row)));
                             if (!isUndefinedNullOrEmpty(row.DiferenciaCargoAbono) && row.DiferenciaCargoAbono !== 0) {
                                 return buttons.replaceAll('{mayorizar_style}', 'display:none;');
-                            } else {
+                                
+                            }else if ((row.DiferenciaCargoAbono === 0 || isUndefinedNullOrEmpty(row.DiferenciaCargoAbono)) &&
+                            (row.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(row.TOTAL_POLIZA))) {
+                                // Si ambos son 0, oculta el botón
+                                return buttons.replaceAll('{mayorizar_style}', 'display:none;');
+                            }
+                            else {
                                 return buttons;
                             }
                         }
@@ -244,6 +257,7 @@ function showDetRepoGrid(data) {
         detRepoId.doctoType = data.TIPO_DOCTO;
         detRepoId.numPoliza = data.NUM_POLIZA;
         setTempPartidaDiffValues(data.COD_CIA, data.PERIODO, data.TIPO_DOCTO, data.NUM_POLIZA);
+        console.log(detRepoId);
     }
 
     const TITLE = isEditing ? 'Editar asientos contables' : 'Agregar asientos contables';
@@ -258,9 +272,10 @@ function showDetRepoGrid(data) {
         IS_ADDING = false;
         DT_LOCAL_DATA = [];
         reloadTable();
-        if (!isUndefinedNullOrEmpty(temp_PARTIDA_DIFF) && temp_PARTIDA_DIFF === 0) {
-            capitalizeAccounts(temp_COD_CIA, temp_PERIODO, temp_TIPO_DOCTO, temp_NUM_POLIZA)
-        }
+        //if (!isUndefinedNullOrEmpty(temp_PARTIDA_DIFF) && temp_PARTIDA_DIFF === 0) {
+        //capitalizeAccounts(temp_COD_CIA, temp_PERIODO, temp_TIPO_DOCTO, temp_NUM_POLIZA);
+        
+        //}
     });
 
     initDetailSelectsAndCalendars();

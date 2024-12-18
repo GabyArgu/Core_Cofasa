@@ -11,7 +11,7 @@ namespace CoreContable.Services;
 
 public interface ICentroCuentaRepository
 {
-    Task<List<CentroCuentaResultSet>> GetAllByCia(string codCia, string codCC, string? q = null);
+    Task<List<CentroCuentaResultSet>> GetAllByCia(string codCia, string codCC);
 
     Task<List<Select2ResultSet>> GetForSelect2(
         string codCia, string codCC, string? query = null, int pageNumber = 1, int pageSize = 10);
@@ -26,7 +26,7 @@ public class CentroCuentaRepository(
     ILogger<CentroCuentaRepository> logger
 ) : ICentroCuentaRepository
 {
-    public Task<List<CentroCuentaResultSet>> GetAllByCia(string codCia, string codCc, string? q = null) =>
+    public Task<List<CentroCuentaResultSet>> GetAllByCia(string codCia, string codCc) =>
         dbContext.ConsultarCentroCuentaFromFunc
             .FromSqlRaw(
                 "SELECT * FROM CONTABLE.ConsultarCENTRO_CUENTA({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})",

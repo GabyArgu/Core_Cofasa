@@ -14,7 +14,7 @@ using NPOI.XSSF.UserModel;
 
 namespace CoreContable.Controllers;
 
-public class RepositoryController(
+public class RepositoryController (
     ILogger<RepositoryController> logger,
     ISecurityRepository securityRepository,
     IDmgNumeraRepository dmgNumeraRepository,
@@ -24,183 +24,156 @@ public class RepositoryController(
     IDmgCieCierreRepository dmgCieCierreRepository,
     IRepositoryImportLogRepository repositoryImportLogRepository,
     IDmgCuentasRepository dmgCuentasRepository
-) : CrudController
-{
-    [IsAuthorized(alias: CC.SECOND_LEVEL_PERMISSION_ADMIN_REPOSITORIO)]
-    public IActionResult Index()
-    {
-        return View();
+) : CrudController {
+    [IsAuthorized (alias: CC.SECOND_LEVEL_PERMISSION_ADMIN_REPOSITORIO)]
+    public IActionResult Index ( ) {
+        return View ( );
     }
 
-    [IsAuthorized(alias: CC.SECOND_LEVEL_PERMISSION_ADMIN_REPOSITORIO)]
+    [IsAuthorized (alias: CC.SECOND_LEVEL_PERMISSION_ADMIN_REPOSITORIO)]
     [HttpPost]
-    public async Task<JsonResult> GetForDt(string? doctoType)
-    {
+    public async Task<JsonResult> GetForDt (string? doctoType) {
         DataTableResultSet<List<RepositorioResultSet>>? dataTableResultSet;
 
-        try
-        {
-            var currentCia = securityRepository.GetSessionCiaCode();
+        try {
+            var currentCia = securityRepository.GetSessionCiaCode ( );
             // var dtParams = GetDtParamsFromQuery(Request);
-            var dtParams = GetDtParams(Request);
+            var dtParams = GetDtParams (Request);
             dataTableResultSet = await contaRepoRepository
-                .GetAllBy(dataTabletDto: dtParams, codCia: currentCia, tipoDocto: doctoType);
+                .GetAllBy (dataTabletDto: dtParams, codCia: currentCia, tipoDocto: doctoType);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             dataTableResultSet = null;
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(GetForDt));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GetForDt));
         }
 
-        return Json(dataTableResultSet, new JsonSerializerOptions { PropertyNamingPolicy = null });
+        return Json (dataTableResultSet, new JsonSerializerOptions { PropertyNamingPolicy = null });
     }
 
-    [IsAuthorized(alias: CC.THIRD_LEVEL_PERMISSION_USERS_CAN_UPDATE)]
+    [IsAuthorized (alias: CC.THIRD_LEVEL_PERMISSION_USERS_CAN_UPDATE)]
     [HttpGet]
-    public async Task<JsonResult> GetOneBy([FromQuery] string codCia, [FromQuery] int period,
-        [FromQuery] string doctoType, [FromQuery] int numPoliza)
-    {
+    public async Task<JsonResult> GetOneBy ([FromQuery] string codCia, [FromQuery] int period,
+        [FromQuery] string doctoType, [FromQuery] int numPoliza) {
         RepositorioResultSet? data;
 
-        try
-        {
-            data = await contaRepoRepository.GetOneBy(
+        try {
+            data = await contaRepoRepository.GetOneBy (
                 codCia,
                 period,
                 doctoType,
                 numPoliza
             );
 
-            if (data != null)
-            {
+            if (data != null) {
                 // Getting dmgdocto to select2
-                var currentCia = securityRepository.GetSessionCiaCode();
-                var dmgDocto = await dmgDoctosRepository.GetOneDmgDoctoByCia(currentCia, doctoType);
-                data.selTIPO_DOCTO = new Select2ResultSet
-                {
+                var currentCia = securityRepository.GetSessionCiaCode ( );
+                var dmgDocto = await dmgDoctosRepository.GetOneDmgDoctoByCia (currentCia, doctoType);
+                data.selTIPO_DOCTO = new Select2ResultSet {
                     id = dmgDocto?.TIPO_DOCTO ?? "",
                     text = dmgDocto?.DESCRIP_TIPO ?? ""
                 };
 
                 // Getting STAT_POLIZA to select2.
-                data.selSTAT_POLIZA = new Select2ResultSet()
-                {
+                data.selSTAT_POLIZA = new Select2ResultSet ( ) {
                     id = data.STAT_POLIZA,
                     text = data.STAT_POLIZA == "G" ? "Grabada" : "Revisada"
                 };
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             data = null;
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(GetOneBy));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GetOneBy));
         }
 
-        return Json(new
-        {
+        return Json (new {
             success = true,
             message = "Access data",
             data
         }, new JsonSerializerOptions { PropertyNamingPolicy = null });
     }
 
-    [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD}," +
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD}," +
                          $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_UPDATE}," +
                          $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_DELETE}")]
     [HttpPost]
-    public async Task<JsonResult> SaveOrUpdateOrDeleteOne([FromForm] RepositorioDto data)
-    {
+    public async Task<JsonResult> SaveOrUpdateOrDeleteOne ([FromForm] RepositorioDto data) {
         bool result;
 
-        try
-        {
+        try {
             var operation = data.OPERACION ?? "";
-            var sessionUser = securityRepository.GetSessionUserName();
-            var codCia = securityRepository.GetSessionCiaCode();
+            var sessionUser = securityRepository.GetSessionUserName ( );
+            var codCia = securityRepository.GetSessionCiaCode ( );
 
             // Si se esta agregando una cabecera o editando una existente se debe validar si el periodo esta abierto.
-            if (operation != "ELIMINAR" && !await IsPeriodOpen(codCia, int.Parse(data.MES), int.Parse(data.PERIODO)))
-            {
-                return Json(new
-                {
+            if (operation != "ELIMINAR" && !await IsPeriodOpen (codCia, int.Parse (data.MES), int.Parse (data.PERIODO))) {
+                return Json (new {
                     success = false,
                     message = "El período seleccionado no está habilitado."
                 });
             }
 
-            if (operation is "MODIFICAR" or "ELIMINAR")
-            {
+            if (operation is "MODIFICAR" or "ELIMINAR") {
                 // data.FECHA_CAMBIO = DateTime.Now;
                 data.MODIFICACION_FECHA = DateTime.Now;
                 data.MODIFICACION_USUARIO = sessionUser;
 
-                result = await contaRepoRepository.ModifyOrDeleteOneBy(data);
+                result = await contaRepoRepository.ModifyOrDeleteOneBy (data);
             }
-            else
-            {
+            else {
                 data.GRABACION_FECHA = DateTime.Now;
                 data.GRABACION_USUARIO = sessionUser;
-                result = await contaRepoRepository.SaveOne(data);
+                result = await contaRepoRepository.SaveOne (data);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             result = false;
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(SaveOrUpdateOrDeleteOne));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (SaveOrUpdateOrDeleteOne));
         }
 
-        var message = data.OPERACION switch
-        {
+        var message = data.OPERACION switch {
             "MODIFICAR" => "Encabezado actualizado correctamente",
             "ELIMINAR" => "Encabezado eliminado correctamente",
             _ => "Encabezado guardado correctamente"
         };
 
-        var errorMessage = data.OPERACION switch
-        {
+        var errorMessage = data.OPERACION switch {
             "MODIFICAR" => "Ocurrió un error al actualizar el encabezado",
             "ELIMINAR" => "Ocurrió un error al eliminar el encabezado",
             _ => "Ocurrió un error al guardar el registro"
         };
 
-        return Json(new
-        {
+        return Json (new {
             success = result,
             message = result ? message : errorMessage
         });
     }
 
-    [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD}," +
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD}," +
                          $"{CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD}")]
     [HttpPost]
-    public async Task<JsonResult> SaveList([FromBody] DetRepositorioListDto data)
-    {
+    public async Task<JsonResult> SaveList ([FromBody] DetRepositorioListDto data) {
         var result = false;
         var saveRepositoryHeaderResult = SaveRepositoryHeaderResult.Error;
         var resultBody = false;
         var updateTotalResult = false;
 
-        try
-        {
-            if (data.detRepoList.Count == 0)
-            {
-                throw new Exception("No se han enviado detalles para guardar.");
+        try {
+            if (data.detRepoList.Count == 0) {
+                throw new Exception ("No se han enviado detalles para guardar.");
             }
 
             // saveRepositoryHeaderResult = await SaveRepositoryHeader(data.header);
-            (saveRepositoryHeaderResult, var numPoliza) = await SaveRepositoryHeader(data.header);
+            (saveRepositoryHeaderResult, var numPoliza) = await SaveRepositoryHeader (data.header);
 
             resultBody = saveRepositoryHeaderResult == SaveRepositoryHeaderResult.Success
-                ? await SaveRepositoryDetails(data, int.Parse(data.header.NUM_POLIZA))
+                ? await SaveRepositoryDetails (data, int.Parse (data.header.NUM_POLIZA))
                 : false;
 
-            if (saveRepositoryHeaderResult == SaveRepositoryHeaderResult.Success && resultBody && numPoliza != null)
-            {
-                updateTotalResult = await UpdatePolizaTotalJob(new RepositoryIterable
-                {
+            if (saveRepositoryHeaderResult == SaveRepositoryHeaderResult.Success && resultBody && numPoliza != null) {
+                updateTotalResult = await UpdatePolizaTotalJob (new RepositoryIterable {
                     CodCia = data.header.COD_CIA,
                     Periodo = data.header.PERIODO,
                     TipoDocto = data.header.TIPO_DOCTO,
@@ -208,15 +181,13 @@ public class RepositoryController(
                 });
             }
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(SaveList));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (SaveList));
         }
 
         result = saveRepositoryHeaderResult == SaveRepositoryHeaderResult.Success && resultBody;
-        var message = saveRepositoryHeaderResult switch
-        {
+        var message = saveRepositoryHeaderResult switch {
             SaveRepositoryHeaderResult.PeriodClosed => "El período seleccionado no está habilitado.",
             SaveRepositoryHeaderResult.Error => "Ocurrió un error al guardar el encabezado y detalles",
             SaveRepositoryHeaderResult.Success => resultBody
@@ -225,12 +196,10 @@ public class RepositoryController(
             _ => "Ocurrió un error al guardar el encabezado y detalles"
         };
 
-        return Json(new
-        {
+        return Json (new {
             success = result,
             message,
-            data = new
-            {
+            data = new {
                 codCia = data.header.COD_CIA,
                 periodo = data.header.PERIODO,
                 tipoDocto = data.header.TIPO_DOCTO,
@@ -239,103 +208,71 @@ public class RepositoryController(
         });
     }
 
-    private Task<bool> UpdatePolizaTotalJob(RepositoryIterable data)
-    {
-        try
-        {
-            return contaRepoRepository.UpdateTotalPoliza(
-                data.CodCia, int.Parse(data.Periodo),
+    private Task<bool> UpdatePolizaTotalJob (RepositoryIterable data) {
+        try {
+            return contaRepoRepository.UpdateTotalPoliza (
+                data.CodCia, int.Parse (data.Periodo),
                 data.TipoDocto, data.NumPoliza);
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(UpdatePolizaTotalJob));
-            return Task.FromResult(false);
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (UpdatePolizaTotalJob));
+            return Task.FromResult (false);
         }
     }
 
-    [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_CAPITALIZE}")]
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_CAPITALIZE}")]
     [HttpPost]
-    public async Task<JsonResult> CapitalizeAccounts([FromForm] CapitalizeAccountDto data)
-    {
+    public async Task<JsonResult> CapitalizeAccounts ([FromForm] CapitalizeAccountDto data) {
         bool result;
 
-        try
-        {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+        try {
+            var stopwatch = new Stopwatch ( );
+            stopwatch.Start ( );
 
-            result = await contaRepoRepository.CapitalizeAccounts(data);
-            stopwatch.Stop();
+            result = await contaRepoRepository.CapitalizeAccounts (data);
+            stopwatch.Stop ( );
 
             // Si el proceso dura menos de 1 segundo el dialog de loading no se oculta en el fronetend.
             var elapsed = stopwatch.ElapsedMilliseconds;
-            if (elapsed < 1000)
-            {
+            if (elapsed < 1000) {
                 var milliseconds = 1000 - (int)elapsed;
-                await Task.Delay (milliseconds);
+                Thread.Sleep (milliseconds);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             result = false;
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(CapitalizeAccounts));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (CapitalizeAccounts));
         }
 
         var message = result
             ? "Asientos mayorizados correctamente"
             : "Ocurrió un error al mayorizar los asientos";
 
-        return Json(new
-        {
-            success = result, message
+        return Json (new {
+            success = result,
+            message
         });
     }
 
-    [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_IMPORT_FROM_EXCEL}")]
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_IMPORT_FROM_EXCEL}")]
     [HttpGet]
-    public async Task<IActionResult> DownloadExcelFormat()
-    {
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "static", "PLANTILLA_REPOSITORIOS.xlsx");
+    public async Task<IActionResult> DownloadExcelFormat ( ) {
+        var path = Path.Combine (Directory.GetCurrentDirectory ( ), "wwwroot", "static", "PLANTILLA_REPOSITORIOS.xlsx");
 
-        var memory = new MemoryStream();
-        await using (var stream = new FileStream(path, FileMode.Open))
-        {
-            await stream.CopyToAsync(memory);
+        var memory = new MemoryStream ( );
+        await using (var stream = new FileStream (path, FileMode.Open)) {
+            await stream.CopyToAsync (memory);
         }
 
         memory.Position = 0;
-        return File(
+        return File (
             memory,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            Path.GetFileName(path)
+            Path.GetFileName (path)
         );
     }
-
-
-    private static int GetNumberFromCuentaContable (string cuentaContable, int index) {
-        // Verificar si cuentaContable es nulo o vacío
-        if (string.IsNullOrEmpty (cuentaContable)) {
-            return 0; // Retornar 0 si la cuenta contable es nula o vacía
-        }
-
-        // Verificar si el índice está fuera de los límites de la cadena
-        if (index < 0 || index >= cuentaContable.Length) {
-            return 0; // Retornar 0 si el índice es inválido
-        }
-
-        // Intentar obtener el número de la subcadena
-        try {
-            return int.Parse (cuentaContable.Substring (index, 1));
-        }
-        catch (FormatException) {
-            return 0; // Retornar 0 si el valor en la posición no es un número válido
-        }
-    }
-
-
 
     [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_IMPORT_FROM_EXCEL}")]
     [HttpPost]
@@ -393,7 +330,7 @@ public class RepositoryController(
                     }
 
                     var coreAccountNumber = await dmgCuentasRepository
-                        .GetCoreContableAccountFromCONTABLEAccount (currentCia, currentRow.CUENTA_CONTABLE);
+                        .GetCoreContableAccountFromCONTABLEAccount(currentCia, currentRow.CUENTA_CONTABLE);
 
                     var detailData = new DetRepositorioDto {
                         det_COD_CIA = currentCia,
@@ -450,87 +387,98 @@ public class RepositoryController(
         }
     }
 
-    private async Task<bool> IsPeriodOpen(string codCia, int month, int year)
-    {
-        var dmgCieCierre = await dmgCieCierreRepository
-            .GetOneBy(codCia, year, month);
+    private static int GetNumberFromCuentaContable (string cuentaContable, int index) {
+        // Verificar si cuentaContable es nulo o vacío
+        if (string.IsNullOrEmpty (cuentaContable)) {
+            return 0; // Retornar 0 si la cuenta contable está vacía o nula
+        }
 
-        if (dmgCieCierre == null)
-        {
+        // Verificar si el índice está fuera de los límites de la cadena
+        if (index < 0 || index >= cuentaContable.Length) {
+            return 0; // Retornar 0 si el índice está fuera del rango
+        }
+
+        // Intentar obtener el número de la subcadena
+        if (int.TryParse (cuentaContable.Substring (index, 1), out int result)) {
+            return result; // Retornar el número si es válido
+        }
+
+        return 0; // Retornar 0 si no es un número válido
+    }
+
+
+
+    private async Task<bool> IsPeriodOpen (string codCia, int month, int year) {
+        var dmgCieCierre = await dmgCieCierreRepository
+            .GetOneBy (codCia, year, month);
+
+        if (dmgCieCierre == null) {
             return false;
         }
 
         return dmgCieCierre.CIE_ESTADO == "A";
     }
 
-    private async Task<(SaveRepositoryHeaderResult, int?)> SaveRepositoryHeader(RepositorioDto data, bool isImport = false)
-    {
+    private async Task<(SaveRepositoryHeaderResult, int?)> SaveRepositoryHeader (RepositorioDto data, bool isImport = false) {
         var result = SaveRepositoryHeaderResult.Error;
-        var sessionUser = securityRepository.GetSessionUserName();
-        var codCia = securityRepository.GetSessionCiaCode();
+        var sessionUser = securityRepository.GetSessionUserName ( );
+        var codCia = securityRepository.GetSessionCiaCode ( );
         var numPoliza = 0;
 
-        try
-        {
+        try {
             // PASO 0: Validar si el periodo esta abierto.
-            if (!await IsPeriodOpen(codCia, int.Parse(data.MES), int.Parse(data.PERIODO)))
-            {
+            if (!await IsPeriodOpen (codCia, int.Parse (data.MES), int.Parse (data.PERIODO))) {
                 return (SaveRepositoryHeaderResult.PeriodClosed, null);
             }
 
             // PASO 1: Generar el numero de la nueva poliza:
-            numPoliza = await dmgNumeraRepository.GenerateNumPoliza(
+            numPoliza = await dmgNumeraRepository.GenerateNumPoliza (
                 data.COD_CIA,
                 data.TIPO_DOCTO,
-                int.Parse(data.PERIODO),
-                int.Parse(data.MES)
+                int.Parse (data.PERIODO),
+                int.Parse (data.MES)
             );
 
-            if (numPoliza != 0)
-            {
+            if (numPoliza != 0) {
                 data.NUM_POLIZA = $"{numPoliza}";
                 // PASO 2: Guardar el encabezado de repositorio con el numero de poliza generado en el paso anterior.
                 data.GRABACION_FECHA = DateTime.Now;
                 data.GRABACION_USUARIO = sessionUser;
                 data.FECHA_CAMBIO = data.FECHA;
-                result = await contaRepoRepository.SaveOne(data)
+                result = await contaRepoRepository.SaveOne (data)
                     ? SaveRepositoryHeaderResult.Success
                     : SaveRepositoryHeaderResult.Error;
             }
 
-            if (result == SaveRepositoryHeaderResult.Success && isImport)
-            {
-                await LogImportResult(int.Parse(data.NUM_POLIZA), data.TIPO_DOCTO, data.CONCEPTO);
+            if (result == SaveRepositoryHeaderResult.Success && isImport) {
+                await LogImportResult (int.Parse (data.NUM_POLIZA), data.TIPO_DOCTO, data.CONCEPTO);
             }
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(SaveRepositoryHeader));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (SaveRepositoryHeader));
             return (SaveRepositoryHeaderResult.Error, null);
         }
 
         return (result, numPoliza);
     }
 
-    private async Task<bool> SaveRepositoryDetails(DetRepositorioListDto data, int numPoliza)
-    {
+    private async Task<bool> SaveRepositoryDetails (DetRepositorioListDto data, int numPoliza) {
         var result = false;
         var detailsSaved = 0;
         var currentDate = DateTime.Now;
-        var currentUser = securityRepository.GetSessionUserName();
+        var currentUser = securityRepository.GetSessionUserName ( );
         var index = 1;
 
-        foreach (var detalle in data.detRepoList)
-        {
+        foreach (var detalle in data.detRepoList) {
             detalle.det_CORRELAT = index++;
             detalle.det_COD_CIA = data.header.COD_CIA;
-            detalle.det_PERIODO = int.Parse(data.header.PERIODO);
+            detalle.det_PERIODO = int.Parse (data.header.PERIODO);
             detalle.det_TIPO_DOCTO = data.header.TIPO_DOCTO;
             detalle.det_NUM_POLIZA = numPoliza;
             detalle.GRABACION_FECHA = currentDate;
             detalle.GRABACION_USUARIO = currentUser;
-            var resultBodyRow = await detRepoRepository.SaveOne(detalle);
+            var resultBodyRow = await detRepoRepository.SaveOne (detalle);
             detailsSaved += resultBodyRow ? 1 : 0;
         }
 
@@ -538,133 +486,116 @@ public class RepositoryController(
         return result;
     }
 
-    public bool IsValidExcelFormat(string fileName)
-    {
+
+
+    public bool IsValidExcelFormat (string fileName) {
         // var validFormats = new List<string> { ".xlsx", ".xls", ".xlsm", ".xlsb", ".csv" };
         var validFormats = new List<string> { ".xlsx", ".xls" };
-        var fileExtension = Path.GetExtension(fileName);
-        return validFormats.Contains(fileExtension);
+        var fileExtension = Path.GetExtension (fileName);
+        return validFormats.Contains (fileExtension);
     }
 
-    private List<string> GroupListByOrderNumber(List<RepositoryFromCsvDto> rows)
-    {
-        try
-        {
+    private List<string> GroupListByOrderNumber (List<RepositoryFromCsvDto> rows) {
+        try {
             return rows
-                .GroupBy(x => x.NUMERO)
-                .Select(x => x.Key)
-                .Where(x => x != "")
-                .ToList();
+                .GroupBy (x => x.NUMERO)
+                .Select (x => x.Key)
+                .Where (x => x != "")
+                .ToList ( );
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(GroupListByOrderNumber));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GroupListByOrderNumber));
             return [];
         }
     }
 
-    private List<RepositoryFromCsvDto> GetRowsByOrderNumber(List<RepositoryFromCsvDto> rows, string orderNumber)
-    {
-        try
-        {
+    private List<RepositoryFromCsvDto> GetRowsByOrderNumber (List<RepositoryFromCsvDto> rows, string orderNumber) {
+        try {
             return rows
-                .Where(x => x.NUMERO == orderNumber)
-                .ToList();
+                .Where (x => x.NUMERO == orderNumber)
+                .ToList ( );
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(GetRowsByOrderNumber));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GetRowsByOrderNumber));
             return [];
         }
     }
 
-    private string? SafeGetCellStringValue(IRow? row, int index, CellType cellType = CellType.String)
-    {
-        var cell = row.GetCell(index);
+    private string? SafeGetCellStringValue (IRow? row, int index, CellType cellType = CellType.String) {
+        var cell = row.GetCell (index);
         if (cell == null) return null;
-        try
-        {
-            return cell.CellType switch
-            {
+        try {
+            return cell.CellType switch {
                 CellType.String => cell.StringCellValue,
-                CellType.Numeric => cell.NumericCellValue.ToString(),
+                CellType.Numeric => cell.NumericCellValue.ToString ( ),
                 _ => cell.StringCellValue
             };
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(SafeGetCellStringValue));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (SafeGetCellStringValue));
             return "";
         }
     }
 
-    private async Task<List<RepositoryFromCsvDto>> GetRowsFromExcel(IFormFile file)
-    {
-        try
-        {
+    private async Task<List<RepositoryFromCsvDto>> GetRowsFromExcel (IFormFile file) {
+        try {
             IWorkbook workbook;
-            var records = new List<RepositoryFromCsvDto>();
+            var records = new List<RepositoryFromCsvDto> ( );
 
-            await using var stream = file.OpenReadStream();
-            workbook = new XSSFWorkbook(stream);
-            var sheet = workbook.GetSheetAt(0);
-            var rows = sheet.GetRowEnumerator();
+            await using var stream = file.OpenReadStream ( );
+            workbook = new XSSFWorkbook (stream);
+            var sheet = workbook.GetSheetAt (0);
+            var rows = sheet.GetRowEnumerator ( );
 
-            while (rows.MoveNext())
-            {
-                var row = (IRow?) rows.Current;
-                if (row?.GetCell(0) == null) break;
+            while (rows.MoveNext ( )) {
+                var row = (IRow?)rows.Current;
+                if (row?.GetCell (0) == null) break;
                 if (row.RowNum <= 1) continue;
 
-                var record = new RepositoryFromCsvDto
-                {
-                    NUMERO = SafeGetCellStringValue(row, 0) ?? string.Empty,
-                    TIPO_DOCTO = SafeGetCellStringValue(row, 1) ?? string.Empty,
-                    FECHA = SafeGetCellStringValue(row, 2) ?? string.Empty,
-                    CONCEPTO = SafeGetCellStringValue(row, 3) ?? string.Empty,
-                    CENTRO_COSTO = SafeGetCellStringValue(row, 4) ?? string.Empty,
-                    CUENTA_CONTABLE = SafeGetCellStringValue(row, 5) ?? string.Empty,
-                    CONCEPTO_DETALLE = SafeGetCellStringValue(row, 6) ?? string.Empty,
-                    CARGO = SafeGetCellStringValue(row, 7) ?? string.Empty,
-                    ABONO = SafeGetCellStringValue(row, 8) ?? string.Empty
+                var record = new RepositoryFromCsvDto {
+                    NUMERO = SafeGetCellStringValue (row, 0) ?? string.Empty,
+                    TIPO_DOCTO = SafeGetCellStringValue (row, 1) ?? string.Empty,
+                    FECHA = SafeGetCellStringValue (row, 2) ?? string.Empty,
+                    CONCEPTO = SafeGetCellStringValue (row, 3) ?? string.Empty,
+                    CENTRO_COSTO = SafeGetCellStringValue (row, 4) ?? string.Empty,
+                    CUENTA_CONTABLE = SafeGetCellStringValue (row, 5) ?? string.Empty,
+                    CONCEPTO_DETALLE = SafeGetCellStringValue (row, 6) ?? string.Empty,
+                    CARGO = SafeGetCellStringValue (row, 7) ?? string.Empty,
+                    ABONO = SafeGetCellStringValue (row, 8) ?? string.Empty
                 };
 
-                records.Add(record);
+                records.Add (record);
             }
 
             return records;
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(GetRowsFromExcel));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GetRowsFromExcel));
             return [];
         }
     }
 
-    private async Task LogImportResult(int numPoliza, string tipoDocto, string description)
-    {
-        var data = new RepositoryImportLog
-        {
-            CodCia = securityRepository.GetSessionCiaCode(),
+
+    private async Task LogImportResult (int numPoliza, string tipoDocto, string description) {
+        var data = new RepositoryImportLog {
+            CodCia = securityRepository.GetSessionCiaCode ( ),
             NumPoliza = numPoliza,
             TipoDocto = tipoDocto,
             Description = description,
-            UploadUser = securityRepository.GetSessionUserName(),
+            UploadUser = securityRepository.GetSessionUserName ( ),
             UploadAt = DateTime.Now,
         };
-    
-        try
-        {
-            await repositoryImportLogRepository.SaveOne(data);
+
+        try {
+            await repositoryImportLogRepository.SaveOne (data);
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(RepositoryController), nameof(LogImportResult));
+        catch (Exception e) {
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (LogImportResult));
         }
     }
 }

@@ -16,11 +16,11 @@ public class CentroCuentaController (
 ) : Controller {
     [IsAuthorized (alias: CC.THIRD_LEVEL_PERMISSION_ADMIN_CENTRO_CUENTA)]
     [HttpGet]
-    public async Task<JsonResult> GetAll ([FromQuery] string ciaCod, [FromQuery] string codCC) {
+    public async Task<JsonResult> GetAll ([FromQuery] string codCia, [FromQuery] string codCC) {
         List<CentroCuentaResultSet>? data;
 
         try {
-            data = await centroCuentaRepository.GetAllByCia (ciaCod, codCC);
+            data = await centroCuentaRepository.GetAllByCia (codCia, codCC);
         }
         catch (Exception e) {
             logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
@@ -44,7 +44,7 @@ public class CentroCuentaController (
 
         try {
             if (data.ESTADO.IsNullOrEmpty ( )) {
-                data.ESTADO = "0";
+                data.ESTADO = "N";
             }
 
             if (data.isUpdating.IsNullOrEmpty ( )) {
@@ -80,14 +80,14 @@ public class CentroCuentaController (
 
     [IsAuthorized (alias: CC.THIRD_LEVEL_PERMISSION_CENTRO_CUENTA_CAN_UPDATE)]
     [HttpGet]
-    public async Task<JsonResult> GetOne ([FromQuery] string ciaCod, [FromQuery] string codCC, [FromQuery] string cta1,
+    public async Task<JsonResult> GetOne ([FromQuery] string codCia, [FromQuery] string codCC, [FromQuery] string cta1,
         [FromQuery] string cta2, [FromQuery] string cta3, [FromQuery] string cta4, [FromQuery] string cta5,
         [FromQuery] string cta6) {
         CentroCuentaResultSet? result;
 
         try {
             result = await centroCuentaRepository
-                .GetOne (ciaCod, codCC, cta1, cta2, cta3, cta4, cta5, cta6);
+                .GetOne (codCia, codCC, cta1, cta2, cta3, cta4, cta5, cta6);
         }
         catch (Exception e) {
             logger.LogError (e, "Ocurrió un error en {Class}.{Method}",

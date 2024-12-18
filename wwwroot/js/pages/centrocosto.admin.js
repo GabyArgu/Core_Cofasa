@@ -44,7 +44,7 @@ function overrideInitDt() {
                     {
                         'data': 'ACEPTA_DATOS',
                         render: function (data, type, row) {
-                            return data==='1' ? 'Sí' : 'No';
+                            return data==='S' ? 'Sí' : 'No';
                         }
                     },
                     {
@@ -124,7 +124,7 @@ function setDataToForm(data) {
 
     if (isDefined(data.CENTRO_COSTO)) $('#CENTRO_COSTO').val(data.CENTRO_COSTO);
     if (isDefined(data.DESCRIPCION)) $('#DESCRIPCION').val(data.DESCRIPCION);
-    if (isDefined(data.ACEPTA_DATOS) && data.ACEPTA_DATOS === '1') { $('#ACEPTA_DATOS').prop('checked', true) }
+    if (isDefined(data.ACEPTA_DATOS) && data.ACEPTA_DATOS === 'S') { $('#ACEPTA_DATOS').prop('checked', true) }
 }
 
 function validateCentroCostoCopyForm() {

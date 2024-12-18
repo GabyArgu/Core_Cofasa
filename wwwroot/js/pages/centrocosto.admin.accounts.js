@@ -72,7 +72,7 @@ function ccAccountsInitGrid() {
                 {
                     'data': 'ESTADO',
                     render: function (data, type, row) {
-                        return data==='1'? 'Activo' : 'Inactivo';
+                        return data==='A'? 'Activo' : 'Inactivo';
                     }
                 },
                 { 'data': 'Descripcion_CTA' },
@@ -205,5 +205,5 @@ function ccAccountsSetDataToForm(data) {
     if (isDefined(data.CTA_5)) $('#CTA_5').val(data.CTA_5);
     if (isDefined(data.CTA_6)) $('#CTA_6').val(data.CTA_6);
     if (isDefined(data.Descripcion_CTA)) $('#NOMBRE').val(data.Descripcion_CTA);
-    if (isDefined(data.ESTADO) && data.ESTADO === '1') { $('#ESTADO').prop('checked', true) }
+    if (isDefined(data.ESTADO) && data.ESTADO === 'A') { $('#ESTADO').prop('checked', true) }
 }
