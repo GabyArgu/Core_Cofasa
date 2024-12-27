@@ -18,6 +18,8 @@ public interface IDmgCuentasRepository
     Task<string> GetName(GetAccountNameDto data);
 
     Task<string> GetCoreContableAccountFromCONTABLEAccount(string codCia, string CONTABLEAccount);
+
+    Task<bool> GenerarPartidaLiquidacion (string codCia);
 }
 
 public class DmgCuentasRepository(
@@ -182,5 +184,35 @@ public class DmgCuentasRepository(
             return "";
         }
     }
+
+
+    public async Task<bool> GenerarPartidaLiquidacion(string codCia) {
+        try {
+            // Año actual
+            int año = DateTime.Now.Year;
+
+            // Mes siempre será diciembre (12)
+            int mes = 12;
+
+            // Concepto y documento definidos automáticamente
+            string concepto = $"partida por el cierre anual {año}";
+            string doc = "PC";
+
+            // Establecer un tiempo de espera personalizado
+            dbContext.Database.SetCommandTimeout (120); // Tiempo en segundos
+
+            // Ejecución de la función CrearAsientoCierre
+            await dbContext.Database.ExecuteSqlRawAsync (
+                "EXEC [CONTABLE].[CrearAsientoCierre] {0}, {1}, {2}, {3}, {4}",
+                codCia, año, mes, concepto, doc
+            );
+            return true;
+        }
+        catch (Exception e) {
+            logger.LogError (e, "Error en {Class}.{Method}", nameof (DmgCuentasRepository), nameof (GenerarPartidaLiquidacion));
+            return false;
+        }
+    }
+
 
 }

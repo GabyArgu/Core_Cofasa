@@ -30,9 +30,39 @@ $(document).ready(function () {
     overrideInitDt();
     initTipoDoctoSelect('tipoDoctoFilter', 'Filtrar por tipo de documento');
     listenDoctoTypeChanges();
+
+    // Ejecutar la verificación inicial al cargar la página
+    verificarCampos();
+
+    // Revisar los campos cada 5 segundos
+    setInterval(verificarCampos, 500);
 });
 
-function listenDoctoTypeChanges() { 
+// Función para verificar si los campos requeridos están llenos
+function verificarCampos() {
+    const estado = $('#selSTAT_POLIZA').val();
+    const tipoPoliza = $('#selTIPO_DOCTO').val();
+    const fecha = $('#FECHA').val();
+    const concepto = $('#CONCEPTO').val();
+
+    //console.log(`estado: ${estado}`);
+    //console.log(`tipoPoliza: ${tipoPoliza}`);
+    //console.log(`fecha: ${fecha}`);
+    //console.log(`concepto: ${concepto}`);
+
+    if (estado && tipoPoliza && fecha && concepto) {
+        /*console.log('Todos los campos están completos. Mostrando #detRepoForm');*/
+        $('#detRepositoryForm').removeClass('d-none'); // Quitar la clase d-none
+    } else {
+        /*console.log('Algunos campos están vacíos. Ocultando #detRepoForm');*/
+        $('#detRepositoryForm').addClass('d-none'); // Agregar la clase d-none
+    }
+}
+
+// Detectar cambios en los inputs del formulario
+$('#repositoryForm input:not([type="hidden"]), #repositoryForm select').on('input change', verificarCampos);
+
+function listenDoctoTypeChanges() {
     $('#tipoDoctoFilter').on('change', function () {
         const newUrl = API.tableURL.replaceAll('{doctoType}', $(this).val());
         reloadTableWithNewURL(newUrl);
@@ -41,8 +71,12 @@ function listenDoctoTypeChanges() {
 
 function overridePrepareButtons() {
     prepareButtons(function () {
-        $(`#${initValues.addButtonId}`).click(function(){ showDetRepoGrid(); });
-        $('#repositoryImportButton').click(function(){ showImportFileDialog(); });
+        $(`#${initValues.addButtonId}`).click(function () {
+            showDetRepoGrid();
+            verificarCampos();
+        });
+        $('#repositoryImportButton').click(function () { showImportFileDialog(); });
+        $('#generateSettlementEntriesButton').click(function () { generarPartidaLiquidacion(); });
     });
 }
 
@@ -58,10 +92,10 @@ function overrideInitDt() {
                     'type': 'POST',
                     'datatype': 'JSON',
                 },
-                'createdRow': function(row, data, dataIndex) {
+                'createdRow': function (row, data, dataIndex) {
                     // Verifica si ambos valores son 0 o nulos/indefinidos
                     if ((data.DiferenciaCargoAbono === 0 || isUndefinedNullOrEmpty(data.DiferenciaCargoAbono)) &&
-                    (data.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(data.TOTAL_POLIZA))) {
+                        (data.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(data.TOTAL_POLIZA))) {
                         // Si ambos son 0, agrega la clase 'hasDifference'
                         $(row).addClass('hasDifference');
                     }
@@ -70,7 +104,7 @@ function overrideInitDt() {
                         $(row).addClass('hasDifference');
                     }
                 },
-                'rowCallback': function(row, data, index) {
+                'rowCallback': function (row, data, index) {
                     $(row).find('td:eq(5)').addClass('break-word');
                     $(row).find('td:eq(6)').addClass('text-right');
                     $(row).find('td:eq(7)').addClass('text-right');
@@ -78,7 +112,7 @@ function overrideInitDt() {
                 'columns': [
                     // {'data': 'COD_CIA'},
                     // {sortable: false, searchable: false, visible: false, 'data': 'FECHA_CAMBIO'},
-                    { searchable: false, 'data': 'RowNum',},
+                    { searchable: false, 'data': 'RowNum', },
                     {
                         'data': 'FECHA',
                         // sortable: false,
@@ -86,8 +120,8 @@ function overrideInitDt() {
                             return moment(data).format(CONSTANTS.defaults.date.formats.date);
                         }
                     },
-                    {'data': 'NUM_POLIZA'},
-                    {'data': 'NOMBRE_DOCTO'},
+                    { 'data': 'NUM_POLIZA' },
+                    { 'data': 'NOMBRE_DOCTO' },
                     {
                         'data': 'STAT_POLIZA',
                         render: function (data, type, row) {
@@ -96,7 +130,7 @@ function overrideInitDt() {
                                 : 'Revisada';
                         }
                     },
-                    {'data': 'CONCEPTO'},
+                    { 'data': 'CONCEPTO' },
                     {
                         'data': 'TOTAL_POLIZA',
                         render: function (data, type, row) {
@@ -112,12 +146,12 @@ function overrideInitDt() {
                     {
                         sortable: false, searchable: false,
                         render: function (data, type, row) {
-                            let buttons = gridButtons.replace('{data}',Base64.encode($.toJSON(row)));
+                            let buttons = gridButtons.replace('{data}', Base64.encode($.toJSON(row)));
                             if (!isUndefinedNullOrEmpty(row.DiferenciaCargoAbono) && row.DiferenciaCargoAbono !== 0) {
                                 return buttons.replaceAll('{mayorizar_style}', 'display:none;');
-                                
-                            }else if ((row.DiferenciaCargoAbono === 0 || isUndefinedNullOrEmpty(row.DiferenciaCargoAbono)) &&
-                            (row.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(row.TOTAL_POLIZA))) {
+
+                            } else if ((row.DiferenciaCargoAbono === 0 || isUndefinedNullOrEmpty(row.DiferenciaCargoAbono)) &&
+                                (row.TOTAL_POLIZA === 0 || isUndefinedNullOrEmpty(row.TOTAL_POLIZA))) {
                                 // Si ambos son 0, oculta el botón
                                 return buttons.replaceAll('{mayorizar_style}', 'display:none;');
                             }
@@ -180,7 +214,7 @@ function overrideLoadOne(codCia, period, doctoType, numPoliza) {
             .replaceAll('{doctoType}', doctoType)
             .replaceAll('{numPoliza}', numPoliza),
         success: function (data) {
-            if(data.success){ setFormData(data.data); }
+            if (data.success) { setFormData(data.data); }
         }
     });
 }
@@ -234,7 +268,7 @@ function initDetailSelectsAndCalendars() {
         '/CentroCuenta/GetToSelect2',
         'Cuenta contable',
         false,
-        function(term, page) {
+        function (term, page) {
             return {
                 codCia: $('#COD_CIA').val(),
                 centroCosto: $('#CENTRO_COSTO').select2('val'),
@@ -242,13 +276,13 @@ function initDetailSelectsAndCalendars() {
                 page: page || 1,
                 pageSize: 10
             };
-    });
+        });
 
     $('#CENTRO_COSTO').on('change', function () { validateDetRepoFormSel2(); });
 }
 
 function showDetRepoGrid(data) {
-    const isEditing = !(typeof (data) === 'undefined' || data === '' || data===null);
+    const isEditing = !(typeof (data) === 'undefined' || data === '' || data === null);
     IS_ADDING = !isEditing;
 
     if (isEditing) {
@@ -268,13 +302,13 @@ function showDetRepoGrid(data) {
         className: 'modalExtraLarge',
     });
 
-    detRepoDialog.on('hidden.bs.modal', function(e){
+    detRepoDialog.on('hidden.bs.modal', function (e) {
         IS_ADDING = false;
         DT_LOCAL_DATA = [];
         reloadTable();
         //if (!isUndefinedNullOrEmpty(temp_PARTIDA_DIFF) && temp_PARTIDA_DIFF === 0) {
         //capitalizeAccounts(temp_COD_CIA, temp_PERIODO, temp_TIPO_DOCTO, temp_NUM_POLIZA);
-        
+
         //}
     });
 
@@ -323,7 +357,7 @@ function watchCargoAndAbonoChanges() {
         const cargo = $('#CARGO').val()
         const abono = $('#ABONO').val()
 
-        if ((isUndefinedNullOrEmpty(cargo) || cargo=='0') && (isUndefinedNullOrEmpty(abono) || abono=='0')) {
+        if ((isUndefinedNullOrEmpty(cargo) || cargo == '0') && (isUndefinedNullOrEmpty(abono) || abono == '0')) {
             $('#CARGO, #ABONO').removeAttr('readonly');
         }
         else if (isUndefinedNullOrEmpty(cargo)) {
@@ -347,7 +381,7 @@ function saveUpdateOrDeleteHeader(action, data) {
         showConfirm({
             message: '¿Está seguro de eliminar el registro?',
             result: function (result) {
-                if(!result) return;
+                if (!result) return;
                 const newFormData = `COD_CIA=${data.COD_CIA}&NUM_REFERENCIA=${data.NUM_REFERENCIA}
                     &OPERACION=ELIMINAR&PERIODO=${data.PERIODO}&ANIO=${data.ANIO}&MES=${data.MES}
                     &STAT_POLIZA=${data.STAT_POLIZA}&NUM_POLIZA=${data.NUM_POLIZA}&TIPO_DOCTO=${data.TIPO_DOCTO}
@@ -367,7 +401,7 @@ function callSaveUpdateOrDeleteHeader(formData, callback, errorCallback) {
             else {
                 isLoading(`#${initValues.btnSaveId}`, false);
                 showToast(data.success, data.message);
-                if(data.success) { reloadTable(); }
+                if (data.success) { reloadTable(); }
             }
         },
         error: function (err) {
@@ -399,18 +433,18 @@ function capitalizeAccounts(codCIA, periodo, tipoDOCTO, numPOLIZA) {
     showConfirm({
         message: '¿Mayorizar este asiento contable?',
         result: function (result) {
-            if(!result) return;
+            if (!result) return;
             showLoadingDialog(true, 'Mayorizando asientos, por favor espere ...');
-            const formData= `codCia=${codCIA}&periodo=${periodo}&tipoDocto=${tipoDOCTO}&numPoliza=${numPOLIZA}`;
+            const formData = `codCia=${codCIA}&periodo=${periodo}&tipoDocto=${tipoDOCTO}&numPoliza=${numPOLIZA}`;
 
             $.ajax({
                 url: '/Repository/CapitalizeAccounts',
                 type: 'POST',
                 data: formData,
-                success:function(data){
+                success: function (data) {
                     showLoadingDialog(false, '');
                     showToast(data.success, data.message);
-                    if(data.success) { reloadTable(); }
+                    if (data.success) { reloadTable(); }
                     setTempPartidaDiffValues();
                 },
                 error: function (error) {
@@ -456,3 +490,58 @@ function showImportFileDialog() {
 
     listenFileDrop();
 }
+
+function generarPartidaLiquidacion() {
+    // Obtener el valor del input oculto con el código de compañía
+    const codCIA = document.getElementById('COD_CIA').value;
+
+    // Validar que el código de compañía no esté vacío
+    if (!codCIA || codCIA.trim() === "") {
+        showToast(false, 'El código de compañía no está disponible.');
+        return;
+    }
+
+    // Confirmación antes de proceder
+    showConfirm({
+        message: '¿Generar asientos de cierre?',
+        result: function (result) {
+            if (!result) return;
+
+            // Mostrar un mensaje de carga
+            showLoadingDialog(true, 'Generando asientos, por favor espere ...');
+
+            // Llamada AJAX al backend
+            $.ajax({
+                url: `/Repository/GenerarPartidaLiquidacion?codCia=${encodeURIComponent(codCIA)}`,
+                type: 'GET',
+                success: function (data) {
+                    // Ocultar el mensaje de carga
+                    showLoadingDialog(false, '');
+
+                    // Mostrar el resultado de la operación
+                    showToast(data.success, data.message);
+
+                    // Recargar la tabla si la operación fue exitosa
+                    if (data.success) {
+                        reloadTable();
+                    }
+
+                    // Resetear los valores temporales de diferencia de partida
+                    setTempPartidaDiffValues();
+                },
+                error: function () {
+                    // Ocultar el mensaje de carga
+                    showLoadingDialog(false, '');
+
+                    // Mostrar un mensaje de error
+                    showToast(false, 'Ocurrió un error al procesar la solicitud.');
+
+                    // Resetear los valores temporales de diferencia de partida
+                    setTempPartidaDiffValues();
+                }
+            });
+        }
+    });
+}
+
+

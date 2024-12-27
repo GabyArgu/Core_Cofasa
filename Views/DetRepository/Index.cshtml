@@ -26,7 +26,7 @@
         @if (SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD)
              || SecurityRepository.GetSessionUserPermissionList().Contains(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_UPDATE))
         {
-            <div class="row"><partial name="../DetRepository/DetRepositoryForm"/></div>
+            <div class="row d-none" id="detRepositoryForm"><partial name="../DetRepository/DetRepositoryForm" /></div>
         }
 
         <div class="row mt-3">

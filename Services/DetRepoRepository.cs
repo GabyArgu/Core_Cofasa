@@ -60,10 +60,9 @@ public class DetRepoRepository(
                     id = detRepo.CENTRO_COSTO,
                     text = detRepo.Desc_CCosto
                 },
-                selCentroCuenta = new Select2ResultSet
-                {
-                    id = $"{detRepo.COD_CIA}|{detRepo.CENTRO_COSTO}|{detRepo.CTA_1}|{detRepo.CTA_2}|{detRepo.CTA_3}|{detRepo.CTA_4}|{detRepo.CTA_5}|{detRepo.CTA_6}",
-                    text = $"{detRepo.CTA_1}{detRepo.CTA_2}{detRepo.CTA_3}{detRepo.CTA_4}{detRepo.CTA_5}{detRepo.CTA_6}"
+                selCentroCuenta = new Select2ResultSet {
+                    id = $"{detRepo.CTA_1}{detRepo.CTA_2}{detRepo.CTA_3.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_4.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_5.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_6.ToString ( ).PadLeft (3, '0')}",
+                    text = $"{detRepo.CTA_1}{detRepo.CTA_2}{detRepo.CTA_3.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_4.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_5.ToString ( ).PadLeft (2, '0')}{detRepo.CTA_6.ToString ( ).PadLeft (3, '0')}"
                 },
                 CORRELAT = detRepo.CORRELAT,
                 CTA_1 = detRepo.CTA_1,

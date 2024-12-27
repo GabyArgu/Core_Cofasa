@@ -286,32 +286,33 @@ public class ContaRepoRepository(
         }
     }
 
-    public async Task<bool> CapitalizeAccounts(CapitalizeAccountDto data)
-    {
-        var command = dbContext.Database.GetDbConnection().CreateCommand();
+    public async Task<bool> CapitalizeAccounts (CapitalizeAccountDto data) {
+        using (var command = dbContext.Database.GetDbConnection ( ).CreateCommand ( )) {
+            try {
+                command.CommandText = $"[{CC.SCHEMA}].[MayorizarAsiento]";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 900; // Aumentar timeout aquí
 
-        try
-        {
-            command.CommandText = $"[{CC.SCHEMA}].[MayorizarAsiento]";
-            command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add (new SqlParameter ("@COD_CIA", SqlDbType.VarChar) { Value = (object?)data.codCia ?? DBNull.Value });
+                command.Parameters.Add (new SqlParameter ("@PERIODO", SqlDbType.Int) { Value = (object?)data.periodo ?? DBNull.Value });
+                command.Parameters.Add (new SqlParameter ("@TIPO_DOCTO", SqlDbType.VarChar) { Value = (object?)data.tipoDocto ?? DBNull.Value });
+                command.Parameters.Add (new SqlParameter ("@NUM_POLIZA", SqlDbType.Int) { Value = (object?)data.numPoliza ?? DBNull.Value });
 
-            command.Parameters.Add(new SqlParameter("@COD_CIA", SqlDbType.VarChar) { Value = data.codCia==null ? DBNull.Value : data.codCia });
-            command.Parameters.Add(new SqlParameter("@PERIODO", SqlDbType.Int) { Value = data.periodo==null ? DBNull.Value : data.periodo });
-            command.Parameters.Add(new SqlParameter("@TIPO_DOCTO", SqlDbType.VarChar) { Value = data.tipoDocto==null ? DBNull.Value : data.tipoDocto });
-            command.Parameters.Add(new SqlParameter("@NUM_POLIZA", SqlDbType.Int) { Value = data.numPoliza==null ? DBNull.Value : data.numPoliza });
+                if (command.Connection?.State != ConnectionState.Open)
+                    await dbContext.Database.OpenConnectionAsync ( );
 
-            if (command.Connection?.State != ConnectionState.Open) await dbContext.Database.OpenConnectionAsync();
-            await command.ExecuteNonQueryAsync();
-            if (command.Connection?.State == ConnectionState.Open) await dbContext.Database.CloseConnectionAsync();
+                await command.ExecuteNonQueryAsync ( );
 
-            return true;
-        }
-        catch (Exception e)
-        {
-            if (command.Connection?.State == ConnectionState.Open) await dbContext.Database.CloseConnectionAsync();
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(SecurityRepository), nameof(CapitalizeAccounts));
-            return false;
+                return true;
+            }
+            catch (Exception e) {
+                logger.LogError (e, "Ocurrió un error en {Class}.{Method}", nameof (SecurityRepository), nameof (CapitalizeAccounts));
+                return false;
+            }
+            finally {
+                if (command.Connection?.State == ConnectionState.Open)
+                    await dbContext.Database.CloseConnectionAsync ( );
+            }
         }
     }
 
@@ -384,4 +385,5 @@ public class ContaRepoRepository(
             return Task.FromResult(0);
         }
     }
+
 }

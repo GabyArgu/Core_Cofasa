@@ -24,22 +24,32 @@
             </div>
             <div class="col-9">
                 <div class="btn-toolbar float-right" role="toolbar" aria-label="" style="margin-bottom:20px;">
+                    @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD))
+                    {
+                        <div class="btn-group mr-2" role="group" aria-label="">
+                            <button class="btn btn-success" id="generateSettlementEntriesButton">
+                                <i class="fa fa-file"></i>&nbsp; Partidas Liquidación
+                            </button>
+                        </div>
+                    }
+                    <input type="hidden" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
                     <div class="btn-group mr-2" role="group" aria-label="First group">
                         <button type="button" class="btn btn-warning" id="repositoryImportButton">
-                            <i class="fa fa-upload"></i>&nbsp;Importar
+                            <i class="fa fa-upload"></i>&nbsp; Importar
                         </button>
                     </div>
-                    @if (SecurityRepository.HasPermission(CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD))
+                    @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD))
                     {
                         <div class="btn-group mr-2" role="group" aria-label="">
                             <button class="btn btn-primary" id="repositoryAddButtonId">
-                                <i class="fa fa-plus"></i>&nbsp;Agregar
+                                <i class="fa fa-plus"></i>&nbsp; Agregar
                             </button>
                         </div>
                     }
                 </div>
             </div>
         </div>
+
 
         <table id="repositoryDataTableId" class="" style="width:100%!important;">
             <thead>
@@ -69,31 +79,31 @@
         {
     <button class='btn btn-warning btn-sm button-edit' data-action="asientos" title="Asientos">
     <i class='fa fa-pencil'></i>
-                </button>
+                    </button>
         }
         @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_DELETE))
         {
     <button class="btn btn-danger btn-sm button-cancel" data-action="deleterepo" title="Eliminar">
     <i class="fa fa-times"></i>
-                </button>
+                    </button>
         }
         @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_CAPITALIZE))
         {
     <button class='btn btn-primary btn-sm button-up' data-action="capitalizerepo" title="Mayorizar" style="{mayorizar_style}">
     <i class='fa fa-arrow-up'></i>
-                </button>
+                    </button>
         }
         @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_PRINT))
         {
     <button class='btn bg-info btn-sm' data-action="repoprint" title="Imprimir">
     <i class='fa fa-print'></i>
-                </button>
+                    </button>
         }
         @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_PRINT))
         {
     <button class='btn bg-olive btn-sm' data-action="excelprint" title="Excel">
     <i class='fa fa-file-excel'></i>
-                </button>
+                    </button>
         }
     </div>
 </textarea>

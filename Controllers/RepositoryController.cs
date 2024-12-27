@@ -598,4 +598,26 @@ public class RepositoryController (
                 nameof (RepositoryController), nameof (LogImportResult));
         }
     }
+
+    [HttpGet]
+    public async Task<JsonResult> GenerarPartidaLiquidacion ([FromQuery] string codCia) {
+        bool result = false;
+        try {
+            result = await dmgCuentasRepository.GenerarPartidaLiquidacion(codCia);
+        }
+        catch (Exception e) {
+            result = false;
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (RepositoryController), nameof (GetOneBy));
+        }
+
+        var message = result
+            ? "Asientos de cierre generado correctamente"
+            : "Ocurrió un error al generar el asiento de cierre";
+
+        return Json (new {
+            success = result,
+            message
+        });
+    }
 }
