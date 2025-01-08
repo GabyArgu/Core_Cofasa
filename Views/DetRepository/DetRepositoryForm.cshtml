@@ -9,10 +9,28 @@
     <input type="hidden" id="det_NUM_POLIZA" name="det_NUM_POLIZA" /> @* VIENE DESDE LA TABLA PADRE *@
     <input type="hidden" id="det_CORRELAT" name="det_CORRELAT" /> @* Generado desde el front *@
     <input type="hidden" id="detOPERACION" name="detOPERACION" />
+    <style>
+        #detallitos {
+            width: 100%; /* Tabla ocupa el 100% del ancho */
+            table-layout: fixed; /* Fija el ancho de las celdas */
+        }
+
+        #detallitos td {
+            width: 120px; /* Ancho fijo para todas las celdas */
+            max-width: 220px; /* Evitar que crezcan más allá de este ancho */
+            overflow: hidden; /* Evitar que el contenido desborde */
+            text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es demasiado largo */
+            white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+        }
+
+        #detallitos th {
+            width: 120px; /* Aplica el mismo ancho fijo a los encabezados si es necesario */
+        }
+    </style>
 
     <div class="row">
         <div class="col-md-12">
-            <table>
+            <table id="detallitos">
                 <thead>
                 <tr>
                     <th colspan="2" style="width: 40%;" class="text-center"></th>

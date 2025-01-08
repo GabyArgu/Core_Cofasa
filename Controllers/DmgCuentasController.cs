@@ -60,6 +60,8 @@ public class DmgCuentasController(
             {
                 data.FechaCreacion = DateTime.Now;
                 data.UsuarioCreacion = securityRepository.GetSessionUserName();
+                data.FechaModificacion = DateTime.Now;
+                data.UsuarioModificacion = securityRepository.GetSessionUserName ( );
                 isUpdating = false;
             }
             else

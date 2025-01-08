@@ -19,7 +19,9 @@ public interface IDmgCuentasRepository
 
     Task<string> GetCoreContableAccountFromCONTABLEAccount(string codCia, string CONTABLEAccount);
 
-    Task<bool> GenerarPartidaLiquidacion (string codCia);
+    Task<bool> GenerarPartidaLiquidacion (string codCia, int año);
+
+    Task<bool> MayorizarMes (string codCia, int periodo, int año, int mes);
 }
 
 public class DmgCuentasRepository(
@@ -107,7 +109,7 @@ public class DmgCuentasRepository(
             command.Parameters.Add (new SqlParameter ("@ACEP_MOV", SqlDbType.VarChar) { Value = data.ACEP_MOV ?? "N" });
             command.Parameters.Add (new SqlParameter ("@ACEP_PRESUP", SqlDbType.VarChar) { Value = data.ACEP_PRESUP ?? "N" });
             command.Parameters.Add (new SqlParameter ("@ACEP_ACTIV", SqlDbType.VarChar) { Value = data.ACEP_ACTIV ?? "N" });
-            command.Parameters.Add (new SqlParameter ("@GRUPO_CTA", SqlDbType.VarChar) { Value = data.GRUPO_CTA ?? " " });
+            command.Parameters.Add (new SqlParameter ("@GRUPO_CTA", SqlDbType.VarChar) { Value = data.GRUPO_CTA ?? "NO DIFINIDO" });
             command.Parameters.Add (new SqlParameter ("@CLASE_SALDO", SqlDbType.VarChar) { Value = data.CLASE_SALDO == null ? DBNull.Value : data.CLASE_SALDO });
             command.Parameters.Add (new SqlParameter ("@CTA_1P", SqlDbType.VarChar) { Value = data.CTA_1P == null ? DBNull.Value : data.CTA_1P });
             command.Parameters.Add (new SqlParameter ("@CTA_2P", SqlDbType.VarChar) { Value = data.CTA_2P == null ? DBNull.Value : data.CTA_2P });
@@ -186,10 +188,8 @@ public class DmgCuentasRepository(
     }
 
 
-    public async Task<bool> GenerarPartidaLiquidacion(string codCia) {
+    public async Task<bool> GenerarPartidaLiquidacion (string codCia, int año) {
         try {
-            // Año actual
-            int año = DateTime.Now.Year;
 
             // Mes siempre será diciembre (12)
             int mes = 12;
@@ -205,6 +205,28 @@ public class DmgCuentasRepository(
             await dbContext.Database.ExecuteSqlRawAsync (
                 "EXEC [CONTABLE].[CrearAsientoCierre] {0}, {1}, {2}, {3}, {4}",
                 codCia, año, mes, concepto, doc
+            );
+            return true;
+        }
+        catch (Exception e) {
+            logger.LogError (e, "Error en {Class}.{Method}", nameof (DmgCuentasRepository), nameof (GenerarPartidaLiquidacion));
+            return false;
+        }
+    }
+
+
+    public async Task<bool> MayorizarMes(string codCia, int periodo, int año, int mes) {
+        try {
+
+            string estado = "R";
+
+            // Establecer un tiempo de espera personalizado
+            //dbContext.Database.SetCommandTimeout (1120); // Tiempo en segundos
+
+            // Ejecución de la función EjecutarMayorizacionMasiva
+            await dbContext.Database.ExecuteSqlRawAsync (
+                "EXEC [CONTABLE].[EjecutarMayorizacionMasiva] {0}, {1}, {2}, {3}, {4}",
+                codCia, periodo, año, mes, estado
             );
             return true;
         }

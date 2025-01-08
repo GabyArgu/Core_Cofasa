@@ -147,28 +147,34 @@ public class ContaRepoRepository(
         }
     }
 
-    public Task<RepositorioResultSet?> GetOneBy(
-        string? codCia,
-        int? periodo,
-        string? tipoDocto,
-        int? numPoliza
-    )
-    {
-        try
-        {
-            return dbContext.ObtenerDatosRepositorioResult
-                .FromSqlRaw(
-                    "SELECT * FROM CONTABLE.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
-                    codCia!=null ? codCia : DBNull.Value,
-                    periodo!=null ? periodo : DBNull.Value,
-                    tipoDocto!=null ? tipoDocto : DBNull.Value,
-                    numPoliza!=null ? numPoliza : DBNull.Value,
-                    DBNull.Value,
-                    DBNull.Value,
-                    DBNull.Value
-                )
-                .Select(repositorio => new RepositorioResultSet
-                {
+    public async Task<RepositorioResultSet?> GetOneBy (
+    string? codCia,
+    int? periodo,
+    string? tipoDocto,
+    int? numPoliza
+) {
+        try {
+            // Log de entrada de parámetros
+            logger.LogInformation ("Inicio de GetOneBy con parámetros: codCia={codCia}, periodo={periodo}, tipoDocto={tipoDocto}, numPoliza={numPoliza}",
+                codCia, periodo, tipoDocto, numPoliza);
+
+            // Ejecutar la consulta
+            var query = dbContext.ObtenerDatosRepositorioResult.FromSqlRaw (
+                "SELECT * FROM CONTABLE.ObtenerDatosRepositorio({0}, {1}, {2}, {3}, {4}, {5}, {6})",
+                codCia ?? (object)DBNull.Value,
+                periodo ?? (object)DBNull.Value,
+                tipoDocto ?? (object)DBNull.Value,
+                numPoliza ?? (object)DBNull.Value,
+                DBNull.Value,
+                DBNull.Value,
+                DBNull.Value
+            );
+
+            // Log para verificar la consulta se construyó correctamente
+            logger.LogInformation ("Consulta ejecutada en base de datos.");
+
+            var resultado = await query
+                .Select (repositorio => new RepositorioResultSet {
                     COD_CIA = repositorio.COD_CIA,
                     PERIODO = $"{repositorio.PERIODO}",
                     TIPO_DOCTO = repositorio.TIPO_DOCTO,
@@ -186,15 +192,26 @@ public class ContaRepoRepository(
                     // MODIFICACION_USUARIO = repositorio.MODIFICACION_USUARIO,
                     // MODIFICACION_FECHA = repositorio.MODIFICACION_FECHA,
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync ( );
+
+            // Verificar si se obtuvo un resultado
+            if (resultado == null) {
+                logger.LogWarning ("El procedimiento no devolvió ningún resultado para los parámetros proporcionados.");
+            }
+            else {
+                logger.LogInformation ("Resultado obtenido: {@resultado}", resultado);
+            }
+
+            return resultado;
         }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(SecurityRepository), nameof(GetOneBy));
-            return Task.FromResult<RepositorioResultSet?>(null);
+        catch (Exception e) {
+            // Log de errores detallados
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method} con los parámetros: codCia={codCia}, periodo={periodo}, tipoDocto={tipoDocto}, numPoliza={numPoliza}",
+                nameof (SecurityRepository), nameof (GetOneBy), codCia, periodo, tipoDocto, numPoliza);
+            return null;
         }
     }
+
 
     public async Task<bool> SaveOne(RepositorioDto data)
     {

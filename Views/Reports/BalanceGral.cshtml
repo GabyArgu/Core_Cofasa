@@ -3,6 +3,8 @@
 
 @{
     Layout = null;
+
+    var detallesPatrimonio = Model.Detalles.Where (x => x.grupo_cta == "PATRIMONIO").ToList ( );
 }
 
 <!doctype html>
@@ -16,28 +18,40 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
         body {
             font-family: 'Calibri', sans-serif;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .title {
-            font-weight: bold;
-            font-size: 1.5rem;
+            margin-top: 0rem !important;
+            font-weight: bolder;
+            font-size: 1.4rem;
             text-align: center;
+            margin-bottom: 0.3rem;
         }
 
         .sub-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.3rem;
+            margin-top: 0rem !important;
+        }
+
+        .sub-title2 {
+            font-size: 1rem;
+            font-weight: lighter;
+            text-align: center;
+            padding-bottom: 0.5rem;
         }
 
         .section-title {
-            font-size: 1.1rem;
+            font-size: 0.9rem; /* Reducido de 1.1rem */
             font-weight: bold;
             padding: 0 !important;
-            margin-bottom: 0.7rem;
             text-align: left;
         }
 
@@ -48,29 +62,33 @@
         }
 
         .group-section {
-            width: 48%;
-            margin-bottom: 20px;
+            width: 50%;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 5px; /* Menor margen superior */
+            font-size: 0.85rem;
         }
 
         th, td {
-            padding: 6px;
             text-align: left;
-            font-size: 1rem;
+            font-size: 0.85rem; /* Reducido de 1rem */
+        
         }
 
         th {
-            background-color: #f2f2f2;
             font-weight: bold;
+        }
+
+        #cuentas td{
+            padding-top: 0.45rem !important;
         }
 
         .money {
             text-align: right !important;
+            font-size: 0.9rem !important;
         }
 
         .text-center {
@@ -80,156 +98,268 @@
         .subtotal {
             font-weight: bold;
             text-align: right;
-            padding-top: 10px;
+            padding-top: 5px; /* Reducido de 10px */
+            font-size: 0.85rem;
         }
 
         .total {
             font-weight: bold;
-            font-size: 1.5rem;
-            margin-top: 20px;
-            padding-bottom: 150px;
+            font-size: 1.1rem; /* Tamaño mayor para destacar */
+            text-align: center;
+            padding-bottom: 9rem !important;
         }
 
-        .bold{
+        .total th {
+            font-size: 1rem !important;
+        }
+
+        .total td {
+            font-size: 1rem !important;
+        }
+
+        .bold {
             font-weight: bold;
-            margin:0 !important;
-            padding:0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        #firmas p{
+        #firmas p {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 0.85rem; /* Reducido para compactar */
+        }
+
+        .main-title {
+            font-weight: bold;
+            font-size: 0.9rem; /* Reducido de 1.1em */
+            text-align: center;
+            text-decoration: underline; /* Mantiene el subrayado */
+        }
+
+        .m-W{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .m-W p{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .m-W strong{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+
+        .UwU {
             margin: 0 !important;
             padding: 0 !important;
         }
 
     </style>
+
 </head>
 <body>
     <div class="container">
         <p class="title">@Model.Compania</p>
-        <p class="sub-title">Balance General al @((DateTime.Parse (Model.FechaReporte)).ToString("dd 'de' MMMM 'de' yyyy"))</p>
-        <p class="sub-title mb-4">(Expresado en dólares US$)</p>
+        <p class="sub-title">Balance General al @((DateTime.Parse (Model.FechaReporte)).ToString ("dd 'de' MMMM 'de' yyyy"))</p>
+        <p class="sub-title2 ">Expresado en dólares de los Estados Unidos de América</p>
+        
+        <div class="row" style="height:450px !important;  max-height:480px!important; " id="cuentas">
 
-        <div class="row">
             <!-- Columna izquierda: Activos -->
-            <div class="col-6 group-section" style="width: 49%; float: left; margin-bottom: 20px;">
+            <div class="col-6 group-section" style="width: 49%; float: left;">
+                @if (Model.Detalles.Any (x => x.grupo_cta == "ACTIVO"))
+                {
+                    <p class="main-title">ACTIVOS</p>
+                }
+
                 @foreach (var subGrupo in new[] { "CORRIENTE", "NO CORRIENTE" })
                 {
                     var detallesActivos = Model.Detalles.Where (x => x.grupo_cta == "ACTIVO" && x.sub_grupo == subGrupo).ToList ( );
                     if (detallesActivos.Any ( ))
                     {
-                        <p class="section-title">ACTIVO - @subGrupo</p>
+                        string cuentaPrefijo = subGrupo == "CORRIENTE" ? "11" : "12";
                         <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; text-align: left;">@cuentaPrefijo</th>
+                                    <th style="width: 60%; text-align: left;">ACTIVO - @subGrupo</th>
+                                    <th class="money" style="width: 30%; text-align: right;">
+                                        $@(detallesActivos.Sum (x => x.saldo ?? 0.0).ToString ("#,##0.00"))
+                                    </th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @foreach (var item in detallesActivos)
                                 {
                                     <tr>
+                                        <td>@item.Cta_CONTABLE</td>
                                         <td>@item.DESCRIPCION</td>
-                                        <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
+                                        <td class="money">$@((item.saldo ?? 0.0).ToString ("#,##0.00"))</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                        <p class="subtotal">Subtotal: $@(detallesActivos.Sum (x => x.saldo ?? 0.0).ToString ("#,##0.00"))</p>
+                        <div style="height: 15px;"></div> <!-- Espacio entre subgrupos -->
                     }
                 }
+
+
             </div>
 
             <!-- Columna derecha: Pasivos y Patrimonio -->
-            <div class="col-6 group-section" style="width: 48%; float: right; margin-bottom: 20px;">
-                @foreach (var grupo in new[] { "PASIVO", "PATRIMONIO" })
+            <div class="col-6 group-section" style="width: 48%; float: right;">
+                @if (Model.Detalles.Any (x => x.grupo_cta == "PASIVO"))
                 {
-                    var detallesDerecha = Model.Detalles.Where (x => x.grupo_cta == grupo).ToList ( );
-
-                    if (detallesDerecha.Any ( ))
-                    {
-                        // Mostrar subgrupo solo para Pasivo, omitirlo para Patrimonio
-                        if (grupo == "PASIVO")
-                        {
-                            foreach (var subGrupo in new[] { "CORRIENTE", "NO CORRIENTE" })
-                            {
-                                var subDetalles = detallesDerecha.Where (x => x.sub_grupo == subGrupo).ToList ( );
-                                if (subDetalles.Any ( ))
-                                {
-                                    <p class="section-title">@grupo - @subGrupo</p>
-                                    <table>
-                                        <tbody>
-                                            @foreach (var item in subDetalles)
-                                            {
-                                                <tr>
-                                                    <td>@item.DESCRIPCION</td>
-                                                    <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                    <p class="subtotal">Subtotal: $@(subDetalles.Sum (x => x.saldo ?? 0.0).ToString("#,##0.00"))</p>
-                                }
-                            }
-                        }
-                        else if (grupo == "PATRIMONIO")
-                        {
-                            <p class="section-title">PATRIMONIO</p>
-                            <table>
-                                <tbody>
-                                    @foreach (var item in detallesDerecha)
-                                    {
-                                        <tr>
-                                            <td>@item.DESCRIPCION</td>
-                                            <td class="money">$ @((item.saldo ?? 0.0).ToString("#,##0.00"))</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <p class="subtotal">Subtotal: $@(detallesDerecha.Sum (x => x.saldo ?? 0.0).ToString("#,##0.00"))</p>
-                        }
-                    }
+                    <p class="main-title">PASIVOS</p> <!-- Título principal -->
                 }
+
+                @foreach (var subGrupo in new[] { "CORRIENTE", "NO CORRIENTE" })
+                {
+                    var detallesPasivos = Model.Detalles.Where (x => x.grupo_cta == "PASIVO" && x.sub_grupo == subGrupo).ToList ( );
+                    if (detallesPasivos.Any ( ))
+                    {
+                        string cuentaPrefijo = subGrupo == "CORRIENTE" ? "21" : "22";
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; text-align: left;">@cuentaPrefijo</th>
+                                    <th style="width: 60%; text-align: left;">PASIVO - @subGrupo</th>
+                                    <th class="money" style="width: 30%; text-align: right;">
+                                        $@(detallesPasivos.Sum (x => x.saldo ?? 0.0).ToString ("#,##0.00"))
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in detallesPasivos)
+                                {
+                                    <tr>
+                                        <td>@item.Cta_CONTABLE</td>
+                                        <td>@item.DESCRIPCION</td>
+                                        <td class="money">$ @((item.saldo ?? 0.0).ToString ("#,##0.00"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <!-- Espacio entre subgrupos -->
+                    <div style="height: 15px;"></div>
+                }
+
+                @if (Model.Detalles.Any (x => x.grupo_cta == "PATRIMONIO"))
+                {
+                    <p class="main-title">PATRIMONIO</p> <!-- Título principal -->
+                }
+
+
+                    @if (detallesPatrimonio.Any ( ))
+                    {
+                        string cuentaPrefijo = "31";
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%; text-align: left;">@cuentaPrefijo</th>
+                                    <th style="width: 60%; text-align: left;">CAPITAL Y RESERVAS</th>
+                                    <th class="money" style="width: 30%; text-align: right;">
+                                        $@(detallesPatrimonio.Sum (x => x.saldo ?? 0.0).ToString ("#,##0.00"))
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in detallesPatrimonio)
+                                {
+                                    <tr>
+                                        <td>@item.Cta_CONTABLE</td>
+                                        <td>@item.DESCRIPCION</td>
+                                        <td class="money">$ @((item.saldo ?? 0.0).ToString ("#,##0.00"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                
+
+               
+            </div>
+
+        </div>
+
+        <div class="row total" style="width:101%">
+
+            <div class=" group-section " style="width: 48%; float: left;">
+                <table class="total money" id="apartadoTotales">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%; text-align: left;"></th>
+                            <th style="width: 60%; text-align: left;">Total Activos:</th>
+                            <th class="money" style="width: 30%; text-align: left;">
+                                $@((Model.Detalles.Where (x => x.grupo_cta == "ACTIVO").Sum (x => x.saldo) ?? 0.0).ToString ("#,##0.00"))
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr style="height: 10px;"></tr>
+                    <tbody class="total">
+
+						<tr>
+                            <td></td>
+                            <td class="bold">Cuentas de Orden Deudoras</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                </div>
+
+            <div class="group-section " style="width: 47%; float: right;">
+                
+                <table  class="total money" id="apartadoTotales">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%; text-align: left;"></th>
+                            <th style="width: 60%; text-align: left;">Total Pasivos y Patrimonio:</th>
+                            <th style="width: 30%; text-align: left;" class="money">
+                                $@((Model.Detalles.Where (x => x.grupo_cta == "PASIVO" || x.grupo_cta == "PATRIMONIO").Sum (x => x.saldo) ?? 0.0).ToString ("#,##0.00"))
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr style="height: 10px;"></tr>
+                    <tbody class="total">
+						<tr>
+                            <td></td> 
+                            <td class="bold">Cuentas de Orden Acreedoras</td>
+                            <td ></td> 
+                        </tr>
+                    </>
+                </table>
+
             </div>
         </div>
 
-
-        <div class="row">
-            @if (Model.Detalles.Any (x => x.grupo_cta == "ACTIVO" || x.grupo_cta == "PASIVO" || x.grupo_cta == "PATRIMONIO"))
-            {
-                <div class="total col-12" style="margin-bottom: 50px; clear: both;">
-                    <div class="row">
-                        <!-- Total Activos -->
-                        <div class="col-6 money d-inline-block" style="width: 48%;">
-                            <p>
-                                <strong>Total Activos: </strong>$@((Model.Detalles.Where (x => x.grupo_cta == "ACTIVO").Sum (x => x.saldo) ?? 0.0).ToString ("#,##0.00"))
-                            </p>
-                        </div>
-
-                        <!-- Total Pasivos y Patrimonio -->
-                        <div class="col-6 money d-inline-block" style="width: 50%;">
-                            <p>
-                                <strong>Total Pasivos y Patrimonio: </strong>$@((Model.Detalles.Where (x => x.grupo_cta == "PASIVO" || x.grupo_cta == "PATRIMONIO").Sum (x => x.saldo) ?? 0.0).ToString ("#,##0.00"))
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            }
+        <div class="row" >
+			<table style="width: 100%; text-align: center;" id="firmas">
+				<tr>
+					<td style="width: 33%; text-align: center; vertical-align: top;">
+						<p class="bold">LIC. SANDRA RUBI SOMOZA DE SIBRIAN</p>
+						<p class="">CONTADOR</p>
+						<p class="">INSCRIPCIÓN No. 6964</p>
+					</td>
+					<td style="width: 33%; text-align: center; vertical-align: top;">
+						<p class="bold">LATINCO, LIMITADA DE C.V.</p>
+						<p class="">AUDITORÍA EXTERNA</p>
+                        <p class="">INSCRIPCION No. 2103</p>
+                        <p class="bold">LIC. JOSE GUSTAVO ARIAS MOLINA</p>
+                        <p class="">INSCRIPCION No. 503</p>
+					</td>
+					<td style="width: 33%; text-align: center; vertical-align: top;">
+                        <p class="bold">LIC. LISSETTE CAROLINA CHAVEZ DE PEREZ</p>
+						<p class="">REPRESENTANTE LEGAL</p>
+					</td>
+				</tr>
+			</table>
         </div>
-
-
-
-        <table style="width:100%; margin-top:100px;" id="firmas">
-            <tr>
-                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
-                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
-                <td style="width: 25%;"><center><div style="width: 70%; border-bottom: 1px solid black;"></div></center></td>
-            </tr>
-            <tr>
-                <td><center><p>Ana María Vidiella Duch</p></center></td>
-                <td><center><p>Giovanni Bladimir Diaz Reyes</p></center></td>
-                <td><center><p>ACOEX, S.A de C.V</p></center></td>
-            </tr>
-            <tr>
-                <td class="bold"><center><p>Representante Legal</p></center></td>
-                <td class="bold"><center><p>Contador General</p></center></td>
-                <td class="bold"><center><p>Auditor Externo</p></center></td>
-            </tr>
-        </table>
+        
     </div>
 </body>
 </html>

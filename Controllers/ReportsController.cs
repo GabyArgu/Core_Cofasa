@@ -1042,12 +1042,13 @@ public class ReportsController (
             foreach (var subGrupo in new[] { "CORRIENTE", "NO CORRIENTE" }) {
                 var items = reportData.Where (x => x.grupo_cta == "ACTIVO" && x.sub_grupo == subGrupo).ToList ( );
                 if (items.Any ( )) {
-                    worksheet.Cell (currentRow, columnaIzquierda).Value = $"ACTIVO - {subGrupo}";
-                    worksheet.Cell (currentRow, columnaIzquierda).Style.Font.Bold = true;
+                    worksheet.Range($"B{currentRow}:C{currentRow}").Merge().Value = $"ACTIVO - {subGrupo}";
+                    worksheet.Cell(currentRow, columnaIzquierda).Style.Font.Bold = true;
                     currentRow++;
 
                     foreach (var item in items) {
-                        worksheet.Cell (currentRow, columnaIzquierda).Value = item.DESCRIPCION;
+                        worksheet.Cell (currentRow, columnaIzquierda).Value = item.Cta_CONTABLE;
+                        worksheet.Cell (currentRow, columnaIzquierda + 1).Value = item.DESCRIPCION;
                         worksheet.Cell (currentRow, columnaIzquierda + 1).Value = "$ " + item.saldo?.ToString ("#,##0.00") ?? "0.00";
                         worksheet.Cell (currentRow, columnaIzquierda + 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                         currentRow++;
@@ -1075,16 +1076,17 @@ public class ReportsController (
                     var items = reportData.Where (x => x.grupo_cta == grupo && x.sub_grupo == subGrupo).ToList ( );
                     if (items.Any ( )) {
                         if (grupo.Equals ("PASIVO")) {
-                            worksheet.Cell (currentRow, columnaDerecha).Value = $"{grupo} - {subGrupo}";
+                            worksheet.Range ($"E{currentRow}:F{currentRow}").Merge().Value = $"{grupo} - {subGrupo}";
                         }
                         else {
-                            worksheet.Cell (currentRow, columnaDerecha).Value = $"{grupo}";
+                            worksheet.Range ($"E{currentRow}:F{currentRow}").Merge().Value = $"{grupo}";
                         }
-                        worksheet.Cell (currentRow, columnaDerecha).Style.Font.Bold = true;
+                        worksheet.Range ($"E{currentRow}:F{currentRow}").Merge ( ).Style.Font.Bold = true;
                         currentRow++;
 
                         foreach (var item in items) {
-                            worksheet.Cell (currentRow, columnaDerecha).Value = item.DESCRIPCION;
+                            worksheet.Cell (currentRow, columnaDerecha).Value = item.Cta_CONTABLE;
+                            worksheet.Cell (currentRow, columnaDerecha + 1).Value = item.DESCRIPCION;
                             worksheet.Cell (currentRow, columnaDerecha + 1).Value = "$ " + item.saldo?.ToString ("#,##0.00") ?? "0.00";
                             worksheet.Cell (currentRow, columnaDerecha + 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                             currentRow++;

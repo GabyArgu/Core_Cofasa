@@ -315,7 +315,7 @@ public class RepositoryController (
                     if (i == 0) {
                         var (result, numPoliza) = await SaveRepositoryHeader (headerData, true);
                         if (result != SaveRepositoryHeaderResult.Success) {
-                            throw new InvalidOperationException ("Error al guardar el encabezado del repositorio.");
+                            throw new InvalidOperationException ($"Error al guardar el encabezado del repositorio. Detalles: {result}");
                         }
 
                         successHeadersCount++;
@@ -330,7 +330,7 @@ public class RepositoryController (
                     }
 
                     var coreAccountNumber = await dmgCuentasRepository
-                        .GetCoreContableAccountFromCONTABLEAccount(currentCia, currentRow.CUENTA_CONTABLE);
+                        .GetCoreContableAccountFromCONTABLEAccount (currentCia, currentRow.CUENTA_CONTABLE);
 
                     var detailData = new DetRepositorioDto {
                         det_COD_CIA = currentCia,
@@ -353,7 +353,7 @@ public class RepositoryController (
                     };
 
                     if (!await detRepoRepository.SaveOne (detailData)) {
-                        throw new InvalidOperationException ("Error al guardar un detalle del repositorio.");
+                        throw new InvalidOperationException ($"Error al guardar un detalle del repositorio. Datos del detalle: Concepto: {currentRow.CONCEPTO_DETALLE}, Cuenta: {currentRow.CUENTA_CONTABLE}, CARGO: {currentRow.CARGO}, ABONO: {currentRow.ABONO}, Centro de Costo: {currentRow.CENTRO_COSTO}");
                     }
 
                     successDetailsCount++;
@@ -376,16 +376,17 @@ public class RepositoryController (
             });
         }
         catch (Exception e) {
-            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
-                nameof (RepositoryController), nameof (ImportFromExcel));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}. Detalles: {Message}",
+                nameof (RepositoryController), nameof (ImportFromExcel), e.Message);
 
             return Json (new {
                 success = false,
-                message = "Ocurrió un error al procesar el archivo. " +
-                          "Detalles: " + e.Message
+                message = "Ocurrió un error al procesar el archivo. Detalles: " + e.Message
             });
         }
     }
+
+
 
     private static int GetNumberFromCuentaContable (string cuentaContable, int index) {
         // Verificar si cuentaContable es nulo o vacío
@@ -600,10 +601,10 @@ public class RepositoryController (
     }
 
     [HttpGet]
-    public async Task<JsonResult> GenerarPartidaLiquidacion ([FromQuery] string codCia) {
+    public async Task<JsonResult> GenerarPartidaLiquidacion ([FromQuery] string codCia, int año) {
         bool result = false;
         try {
-            result = await dmgCuentasRepository.GenerarPartidaLiquidacion(codCia);
+            result = await dmgCuentasRepository.GenerarPartidaLiquidacion (codCia, año);
         }
         catch (Exception e) {
             result = false;
@@ -620,4 +621,25 @@ public class RepositoryController (
             message
         });
     }
+
+
+    [HttpPost]
+    public async Task<JsonResult> MayorizarMes (string codCia, int periodo, int mes) {
+        bool result;
+
+        try {
+            result = await dmgCuentasRepository.MayorizarMes(codCia, periodo, periodo, mes);
+        }
+        catch (Exception e) {
+            result = false;
+            logger.LogError (e, "Error en {Class}.{Method}", nameof (RepositoryController), nameof (MayorizarMes));
+        }
+
+        var message = result
+            ? "El mes fue mayorizado correctamente"
+            : "Ocurrió un error al mayorizar el mes";
+
+        return Json (new { success = result, message });
+    }
+
 }
