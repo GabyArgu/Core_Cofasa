@@ -46,6 +46,7 @@ public class DmgCuentasController(
         }, new JsonSerializerOptions { PropertyNamingPolicy = null });
     }
 
+
     [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_ADD}," +
                          $"{CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_UPDATE}")]
     [HttpPost]

@@ -146,19 +146,28 @@ function ccAccountsShowForm(data) {
     }
 }
 
-function ccAccountsSave(){
-    const formData = $(ccAccountsFormID).serialize();
+function ccAccountsSave() {
+    let formData = $(ccAccountsFormID).serializeArray();
+
+    // Verificar el estado y asignar "A" o "I"
+    const estadoField = formData.find(field => field.name === 'ESTADO');
+    if (estadoField) {
+        estadoField.value = $('#ESTADO').is(':checked') ? 'A' : 'I';
+    } else {
+        formData.push({ name: 'ESTADO', value: $('#ESTADO').is(':checked') ? 'A' : 'I' });
+    }
+
     isLoading(ccAccountsFormAddButtonId, true);
 
     $.ajax({
         url: CC_API.SAVE,
-        type:'POST',
-        data: formData,
-        success:function(data){
+        type: 'POST',
+        data: $.param(formData), // Convertir de nuevo a formato de string
+        success: function (data) {
             showToast(data.success, data.message);
             isLoading(ccAccountsFormAddButtonId, false);
 
-            if(data.success){
+            if (data.success) {
                 ccAccountsDialog.modal('hide');
                 ccAccountsDataTable.ajax.reload();
             }
@@ -169,6 +178,7 @@ function ccAccountsSave(){
         }
     });
 }
+
 
 function ccAccountsLoadOne(data) {
     if (!isDefined(data)) return;

@@ -158,6 +158,26 @@ function initDmgCieCierreGrid() {
         .addClass('table table-bordered table-hover dataTable');
 }
 
+// Función para recargar el DataTable con un año específico
+function reloadDmgCieCierreGrid(year) {
+    const ciaCod = $('#CodCia').val();
+    const period = year || new Date().getFullYear(); // Usa el año actual si no se selecciona ninguno.
+
+    // Actualiza la URL del DataTable y recarga los datos
+    tableDmgCieCierre.ajax.url(`/Params/GetDmgCieCierreForDt?ciaCod=${ciaCod}&period=${period}`).load();
+}
+
+// Configuración inicial y eventos
+$(document).ready(function () {
+    initDmgCieCierreGrid(); // Inicializa la tabla
+
+    // Evento para filtrar por año
+    $('#YearFilter').on('change', function () {
+        const selectedYear = $(this).val();
+        reloadDmgCieCierreGrid(selectedYear);
+    });
+});
+
 function callCieCierreUpdateStatus(data, newStatus) {
     const formData = `CIE_CODCIA=${data.CIE_CODCIA}&CIE_CODIGO=${data.CIE_CODIGO}&CIE_ESTADO=${newStatus}`;
 
