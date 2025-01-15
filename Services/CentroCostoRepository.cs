@@ -65,31 +65,33 @@ public class CentroCostoRepository(
             .ToListAsync();
     }
 
-    public Task<List<Select2ResultSet>> GetForSelect2 (string codCia, string? query = null, int pageNumber = 1, int pageSize = 10) {
+    public Task<List<Select2ResultSet>> GetForSelect2(string codCia, string? query = null, int pageNumber = 1, int pageSize = 10)
+    {
         IQueryable<CentroCosto> efQuery = dbContext.CentroCosto
-            .Where (entity => entity.COD_CIA == codCia); // Filtrar por COD_CIA
+            .Where(entity => entity.COD_CIA == codCia);
 
-        // Si hay una búsqueda por query, agregarlo al filtro
-        if (!query.IsNullOrEmpty ( )) {
-            efQuery = efQuery
-                .Where (
-                    entity =>
-                        EF.Functions.Like (entity.CENTRO_COSTO, $"%{query}%")
-                        || EF.Functions.Like (entity.DESCRIPCION, $"%{query}%")
+        if (!query.IsNullOrEmpty())
+        {
+            efQuery = dbContext.CentroCosto
+                .Where(
+                    entity => 
+                        EF.Functions.Like(entity.CENTRO_COSTO, $"%{query}%")
+                        || EF.Functions.Like(entity.DESCRIPCION, $"%{query}%")
                 );
         }
 
-        var count = efQuery.Count ( );
+        var count = efQuery.Count();
 
         return efQuery
-            .Skip ((pageNumber - 1) * pageSize)
-            .Take (pageSize)
-            .Select (entity => new Select2ResultSet {
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(entity => new Select2ResultSet
+            {
                 id = entity.CENTRO_COSTO,
-                text = $"{entity.CENTRO_COSTO} - {entity.DESCRIPCION}",
+                text = $"{entity.CENTRO_COSTO } - {entity.DESCRIPCION}",
                 more = pageNumber * pageSize < count
             })
-            .ToListAsync ( );
+            .ToListAsync();
     }
 
     public Task<CentroCostoResultSet?> GetOne(string codCia, string codCentroCosto) =>

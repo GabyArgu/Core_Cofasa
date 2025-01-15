@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" />
     <link rel="stylesheet" href="~/css/grids.defaults.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pages/repo.admin.css" asp-append-version="true" />
-
     <style>
         .form-select {
             display: block;
@@ -34,11 +33,11 @@
             appearance: none;
         }
 
-            .form-select:focus {
-                border-color: #86b7fe;
-                outline: 0;
-                box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .5);
-            }
+        .form-select:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 .25rem rgba(48, 29, 113, .5);
+        }
 
         .modal-header .btn-close {
             padding: calc(var(--bs-modal-header-padding-y)* .5) calc(var(--bs-modal-header-padding-x)* .5);
@@ -65,7 +64,6 @@
             opacity: var(--bs-btn-close-opacity);
         }
     </style>
-
 }
 
 @section BreadCrumb {
@@ -87,7 +85,7 @@
                                 <i class="fa fa-file"></i>&nbsp; Partidas Liquidación
                             </button>
                         </div>
-
+                    
                         <input type="hidden" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
                         <div class="btn-group mr-2" role="group" aria-label="First group">
                             <button type="button" class="btn btn-warning" id="repositoryImportButton">
@@ -97,6 +95,12 @@
                     }
                     @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD))
                     {
+                        <div class="btn-group mr-2" role="group" aria-label="">
+                            <button class="btn btn-info" id="capitalizeByMonthButton">
+                                <i class="fa fa-calendar"></i>&nbsp; Mayorizar por Mes
+                            </button>
+                        </div>
+
                         <div class="btn-group mr-2" role="group" aria-label="">
                             <button class="btn btn-primary" id="repositoryAddButtonId">
                                 <i class="fa fa-plus"></i>&nbsp; Agregar
@@ -169,6 +173,49 @@
 <textarea id="importRepoFormHtml" style="display:none;"><partial name="UploadFile" /></textarea>
 <textarea id="repoReportHTML" style="display:none;"><canvas id="the-canvas"></canvas></textarea>
 
+<!-- Modal para selección de periodo y mes -->
+<div class="modal fade" id="capitalizeMonthModal" tabindex="-1" aria-labelledby="capitalizeMonthModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="capitalizeMonthModalLabel">Seleccionar Periodo y Mes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="capitalizeMonthForm">
+                    <div class="mb-3">
+                        <label for="periodoInput" class="form-label">Periodo (Año)</label>
+                        <input type="number" class="form-control" id="periodoInput" placeholder="Ejemplo: 2024" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="mesSelect" class="form-label">Mes</label>
+                        <select class="form-select" id="mesSelect" required>
+                            <option value="" disabled selected>Seleccione un mes</option>
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmCapitalizeButton">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="selectAñoModal" tabindex="-1" aria-labelledby="selectAñoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -179,8 +226,8 @@
             <div class="modal-body">
                 <form id="selectAñoForm">
                     <div class="mb-3">
-                        <label for="periodoInput" class="form-label">Periodo (Año)</label>
-                        <input type="number" class="form-control" id="periodoInput" placeholder="Ejemplo: 2024">
+                        <label for="añoInput" class="form-label">Periodo (Año)</label>
+                        <input type="number" class="form-control" id="añoInput" placeholder="Ejemplo: 2024">
                     </div>
                 </form>
             </div>
@@ -191,9 +238,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 @section Scripts {
     <script src="~/plugins/jquery.dataTables/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -212,11 +256,5 @@
     <script src="~/js/pages/utils/accounts.utils.js" asp-append-version="true"></script>
     <script src="~/js/pages/contarepo.admin.js" asp-append-version="true"></script>
     <script src="~/js/pages/contarepo.admin.detrepo.js" asp-append-version="true"></script>
-    <script>
-        $('#selectAñoModal .btn-secondary').on('click', function () {
-            $('#selectAñoModal').modal('hide');
-        });
-
-    </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 }
