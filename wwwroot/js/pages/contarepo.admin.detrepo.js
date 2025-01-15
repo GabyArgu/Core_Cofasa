@@ -283,8 +283,8 @@ function detRepoStartValidation() {
             det_CONCEPTO: { required: true, maxlength: 400 },
             CARGO: { required: true, number: true },
             ABONO: { required: true, number: true },
-            CENTRO_COSTO: { required: true, maxlength: 25 },
-            CENTRO_CUENTA: { required: true, maxlength: 25 },
+            CENTRO_COSTO: { required: true, maxlength: 45 },
+            CENTRO_CUENTA: { required: true, maxlength: 45 },
             detOPERACION: { required: false },
         },
         showErrors: function(errorMap, errorList) {

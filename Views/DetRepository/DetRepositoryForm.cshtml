@@ -2,124 +2,137 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject ISecurityRepository SecurityRepository
 
-<form role="form" id="detRepoForm" style="margin-left:15px; margin-right:15px;">
-    <input type="hidden" id="det_COD_CIA" name="det_COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
-    <input type="hidden" id="det_PERIODO" name="det_PERIODO" value=""/> @* VIENE DESDE LA TABLA PADRE *@
-    <input type="hidden" id="det_TIPO_DOCTO" name="det_TIPO_DOCTO" value="" /> @* VIENE DESDE LA TABLA PADRE *@
-    <input type="hidden" id="det_NUM_POLIZA" name="det_NUM_POLIZA" /> @* VIENE DESDE LA TABLA PADRE *@
-    <input type="hidden" id="det_CORRELAT" name="det_CORRELAT" /> @* Generado desde el front *@
-    <input type="hidden" id="detOPERACION" name="detOPERACION" />
-    <style>
-        #detallitos {
-            width: 100%; /* Tabla ocupa el 100% del ancho */
-            table-layout: fixed; /* Fija el ancho de las celdas */
-        }
+<div class="col-md-12">
+    <form role="form" id="detRepoForm" style="margin-left:15px; margin-right:15px;">
+        <input type="hidden" id="det_COD_CIA" name="det_COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
+        <input type="hidden" id="det_PERIODO" name="det_PERIODO" value="" /> @* VIENE DESDE LA TABLA PADRE *@
+        <input type="hidden" id="det_TIPO_DOCTO" name="det_TIPO_DOCTO" value="" /> @* VIENE DESDE LA TABLA PADRE *@
+        <input type="hidden" id="det_NUM_POLIZA" name="det_NUM_POLIZA" /> @* VIENE DESDE LA TABLA PADRE *@
+        <input type="hidden" id="det_CORRELAT" name="det_CORRELAT" /> @* Generado desde el front *@
+        <input type="hidden" id="detOPERACION" name="detOPERACION" />
 
-        #detallitos td {
-            width: 120px; /* Ancho fijo para todas las celdas */
-            max-width: 220px; /* Evitar que crezcan más allá de este ancho */
-            overflow: hidden; /* Evitar que el contenido desborde */
-            text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es demasiado largo */
-            white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
-        }
-
-        #detallitos th {
-            width: 120px; /* Aplica el mismo ancho fijo a los encabezados si es necesario */
-        }
-    </style>
-
-    <div class="row">
-        <div class="col-md-12">
-            <table id="detallitos">
-                <thead>
-                <tr>
-                    <th colspan="2" style="width: 40%;" class="text-center"></th>
-                    <th colspan="6" style="width: 30%;" class="text-center"></th>
-                    <th style="width: 30%;"></th>
-                </tr>
-                </thead>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            @* <label>Mes en proceso</label> ES UN SELECT 2*@
-                            <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" id="CENTRO_CUENTA" name="CENTRO_CUENTA" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_1" id="CTA_1" class="form-control" placeholder="#1" readonly=""/></div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_2" id="CTA_2" class="form-control" placeholder="#2" readonly=""/></div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_3" id="CTA_3" class="form-control" placeholder="#3" readonly=""/></div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_4" id="CTA_4" class="form-control" placeholder="#4" readonly=""/></div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_5" id="CTA_5" class="form-control" placeholder="#5" readonly=""/></div>
-                    </td>
-                    <td>
-                        <div class="form-group"><input type="text" name="CTA_6" id="CTA_6" class="form-control" placeholder="#6" readonly=""/></div>
-                    </td>
-                    <td>
-                        @* TODO: VOLVER A PONER readonly="" *@
-                        <div class="form-group"><input type="text" name="NOMBRE" id="NOMBRE" class="form-control" placeholder="Nombre" readonly=""/></div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    
-    <div class="row mt-2">
-        @* <div class="form-group col-md-3"> *@
-        @*     $1$ <label>Mes en proceso</label> ES UN SELECT 2#1# *@
-        @*     <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" /> *@
-        @* </div> *@
-        <div class="form-group col-md-2">
-            @* <label>Mes en proceso</label> *@
-            <input type="text" class="form-control" placeholder="CARGO" id="CARGO" name="CARGO">
-        </div>
-        <div class="form-group col-md-2">
-            @* <label>Mes en proceso</label> *@
-            <input type="text" class="form-control" placeholder="ABONO" id="ABONO" name="ABONO">
-        </div>
-        <div class="form-group col-md-8">
-            @* <label>Mes en proceso</label> *@
-            <input type="text" class="form-control" placeholder="Concepto" id="det_CONCEPTO" name="det_CONCEPTO">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            @if (SecurityRepository.HasPermission(CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD))
-            {
-                <div class="btn-toolbar float-right" role="toolbar" aria-label="">
-                    <div class="btn-group mr-2" role="group" aria-label="First group">
-                        <button type="button" class="btn btn-warning" id="cleanDetRepoButton">
-                            <i class="fa fa-minus"></i>&nbsp;Limpiar
-                        </button>
-                    </div>
-                    <div class="btn-group mr-2" role="group" aria-label="">
-                        <button class="btn btn-primary" id="detRepositoryAddAsientoButton" type="submit">
-                            <i class="fa fa-plus"></i>&nbsp;<span id="detRepositoryAddAsientoButtonText">Agregar cuenta</span>
-                        </button>
-                    </div>
-                </div>
+        <style>
+            /* Mantén el ancho fijo para los encabezados */
+            table th, table td {
+                width: 150px; /* Ajusta el valor según lo necesario */
+                max-width: 450px; /* Máximo ancho permitido */
+                overflow: hidden; /* Oculta el contenido que desborda */
+                text-overflow: ellipsis; /* Añade "..." al contenido que no cabe */
+                white-space: nowrap; /* Evita que el texto se divida en varias líneas */
             }
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <hr/>
-        </div>
-    </div>
-</form>
+            /* Aplica un estilo similar a los inputs */
+            table input.form-control {
+                width: 100%; /* Para que se ajusten al ancho del contenedor */
+                max-width: 100%; /* Limita el crecimiento */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
 
+            /* Opcional: Evita que los divs crezcan */
+            .table .form-group {
+                width: 100%; /* Asegura que el ancho del contenedor sea fijo */
+                max-width: 100%; /* Evita que crezca más allá del contenedor */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+        </style>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="width: 40%;" class="text-center"></th>
+                            <th colspan="6" style="width: 30%;" class="text-center"></th>
+                            <th style="width: 30%;"></th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @* <label>Mes en proceso</label> ES UN SELECT 2*@
+                                <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="CENTRO_CUENTA" name="CENTRO_CUENTA" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_1" id="CTA_1" class="form-control" placeholder="#1" readonly="" /></div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_2" id="CTA_2" class="form-control" placeholder="#2" readonly="" /></div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_3" id="CTA_3" class="form-control" placeholder="#3" readonly="" /></div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_4" id="CTA_4" class="form-control" placeholder="#4" readonly="" /></div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_5" id="CTA_5" class="form-control" placeholder="#5" readonly="" /></div>
+                        </td>
+                        <td>
+                            <div class="form-group"><input type="text" name="CTA_6" id="CTA_6" class="form-control" placeholder="#6" readonly="" /></div>
+                        </td>
+                        <td>
+                            @* TODO: VOLVER A PONER readonly="" *@
+                            <div class="form-group"><input type="text" name="NOMBRE" id="NOMBRE" class="form-control" placeholder="Nombre" readonly="" /></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            @* <div class="form-group col-md-3"> *@
+            @*     $1$ <label>Mes en proceso</label> ES UN SELECT 2#1# *@
+            @*     <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" /> *@
+            @* </div> *@
+            <div class="form-group col-md-2">
+                @* <label>Mes en proceso</label> *@
+                <input type="text" class="form-control" placeholder="CARGO" id="CARGO" name="CARGO">
+            </div>
+            <div class="form-group col-md-2">
+                @* <label>Mes en proceso</label> *@
+                <input type="text" class="form-control" placeholder="ABONO" id="ABONO" name="ABONO">
+            </div>
+            <div class="form-group col-md-8">
+                @* <label>Mes en proceso</label> *@
+                <input type="text" class="form-control" placeholder="Concepto" id="det_CONCEPTO" name="det_CONCEPTO">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                @if (SecurityRepository.HasPermission (CC.THIRD_LEVEL_PERMISSION_DET_REPOSITORIO_CAN_ADD))
+                {
+                    <div class="btn-toolbar float-right" role="toolbar" aria-label="">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-warning" id="cleanDetRepoButton">
+                                <i class="fa fa-minus"></i>&nbsp;Limpiar
+                            </button>
+                        </div>
+                        <div class="btn-group mr-2" role="group" aria-label="">
+                            <button class="btn btn-primary" id="detRepositoryAddAsientoButton" type="submit">
+                                <i class="fa fa-plus"></i>&nbsp;<span id="detRepositoryAddAsientoButtonText">Agregar cuenta</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <hr />
+            </div>
+        </div>
+    </form>
+</div>
