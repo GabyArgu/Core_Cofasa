@@ -86,8 +86,11 @@ function overrideShowForm(codCia, codCentroCosto) {
     });
 }
 
+//Se usa en form de cuentas
+let codigoCentroCosto;
 function showCCGrid(codCia, codCentroCosto, description) {
     $('#codCC').val(codCentroCosto);
+    codigoCentroCosto = codCentroCosto;
 
     ccAccountsGridDialog = bootbox.dialog({
         title: `Cuentas asociadas al centro de costo<br/><small class="text-capitalize text-secondary">${codCentroCosto} - ${description}</small>`,

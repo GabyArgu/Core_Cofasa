@@ -43,19 +43,6 @@ public class CentroCuentaController (
         bool result;
         var isUpdating = false;
 
-        var allCuentas = await centroCuentaRepository.GetAllByCia(data.COD_CIA, data.CENTRO_COSTO);
-
-        bool existeCuenta = allCuentas.Any(p => p.CuentaContable == data.CENTRO_CUENTA);
-
-        if (existeCuenta)
-        {
-            return Json(new
-            {
-                success = false,
-                message = "Ya existe la cuenta en este centro de costo"
-            });
-        }
-
         try
         {
             if (data.ESTADO.IsNullOrEmpty ( )) {
@@ -71,6 +58,22 @@ public class CentroCuentaController (
                 data.FECHA_MODIFICACION = DateTime.Now;
                 data.USUARIO_MODIFICACION = securityRepository.GetSessionUserName ( );
                 isUpdating = true;
+            }
+
+            if (!isUpdating)
+            {
+                var allCuentas = await centroCuentaRepository.GetAllByCia(data.COD_CIA, data.CENTRO_COSTO);
+
+                bool existeCuenta = allCuentas.Any(p => p.CuentaContable == data.CENTRO_CUENTA);
+
+                if (existeCuenta)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Ya existe la cuenta en este centro de costo"
+                    });
+                }
             }
 
             result = await centroCuentaRepository.SaveOrUpdate (data);

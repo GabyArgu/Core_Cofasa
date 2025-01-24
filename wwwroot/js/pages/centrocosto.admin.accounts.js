@@ -124,7 +124,7 @@ function initSelects() {
         function (term, page) {
             return {
                 codCia: $('#COD_CIA').val(),
-                centroCosto: $('#CENTRO_COSTO').val(),
+                centroCosto: "00-000-00",
                 q: term,
                 page: page || 1,
                 pageSize: 10
@@ -133,6 +133,8 @@ function initSelects() {
 
     //Al cambiar centro de cuenta llena los numero de cuentas
     $('#CENTRO_CUENTA').on('change', function () {
+        console.log($('#CENTRO_CUENTA').select2("data").text.split(" ")[0]);
+
         if ($(this).val() !== '') {
             const dataList = getAccountNumbersFromString('|', $(this).val());
             listStringToAccountObject(dataList, function (dataObj) {
@@ -192,7 +194,7 @@ function ccAccountsShowForm(data) {
     initSelects();
 
     //Definir centro de costo a editar
-    $('#CENTRO_COSTO').val("00-000-00");
+    $('#CENTRO_COSTO').val(codigoCentroCosto);
 }
 
 function ccAccountsSave() {
