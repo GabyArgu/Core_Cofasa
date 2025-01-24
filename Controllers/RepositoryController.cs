@@ -51,7 +51,10 @@ public class RepositoryController (
         return Json (dataTableResultSet, new JsonSerializerOptions { PropertyNamingPolicy = null });
     }
 
-    [IsAuthorized (alias: CC.THIRD_LEVEL_PERMISSION_USERS_CAN_UPDATE)]
+
+    [IsAuthorized (alias: $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_ADD}," +
+                         $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_UPDATE}," +
+                         $"{CC.THIRD_LEVEL_PERMISSION_REPOSITORIO_CAN_DELETE}")]
     [HttpGet]
     public async Task<JsonResult> GetOneBy ([FromQuery] string codCia, [FromQuery] int period,
         [FromQuery] string doctoType, [FromQuery] int numPoliza) {

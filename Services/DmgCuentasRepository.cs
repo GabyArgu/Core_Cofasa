@@ -187,7 +187,6 @@ public class DmgCuentasRepository(
         }
     }
 
-
     public async Task<bool> GenerarPartidaLiquidacion (string codCia, int año) {
         try {
 
@@ -213,7 +212,6 @@ public class DmgCuentasRepository(
             return false;
         }
     }
-
 
     public async Task<bool> MayorizarMes(string codCia, int periodo, int año, int mes) {
         try {

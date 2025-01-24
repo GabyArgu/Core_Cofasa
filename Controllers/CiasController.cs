@@ -165,8 +165,11 @@ namespace CoreContable.Controllers {
         }
 
         [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_ADD}," +
-                             $"{CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_UPDATE}," +
-                             $"{CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_COPY}")]
+                                $"{CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_UPDATE}," +
+                                $"{CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_ADD}," +
+                                $"{CC.THIRD_LEVEL_PERMISSION_DMGCUENTAS_CAN_UPDATE}," +
+                                $"{CC.THIRD_LEVEL_PERMISSION_CIAS_CAN_COPY}")] 
+
         [HttpPost]
         public async Task<JsonResult> GetAccountName([FromForm] GetAccountNameDto data) {
             bool result;

@@ -6,20 +6,39 @@
     <div class="col-md-12">
         <input type="hidden" class="form-control" id="isUpdating" name="isUpdating" />
         <input type="hidden" class="form-control" id="COD_CIA" name="COD_CIA" value="@SecurityRepository.GetSessionCiaCode()" />
-        <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" />
 
+        <div class="form-group">
+            @* <label>Mes en proceso</label> ES UN SELECT 2*@
+            <input type="hidden" class="form-control" id="CENTRO_COSTO" name="CENTRO_COSTO" />
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" class="form-control" id="CENTRO_CUENTA" name="CENTRO_CUENTA" />
+        </div>
         <table>
             <tr>
-                <td colspan="7"><label class="form-label">Cuenta contable:</label></td>
-            </tr>
-            <tr>
-                <td><input type="text" name="CTA_1" id="CTA_1" class="form-control" /></td>
-                <td><input type="text" name="CTA_2" id="CTA_2" class="form-control" /></td>
-                <td><input type="text" name="CTA_3" id="CTA_3" class="form-control" /></td>
-                <td><input type="text" name="CTA_4" id="CTA_4" class="form-control" /></td>
-                <td><input type="text" name="CTA_5" id="CTA_5" class="form-control" /></td>
-                <td><input type="text" name="CTA_6" id="CTA_6" class="form-control" /></td>
-                <td style="width: 30%;"><input type="text" placeholder="Nombre" name="NOMBRE" id="NOMBRE" class="form-control" readonly="" /></td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_1" id="CTA_1" class="form-control" placeholder="#1" readonly="" /></div>
+                </td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_2" id="CTA_2" class="form-control" placeholder="#2" readonly="" /></div>
+                </td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_3" id="CTA_3" class="form-control" placeholder="#3" readonly="" /></div>
+                </td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_4" id="CTA_4" class="form-control" placeholder="#4" readonly="" /></div>
+                </td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_5" id="CTA_5" class="form-control" placeholder="#5" readonly="" /></div>
+                </td>
+                <td>
+                    <div class="form-group"><input type="text" name="CTA_6" id="CTA_6" class="form-control" placeholder="#6" readonly="" /></div>
+                </td>
+                <td>
+                    @* TODO: VOLVER A PONER readonly="" *@
+                    <div class="form-group"><input type="text" name="NOMBRE" id="NOMBRE" class="form-control" placeholder="Nombre" readonly="" /></div>
+                </td>
             </tr>
         </table>
 

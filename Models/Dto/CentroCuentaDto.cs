@@ -5,6 +5,7 @@ public class CentroCuentaDto
     public string? isUpdating { get; set; }
     public required string COD_CIA { get; set; }
     public required string CENTRO_COSTO { get; set; }
+    public string CENTRO_CUENTA { get; set; }
 
     public required int CTA_1 { get; set; }
     public required int CTA_2 { get; set; }

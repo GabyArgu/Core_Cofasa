@@ -313,6 +313,7 @@ function detRepoStartValidation() {
 }
 
 function validateDetRepoFormSel2() {
+    console.log($('#CENTRO_COSTO').val())
     if ($('#CENTRO_COSTO').val() === '') {
         readOnlySelect2('#CENTRO_CUENTA', true);
         setSelect2Data('#CENTRO_CUENTA', null);

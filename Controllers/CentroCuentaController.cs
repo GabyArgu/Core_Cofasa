@@ -11,6 +11,7 @@ namespace CoreContable.Controllers;
 
 public class CentroCuentaController (
     ILogger<CentroCuentaController> logger,
+    IContaRepoRepository contaRepoRepository,
     ICentroCuentaRepository centroCuentaRepository,
     ISecurityRepository securityRepository
 ) : Controller {
@@ -42,9 +43,23 @@ public class CentroCuentaController (
         bool result;
         var isUpdating = false;
 
-        try {
+        var allCuentas = await centroCuentaRepository.GetAllByCia(data.COD_CIA, data.CENTRO_COSTO);
+
+        bool existeCuenta = allCuentas.Any(p => p.CuentaContable == data.CENTRO_CUENTA);
+
+        if (existeCuenta)
+        {
+            return Json(new
+            {
+                success = false,
+                message = "Ya existe la cuenta en este centro de costo"
+            });
+        }
+
+        try
+        {
             if (data.ESTADO.IsNullOrEmpty ( )) {
-                data.ESTADO = "N";
+                data.ESTADO = "I";
             }
 
             if (data.isUpdating.IsNullOrEmpty ( )) {

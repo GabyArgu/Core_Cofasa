@@ -53,21 +53,21 @@ function overrideInitDt() {
                     {'data': 'COD_CIA'},
                     {'data': 'COD_CIA'},
                     {'data': 'TIPO_DOCTO'},
-                    {'data': 'CONTADOR_POLIZA'},
+                    /*{'data': 'CONTADOR_POLIZA'},*/
                     {'data': 'DESCRIP_TIPO'},
-                    {'data': 'PROCESO'},
-                    {
-                        'data': 'POLIZA_MANUAL',
-                        sortable: false, searchable: false,
-                        render: function (data, type, row, meta) {
-                            return dmgDoctosGridSelect
-                                .replaceAll('{codCia}', `${row.COD_CIA}_${meta.row}`)
-                                .replaceAll('{data}', Base64.encode($.toJSON(row)))
-                                .replaceAll('{0}', row.POLIZA_MANUAL === '' || row.POLIZA_MANUAL === null ? '' : 'selected')
-                                .replaceAll('{1}', row.POLIZA_MANUAL === 'M' ? 'selected' : '')
-                                .replaceAll('{2}', row.POLIZA_MANUAL === 'A' ? 'selected' : '');
-                        }
-                    },
+                    /*{'data': 'PROCESO'},*/
+                    //{
+                    //    'data': 'POLIZA_MANUAL',
+                    //    sortable: false, searchable: false,
+                    //    render: function (data, type, row, meta) {
+                    //        return dmgDoctosGridSelect
+                    //            .replaceAll('{codCia}', `${row.COD_CIA}_${meta.row}`)
+                    //            .replaceAll('{data}', Base64.encode($.toJSON(row)))
+                    //            .replaceAll('{0}', row.POLIZA_MANUAL === '' || row.POLIZA_MANUAL === null ? '' : 'selected')
+                    //            .replaceAll('{1}', row.POLIZA_MANUAL === 'M' ? 'selected' : '')
+                    //            .replaceAll('{2}', row.POLIZA_MANUAL === 'A' ? 'selected' : '');
+                    //    }
+                    //},
                     {
                         sortable: false, searchable: false,
                         render: function (data, type, row) {
@@ -107,17 +107,22 @@ function callDmgDoctosFromSelect(data, newStatus) {
     const formData = `isUpdating=1&COD_CIA=${data.COD_CIA}&TIPO_DOCTO=${data.TIPO_DOCTO}
         &CONTADOR_POLIZA=${data.CONTADOR_POLIZA}&DESCRIP_TIPO=${data.DESCRIP_TIPO}&PROCESO=${data.PROCESO}
         &POLIZA_MANUAL=${newStatus}`;
-    
+
     POST({
         url: '/DmgDoctos/SaveOrUpdate',
         data: formData,
         success: function (data) {
+            // Mostrar el mensaje (éxito o error) devuelto por el servidor
             showToast(data.success, data.message);
-            if(data.success) reloadTable();
+            // Recargar tabla si fue exitoso
+            if (data.success) reloadTable();
         },
-        error: function (error) { console.log(error); }
+        error: function (error) {
+            console.log(error);
+        }
     });
 }
+
 
 function startDmgDoctosValidation() {
     $(`#${initValues.formID}`).validate({

@@ -114,6 +114,51 @@ function ccAccountsStartValidation() {
     });
 }
 
+//Código de Select2
+function initSelects() {
+    initSelect2Paginated(
+        'CENTRO_CUENTA',
+        '/CentroCuenta/GetToSelect2',
+        'Cuenta contable',
+        false,
+        function (term, page) {
+            return {
+                codCia: $('#COD_CIA').val(),
+                centroCosto: $('#CENTRO_COSTO').val(),
+                q: term,
+                page: page || 1,
+                pageSize: 10
+            };
+        });
+
+    //Al cambiar centro de cuenta llena los numero de cuentas
+    $('#CENTRO_CUENTA').on('change', function () {
+        if ($(this).val() !== '') {
+            const dataList = getAccountNumbersFromString('|', $(this).val());
+            listStringToAccountObject(dataList, function (dataObj) {
+                $('#CTA_1').val(dataObj.CTA_1);
+                $('#CTA_2').val(dataObj.CTA_2);
+                $('#CTA_3').val(dataObj.CTA_3);
+                $('#CTA_4').val(dataObj.CTA_4);
+                $('#CTA_5').val(dataObj.CTA_5);
+                $('#CTA_6').val(dataObj.CTA_6);
+
+                makeAccountNameReq(
+                    '#CTA_1',
+                    '#CTA_2',
+                    '#CTA_3',
+                    '#CTA_4',
+                    '#CTA_5',
+                    '#CTA_6',
+                    '#NOMBRE'
+                );
+            });
+        } else {
+            cleanAccountNumbers();
+        }
+    });
+}
+
 function ccAccountsShowForm(data) {
     const isEditing = !(typeof (data) === 'undefined' || data === null);
     var title = '';
@@ -137,13 +182,17 @@ function ccAccountsShowForm(data) {
     if (isEditing) {
         $('#isUpdating').val(data.COD_CIA);
         $('#COD_CIA').val(data.COD_CIA);
-        $('#CENTRO_COSTO').val(data.CENTRO_COSTO);
         $(ccAccountsFormAddButtonTextId).text('Editar');
         ccAccountsLoadOne(data);
     } else {
         $('#COD_CIA').val($('#codCia').val());
-        $('#CENTRO_COSTO').val($('#codCC').val());
     }
+
+    //Iniciar y cargar selects
+    initSelects();
+
+    //Definir centro de costo a editar
+    $('#CENTRO_COSTO').val("00-000-00");
 }
 
 function ccAccountsSave() {
@@ -207,6 +256,16 @@ function ccAccountsLoadOne(data) {
 
 function ccAccountsSetDataToForm(data) {
     if (!isDefined(data)) return;
+
+    //Definir cuenta contable seleccionada
+    let cuentaContableSelect = {
+        formattedText: data.CuentaContable,
+        id: data.CuentaContable,
+        more: false,
+        text: data.CuentaContable
+    }
+    setDataToSingleSelect2('#CENTRO_CUENTA', cuentaContableSelect, 'Cuenta contable');
+
 
     if (isDefined(data.CTA_1)) $('#CTA_1').val(data.CTA_1);
     if (isDefined(data.CTA_2)) $('#CTA_2').val(data.CTA_2);

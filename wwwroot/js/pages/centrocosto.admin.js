@@ -73,6 +73,7 @@ function initCentroCostoInputMask() {
 function overrideShowForm(codCia, codCentroCosto) {
     showForm(codCia, function (isEditing) {
         initCentroCostoInputMask();
+        
         overrideFormValidation();
         $('#COD_CIA').val($('#codCia').val());
 

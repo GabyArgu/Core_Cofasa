@@ -49,49 +49,56 @@ public class DmgDoctosController(
     [IsAuthorized(alias: $"{CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_ADD}," +
                          $"{CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_UPDATE}")]
     [HttpPost]
-    public async Task<JsonResult> SaveOrUpdate([FromForm] DmgDoctosDto data)
-    {
+    public async Task<JsonResult> SaveOrUpdate ([FromForm] DmgDoctosDto data) {
         bool result;
         var isUpdating = false;
 
-        try
-        {
-            if (data.isUpdating.IsNullOrEmpty())
-            {
+        try {
+            // Validar si el TIPO_DOCTO ya existe en la base de datos
+            var existingDocto = await dmgDoctosRepository.GetOneDmgDoctoByCia (data.COD_CIA, data.TIPO_DOCTO);
+
+            if (existingDocto != null && data.isUpdating.IsNullOrEmpty ( )) {
+                // Devolver un mensaje de error si ya existe y no es una actualización
+                return Json (new {
+                    success = false,
+                    message = "El tipo de documento ya existe en la base de datos."
+                });
+            }
+
+            if (data.isUpdating.IsNullOrEmpty ( )) {
                 data.FechaCreacion = DateTime.Now;
-                data.UsuarioCreacion = securityRepository.GetSessionUserName();
+                data.UsuarioCreacion = securityRepository.GetSessionUserName ( );
                 isUpdating = false;
             }
-            else
-            {
+            else {
                 data.FechaModificacion = DateTime.Now;
-                data.UsuarioModificacion = securityRepository.GetSessionUserName();
+                data.UsuarioModificacion = securityRepository.GetSessionUserName ( );
                 isUpdating = true;
             }
 
-            result = await dmgDoctosRepository.SaveOrUpdateDmgDocto(data);
+            result = await dmgDoctosRepository.SaveOrUpdateDmgDocto (data);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             result = false;
-            logger.LogError(e, "Ocurrió un error en {Class}.{Method}",
-                nameof(DmgDoctosController), nameof(SaveOrUpdate));
+            logger.LogError (e, "Ocurrió un error en {Class}.{Method}",
+                nameof (DmgDoctosController), nameof (SaveOrUpdate));
         }
-        
+
         var message = isUpdating ? "Tipo de partida actualizado correctamente"
             : "Tipo de partida guardado correctamente";
-        
+
         var errorMessage = isUpdating ? "Ocurrió un error al actualizar el registro"
             : "Ocurrió un error al guardar el registro";
 
-        return Json(new
-        {
+        return Json (new {
             success = result,
             message = result ? message : errorMessage
         });
     }
 
-    [IsAuthorized(alias: CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_UPDATE)]
+
+
+    [IsAuthorized (alias: CC.THIRD_LEVEL_PERMISSION_DMGDOCTOS_CAN_UPDATE)]
     [HttpGet]
     public async Task<JsonResult> GetOneDmgDocto([FromQuery] string ciaCod, [FromQuery] string doctoType)
     {

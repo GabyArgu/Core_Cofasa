@@ -47,7 +47,8 @@ public class CentroCostoController (
         bool result;
         var isUpdating = false;
 
-        try {
+        try
+        {
             if (data.ACEPTA_DATOS.IsNullOrEmpty ( )) {
                 data.ACEPTA_DATOS = "N";
             }
